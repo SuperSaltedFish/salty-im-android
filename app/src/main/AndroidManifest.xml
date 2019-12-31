@@ -2,6 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.zhixingye.salty">
 
+
+    <!-- 以下为不需要手动申请的权限 -->
+    <!-- 允许程序振动 -->
+    <uses-permission android:name="android.permission.VIBRATE" /> <!-- 允许程序访问网络连接 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许程序获取网络信息状态，如当前的网络连接是否有效 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序控制屏幕常亮了 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 允许程序使用生物未识别功能 -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- 允许程序使用生物未识别功能 -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 允许程序安装APK -->
+    <!-- 以下为需要手动申请的权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 允许程序读取外部存储 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序写入外部存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 显示系统窗口权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 显示系统窗口权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +26,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

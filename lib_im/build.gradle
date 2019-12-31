@@ -1,0 +1,69 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.buildVersions.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildVersions.buildToolsVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.buildVersions.minSdkVersion
+        targetSdkVersion rootProject.ext.buildVersions.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation "io.grpc:grpc-android:$depVersions.grpc"
+    implementation "io.grpc:grpc-okhttp:$depVersions.grpc"
+    implementation "io.grpc:grpc-protobuf-lite:$depVersions.grpc"
+    implementation "io.grpc:grpc-stub:$depVersions.grpc"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+}
+
+
+apply plugin: 'com.google.protobuf'
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.11.1'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$depVersions.grpc"
+        }
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+
+            }
+            task.plugins {
+                javalite {}
+                grpc {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}

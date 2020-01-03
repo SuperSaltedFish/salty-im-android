@@ -2,12 +2,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.zhixingye.im">
 
-    <application>
-        <service
-            android:name=".service.IMService"
-            android:enabled="true"
-            android:process=":im"
-            android:exported="false"/>
-    </application>
 
 </manifest>

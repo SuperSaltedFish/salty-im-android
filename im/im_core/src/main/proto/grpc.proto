@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package com.salty.protos;
+
+import "pojo.proto";
+
+option java_multiple_files = true;
+
+
+
+/* [USER] */
+// user service
+service UserService {
+    rpc Register (BasicReq) returns (BasicResp) {
+    }
+
+    rpc Login (BasicReq) returns (BasicResp) {
+    }
+}
+
+/* [SMS CODE] */
+service SMSService {
+    rpc ObtainSMSCode (BasicReq) returns (BasicResp) {
+    }
+}
+

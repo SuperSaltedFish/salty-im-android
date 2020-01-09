@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package com.salty.protos;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
+
+option java_multiple_files = true;
+
+// Basic Request
+message BasicReq {
+    string deviceID = 1;
+    string version = 2;
+    Language language = 3;
+    OS os = 4;
+
+    string token = 5;
+
+    google.protobuf.Any data = 6;
+
+    enum Language {
+        CHINESE = 0;
+        ENGLISH = 1;
+    }
+
+    enum OS {
+        UNKNOWN = 0;
+        ANDROID = 1;
+        IOS = 2;
+        WINDOWS = 3;
+    }
+}
+
+// Basic Response
+message BasicResp {
+    int32 code = 1;
+    string message = 2;
+    google.protobuf.Any data = 3;
+}
+
+message UserProfile {
+    string userID = 1;
+    string telephone = 2;
+    string email = 3;
+    string username = 4;
+    string nickname = 5;
+    string avatar = 6;
+    string description = 7;
+    Sex sex = 8;
+    google.protobuf.Timestamp birthday = 9;
+    string location = 10;
+
+    enum Sex {
+        NOT_SET = 0;
+        MALE = 1;
+        FEMALE = 2;
+    }
+}
+
+message RegisterReq {
+    RegisterType registerType = 1;
+    string password = 2;
+    string verificationCode = 3;
+    UserProfile userProfile = 4;
+
+    enum RegisterType {
+        TELEPHONE = 0;
+        EMAIL = 1;
+    }
+}
+
+message RegisterResp {
+    UserProfile profile = 1;
+}
+
+
+message SMSReq {
+    CodeType codeType = 1;
+    oneof targetAccount {
+        string telephone = 2;
+        string email = 3;
+    }
+    enum CodeType {
+        REGISTER = 0;
+        LOGIN = 1;
+    }
+}
+
+message SMSResp {
+
+}

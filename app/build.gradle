@@ -71,6 +71,7 @@ android {
         targetCompatibility = 1.8
     }
 
+
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "SaltyIM_${variant.buildType.name}_${variant.versionName}" + ".apk"

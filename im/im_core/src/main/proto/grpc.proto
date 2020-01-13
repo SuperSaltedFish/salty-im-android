@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package com.salty.protos;
 
-import "pojo.proto";
+import "entity.proto";
 
 option java_multiple_files = true;
 
@@ -11,16 +11,16 @@ option java_multiple_files = true;
 /* [USER] */
 // user service
 service UserService {
-    rpc Register (BasicReq) returns (BasicResp) {
+    rpc Register (GrpcReq) returns (GrpcResp) {
     }
 
-    rpc Login (BasicReq) returns (BasicResp) {
+    rpc Login (GrpcReq) returns (GrpcResp) {
     }
 }
 
 /* [SMS CODE] */
 service SMSService {
-    rpc ObtainSMSCode (BasicReq) returns (BasicResp) {
+    rpc ObtainSMSCode (GrpcReq) returns (GrpcResp) {
     }
 }
 

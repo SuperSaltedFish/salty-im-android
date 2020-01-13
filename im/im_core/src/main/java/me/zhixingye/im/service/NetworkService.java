@@ -1,0 +1,53 @@
+package me.zhixingye.im.service;
+
+import com.google.protobuf.MessageLite;
+
+import javax.annotation.Nullable;
+
+import io.grpc.Attributes;
+import io.grpc.CallOptions;
+import io.grpc.Channel;
+import io.grpc.ClientCall;
+import io.grpc.ClientInterceptor;
+import io.grpc.ForwardingClientCall;
+import io.grpc.ManagedChannel;
+import io.grpc.Metadata;
+import io.grpc.MethodDescriptor;
+import io.grpc.okhttp.OkHttpChannelBuilder;
+
+/**
+ * Created by zhixingye on 2020年01月10日.
+ * 每一个不曾起舞的日子 都是对生命的辜负
+ */
+public class NetworkService {
+
+    private static NetworkService sService;
+
+    public synchronized static void init(String ip, int port) {
+        if (sService == null) {
+            throw new RuntimeException("NetworkService 已经初始化");
+        }
+        sService = new NetworkService(ip, port);
+    }
+
+    public static NetworkService get() {
+        return sService;
+    }
+
+
+    private ManagedChannel mChannel;
+
+    public NetworkService(String ip, int port) {
+        mChannel = OkHttpChannelBuilder.forAddress(ip, port)
+                .usePlaintext()
+                .build();
+    }
+
+    public void sendRequest(MessageLite message){
+
+    }
+
+    public ManagedChannel getChannel() {
+        return mChannel;
+    }
+}

@@ -75,7 +75,7 @@ dependencies {
     implementation "io.grpc:grpc-android:$depVersions.grpc"
     implementation "io.grpc:grpc-okhttp:$depVersions.grpc"
     implementation "io.grpc:grpc-stub:$depVersions.grpc"
-    implementation "io.grpc:grpc-protobuf:$depVersions.grpc"
+    implementation "io.grpc:grpc-protobuf-lite:$depVersions.grpc"
 
     implementation 'javax.annotation:javax.annotation-api:1.3.2'
 

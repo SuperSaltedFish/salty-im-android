@@ -9,6 +9,7 @@ import com.salty.protos.GrpcResp;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import me.zhixingye.im.IMClient;
 import me.zhixingye.im.constant.ErrorCode;
 import me.zhixingye.im.listener.RequestCallback;
 
@@ -26,17 +27,17 @@ class BasicService {
         return mNetworkService.getChannel();
     }
 
-    static GrpcReq createReq(MessageLite message) {
+    protected static GrpcReq createReq(MessageLite message) {
         Any data = Any.newBuilder()
                 .setTypeUrl("salty/" + message.getClass().getCanonicalName())
                 .setValue(message.toByteString())
                 .build();
 
         return GrpcReq.newBuilder()
-                .setDeviceID("111")
+                .setDeviceID(IMClient.get().getDeviceID())
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
-                .setVersion("1.0.0")
+                .setVersion(IMClient.get().getAppVersion())
                 .setData(data)
                 .build();
     }
@@ -60,14 +61,11 @@ class BasicService {
         public void onError(Throwable t) {
             Status status = Status.fromThrowable(t);
             if (status == null) {
-                LogService.getLogger().e(TAG, "Status == null");
+                LogService.getLogger().e(TAG, "Status == null", t);
                 callError(mCallback, ErrorCode.INTERNAL_UNKNOWN);
             } else {
-                switch (status.getCode()){
-                    case OK:
-                    case ABORT ED:
-                }
-                callError(mCallback,new ErrorCode(status.getCode().value(),status.getDescription()));
+                LogService.getLogger().e(TAG, status.toString());
+                callError(mCallback, new ErrorCode(status.getCode().value(), status.getDescription()));
             }
         }
 

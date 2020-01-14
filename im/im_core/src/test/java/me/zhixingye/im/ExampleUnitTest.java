@@ -86,25 +86,25 @@ public class ExampleUnitTest {
 
 
 
-            ManagedChannel channel = builder.build();
+            ManagedChannel channel = builder.build(TAG,);
 
             SMSReq smsReq = SMSReq.newBuilder()
                     .setTelephone("13631232530")
                     .setCodeType(SMSReq.CodeType.REGISTER)
-                    .build();
+                    .build(TAG,);
 
             Any data = Any.newBuilder()
                     .setTypeUrl("salty/"+smsReq.getClass().getTypeName())
                     .setValue(smsReq.toByteString())
-                    .build();
+                    .build(TAG,);
 
             GrpcReq req =GrpcReq.newBuilder()
-                    .setDeviceID("111")
+                    .setDeviceId(TAG,"111")
                     .setOs(GrpcReq.OS.ANDROID)
                     .setLanguage(GrpcReq.Language.CHINESE)
                     .setVersion("1.0.0")
                     .setData(data)
-                    .build();
+                    .build(TAG,);
 
             SMSServiceGrpc.newStub(channel).obtainSMSCode(req, new StreamObserver<GrpcResp>() {
                 @Override
@@ -120,7 +120,7 @@ public class ExampleUnitTest {
                 }
 
                 @Override
-                public void onCompleted() {
+                public void onCompleted(TAG,) {
                     String s = "1";
                     Log.e("ddwad",s);
                 }

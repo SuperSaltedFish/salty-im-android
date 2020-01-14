@@ -2,17 +2,7 @@ package me.zhixingye.im.service;
 
 import com.google.protobuf.MessageLite;
 
-import javax.annotation.Nullable;
-
-import io.grpc.Attributes;
-import io.grpc.CallOptions;
-import io.grpc.Channel;
-import io.grpc.ClientCall;
-import io.grpc.ClientInterceptor;
-import io.grpc.ForwardingClientCall;
 import io.grpc.ManagedChannel;
-import io.grpc.Metadata;
-import io.grpc.MethodDescriptor;
 import io.grpc.okhttp.OkHttpChannelBuilder;
 
 /**
@@ -43,7 +33,7 @@ public class NetworkService {
                 .build();
     }
 
-    public void sendRequest(MessageLite message){
+    public void sendRequest(MessageLite message) {
 
     }
 

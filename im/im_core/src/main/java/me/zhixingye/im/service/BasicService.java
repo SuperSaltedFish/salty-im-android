@@ -12,6 +12,7 @@ import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.IMClient;
 import me.zhixingye.im.constant.ErrorCode;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.tool.Logger;
 
 /**
  * Created by zhixingye on 2020年01月10日.
@@ -61,10 +62,10 @@ class BasicService {
         public void onError(Throwable t) {
             Status status = Status.fromThrowable(t);
             if (status == null) {
-                LogService.getLogger().e(TAG, "Status == null", t);
+                Logger.e(TAG, "Status == null", t);
                 callError(mCallback, ErrorCode.INTERNAL_UNKNOWN);
             } else {
-                LogService.getLogger().e(TAG, status.toString());
+                Logger.e(TAG, status.toString());
                 callError(mCallback, new ErrorCode(status.getCode().value(), status.getDescription()));
             }
         }
@@ -73,7 +74,7 @@ class BasicService {
         @Override
         public void onCompleted() {
             if (mResponse == null) {
-                LogService.getLogger().e(TAG, "GrpcResp == null");
+                Logger.e(TAG, "GrpcResp == null");
                 callError(mCallback, ErrorCode.INTERNAL_UNKNOWN);
                 return;
             }
@@ -91,7 +92,7 @@ class BasicService {
                         callComplete(mCallback, original);
                     }
                 } catch (Exception e) {
-                    LogService.getLogger().e(TAG, "parse 'ProtocolBuffer' fail", e);
+                    Logger.e(TAG, "parse 'ProtocolBuffer' fail", e);
                     callError(mCallback, ErrorCode.INTERNAL_UNKNOWN_RESP_DATA);
                 }
             }

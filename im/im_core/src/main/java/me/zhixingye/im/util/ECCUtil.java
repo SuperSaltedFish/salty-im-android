@@ -43,7 +43,7 @@ import javax.security.auth.x500.X500Principal;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import me.zhixingye.im.service.LogService;
+import me.zhixingye.im.tool.Logger;
 
 
 /**
@@ -76,7 +76,7 @@ public class ECCUtil {
             keyPairGenerator.initialize(new ECGenParameterSpec(ellipticCurve));
             return keyPairGenerator.genKeyPair();
         } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException | NoSuchProviderException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             return null;
         }
     }
@@ -86,7 +86,7 @@ public class ECCUtil {
             sKeyStore = KeyStore.getInstance(PROVIDER_ANDROID_KEY_STORE);
             sKeyStore.load(null);
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             sKeyStore = null;
             return false;
         }
@@ -107,7 +107,7 @@ public class ECCUtil {
                 return new KeyPair(mCertificate.getPublicKey(), privateKey);
             }
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return generateECCKeyPairApi23(keyAlias, ellipticCurve);
@@ -138,7 +138,7 @@ public class ECCUtil {
             keyPairGenerator.initialize(spec);
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -159,7 +159,7 @@ public class ECCUtil {
             keyPairGenerator.initialize(spec);
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -187,7 +187,7 @@ public class ECCUtil {
             X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey);
             return kf.generatePublic(x509KeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -206,7 +206,7 @@ public class ECCUtil {
             }
             return kf.generatePrivate(pkcs8KeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -221,7 +221,7 @@ public class ECCUtil {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey, publicKey.getParams());
             return cipher.doFinal(data);
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -237,7 +237,7 @@ public class ECCUtil {
             cipher.init(Cipher.ENCRYPT_MODE, privateKey, ((ECKey) privateKey).getParams());
             return cipher.doFinal(data);
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -253,7 +253,7 @@ public class ECCUtil {
             cipher.init(Cipher.DECRYPT_MODE, publicKey, publicKey.getParams());
             return cipher.doFinal(data);
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -269,7 +269,7 @@ public class ECCUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey, ((ECKey) privateKey).getParams());
             return cipher.doFinal(data);
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -290,7 +290,7 @@ public class ECCUtil {
             signature.initSign(privateKey);
             return signature;
         } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -311,7 +311,7 @@ public class ECCUtil {
             signature.initVerify(publicKey);
             return signature;
         } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -325,7 +325,7 @@ public class ECCUtil {
             signature.update(data);
             return signature.sign();
         } catch (SignatureException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -338,7 +338,7 @@ public class ECCUtil {
             signature.update(data);
             return signature.verify(sign);
         } catch (SignatureException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return false;
     }

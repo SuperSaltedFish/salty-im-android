@@ -15,6 +15,7 @@ public class SMSService extends BasicService {
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
     public SMSService() {
+        super();
         mSMSServiceStub = SMSServiceGrpc.newStub(getChannel());
     }
 

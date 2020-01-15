@@ -39,7 +39,7 @@ import javax.security.auth.x500.X500Principal;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import me.zhixingye.im.service.LogService;
+import me.zhixingye.im.tool.Logger;
 
 
 /**
@@ -66,7 +66,7 @@ public class RSAUtil {
             keyPairGenerator.initialize(DEFAULT_KEY_SIZE);
             return keyPairGenerator.genKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class RSAUtil {
                 return new KeyPair(mCertificate.getPublicKey(), privateKey);
             }
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return generateRSAKeyPairInAndroidKeyStoreApi23(keyAlias, keySize);
@@ -123,7 +123,7 @@ public class RSAUtil {
             keyPairGenerator.initialize(spec);
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -143,7 +143,7 @@ public class RSAUtil {
             keyPairGenerator.initialize(spec);
             return keyPairGenerator.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -162,7 +162,7 @@ public class RSAUtil {
             KeyFactory kf = KeyFactory.getInstance(RSA);
             return encryptByPublicKey(data, kf.generatePublic(new X509EncodedKeySpec(publicKey)), keySize);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -182,7 +182,7 @@ public class RSAUtil {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return analysis(cipher, data, getMaxEncryptLength(keySize), getDataLengthAfterEncryption(keySize));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | ShortBufferException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -201,7 +201,7 @@ public class RSAUtil {
             KeyFactory kf = KeyFactory.getInstance(RSA);
             return encryptByPrivateKey(data, kf.generatePrivate(new PKCS8EncodedKeySpec(privateKey)), keySize);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -223,7 +223,7 @@ public class RSAUtil {
 
             return analysis(cipher, data, getMaxEncryptLength(keySize), getDataLengthAfterEncryption(keySize));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | ShortBufferException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -242,7 +242,7 @@ public class RSAUtil {
             KeyFactory kf = KeyFactory.getInstance(RSA);
             return decryptByPublicKey(data, kf.generatePublic(new X509EncodedKeySpec(publicKey)), keySize);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -262,7 +262,7 @@ public class RSAUtil {
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
             return analysis(cipher, data, getMaxDecryptLength(keySize), getMaxDecryptLength(keySize));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | ShortBufferException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -281,7 +281,7 @@ public class RSAUtil {
             KeyFactory kf = KeyFactory.getInstance(RSA);
             return decryptByPrivateKey(data, kf.generatePrivate(new PKCS8EncodedKeySpec(privateKey)), keySize);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -301,7 +301,7 @@ public class RSAUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return analysis(cipher, data, getMaxDecryptLength(keySize), getMaxDecryptLength(keySize));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException | ShortBufferException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
         }
         return null;
     }
@@ -312,7 +312,7 @@ public class RSAUtil {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKey);
             return keyFactory.generatePublic(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             return null;
         }
     }
@@ -324,7 +324,7 @@ public class RSAUtil {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKey);
             return keyFactory.generatePrivate(keySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             return null;
         }
     }
@@ -334,7 +334,7 @@ public class RSAUtil {
             sKeyStore = KeyStore.getInstance(PROVIDER);
             sKeyStore.load(null);
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            LogService.getLogger().d(TAG, e.toString(), e);
+            Logger.d(TAG, e.toString(), e);
             sKeyStore = null;
             return false;
         }

@@ -36,5 +36,11 @@ public class ErrorCode {
         return ((ErrorCode) obj).code == this.code;
     }
 
-
+    @Override
+    public String toString() {
+        return "ErrorCode{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.tool;
 
 import android.util.Log;
 
@@ -6,18 +6,66 @@ import android.util.Log;
  * Created by zhixingye on 2020年01月13日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class LogService {
+public class Logger {
 
     private static LogInterface sLogger;
 
     private static final LogInterface DEFAULT_LOGGER = new AndroidLogImpl();
 
-    public static LogInterface getLogger() {
+    private static LogInterface getLogger() {
         return sLogger == null ? DEFAULT_LOGGER : sLogger;
     }
 
     public static void setLogger(LogInterface logger) {
-        LogService.sLogger = logger;
+        Logger.sLogger = logger;
+    }
+
+    public static void v(String tag, String msg) {
+        getLogger().v(tag, msg);
+    }
+
+    public static void v(String tag, String msg, Throwable tr) {
+        getLogger().v(tag, msg, tr);
+    }
+
+    public static void d(String tag, String msg) {
+        getLogger().d(tag, msg);
+    }
+
+    public static void d(String tag, String msg, Throwable tr) {
+        getLogger().d(tag, msg, tr);
+    }
+
+    public static void i(String tag, String msg) {
+        getLogger().i(tag, msg);
+    }
+
+    public static void i(String tag, String msg, Throwable tr) {
+        getLogger().i(tag, msg, tr);
+    }
+
+    public static void w(String tag, String msg) {
+        getLogger().w(tag, msg);
+    }
+
+    public static void w(String tag, String msg, Throwable tr) {
+        getLogger().w(tag, msg, tr);
+    }
+
+    public static void e(String tag, String msg) {
+        getLogger().e(tag, msg);
+    }
+
+    public static void e(String tag, String msg, Throwable tr) {
+        getLogger().e(tag, msg, tr);
+    }
+
+    public static void wtf(String tag, String msg) {
+        getLogger().wtf(tag, msg);
+    }
+
+    public static void wtf(String tag, String msg, Throwable tr) {
+        getLogger().wtf(tag, msg, tr);
     }
 
     public interface LogInterface {

@@ -3,7 +3,7 @@ package me.zhixingye.im.service;
 import com.google.protobuf.MessageLite;
 
 import io.grpc.ManagedChannel;
-import io.grpc.okhttp.OkHttpChannelBuilder;
+import io.grpc.android.AndroidChannelBuilder;
 
 /**
  * Created by zhixingye on 2020年01月10日.
@@ -14,7 +14,7 @@ public class NetworkService {
     private static NetworkService sService;
 
     public synchronized static void init(String ip, int port) {
-        if (sService == null) {
+        if (sService != null) {
             throw new RuntimeException("NetworkService 已经初始化");
         }
         sService = new NetworkService(ip, port);
@@ -28,7 +28,7 @@ public class NetworkService {
     private ManagedChannel mChannel;
 
     public NetworkService(String ip, int port) {
-        mChannel = OkHttpChannelBuilder.forAddress(ip, port)
+        mChannel = AndroidChannelBuilder.forAddress(ip, port)
                 .usePlaintext()
                 .build();
     }

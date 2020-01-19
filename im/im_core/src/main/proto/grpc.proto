@@ -23,4 +23,3 @@ service SMSService {
     rpc ObtainSMSCode (GrpcReq) returns (GrpcResp) {
     }
 }
-

@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package com.salty.protos;
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
 option java_multiple_files = true;
@@ -47,7 +46,7 @@ message UserProfile {
     string avatar = 6;
     string description = 7;
     Sex sex = 8;
-    google.protobuf.Timestamp birthday = 9;
+    int64 birthday = 9;
     string location = 10;
 
     enum Sex {
@@ -73,6 +72,23 @@ message RegisterResp {
     UserProfile profile = 1;
 }
 
+message LoginReq {
+    LoginType loginType = 1;
+    oneof targetAccount {
+        string telephone = 2;
+        string email = 3;
+    }
+    string password = 4;
+    string verificationCode = 5;
+    enum LoginType {
+        TELEPHONE = 0;
+        EMAIL = 1;
+    }
+}
+
+message LoginResp {
+    UserProfile profile = 1;
+}
 
 message SMSReq {
     CodeType codeType = 1;
@@ -87,5 +103,7 @@ message SMSReq {
 }
 
 message SMSResp {
+}
 
+message EmptyResp {
 }

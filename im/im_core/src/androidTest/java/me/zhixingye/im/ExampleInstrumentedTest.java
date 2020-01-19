@@ -1,8 +1,6 @@
 package me.zhixingye.im;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.google.protobuf.MessageLite;
@@ -15,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -23,6 +20,8 @@ import me.zhixingye.im.constant.ErrorCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -35,8 +34,9 @@ public class ExampleInstrumentedTest {
 
     private static final String TAG = "ExampleInstrumentedTest";
 
-    private static CountDownLatch sLatch = new CountDownLatch(1);
     private static boolean isContinue = true;
+    private volatile static boolean isLock = false;
+    private static final Object sLock = new Object();
 
     @Test
     public void useAppContext() {
@@ -49,115 +49,110 @@ public class ExampleInstrumentedTest {
 
 
     private void startTest() {
-        Random random = new Random();
-        StringBuilder builder = new StringBuilder("1");
-        for (int i = 0; i < 10; i++) {
-            builder.append(random.nextInt(10));
-        }
-        sAccount = builder.toString();
-
 
         testSMSReq();
         testRegisterReq();
         testLoginReq();
+
+        while (isLock) {
+            synchronized (sLock) {
+                try {
+                    sLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
-    private static String sAccount;
+    private static String mAccount;
 
     private void testSMSReq() {
-        Random random = new Random();
+        Random random = new Random(System.currentTimeMillis());
         StringBuilder builder = new StringBuilder("1");
         for (int i = 0; i < 10; i++) {
             builder.append(random.nextInt(10));
         }
-        sAccount = builder.toString();
+        mAccount = builder.toString();
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
-                sAccount,
+                mAccount,
                 SMSReq.CodeType.REGISTER,
-                new LockRequestCallback<>(new SimpleRequestCallback<SMSResp>() {
+                new LockRequestCallback<SMSResp>() {
                     @Override
-                    public void onCompleted(SMSResp response) {
+                    public void onSuccessful(SMSResp resp) {
 
                     }
-                }));
+                });
     }
 
-    private String sPassword;
+    private String mPassword;
 
     private void testRegisterReq() {
-        sPassword = "yezhixing123";
+        mPassword = "yezhixing123";
         IMClient.get().getUserService().registerByTelephone(
-                sAccount,
-                sPassword,
+                mAccount,
+                mPassword,
                 "123456",
-                new LockRequestCallback<>(new SimpleRequestCallback<RegisterResp>() {
+                new LockRequestCallback<RegisterResp>() {
                     @Override
-                    public void onCompleted(RegisterResp response) {
+                    public void onSuccessful(RegisterResp resp) {
 
                     }
-                }));
+                });
     }
 
     private void testLoginReq() {
         IMClient.get().getUserService().loginByTelephone(
-                sAccount,
-                sPassword,
+                mAccount,
+                mPassword,
                 "",
-                new LockRequestCallback<LoginResp>(new SimpleRequestCallback<LoginResp>() {
+                new LockRequestCallback<LoginResp>() {
                     @Override
-                    public void onCompleted(LoginResp response) {
-
+                    public void onSuccessful(LoginResp resp) {
+                        assertTrue(resp.hasProfile());
+                        assertNotNull(resp.getProfile().getUserID());
+                        assertEquals(resp.getProfile().getTelephone(), mAccount);
                     }
-                }));
+                });
     }
 
-    private static class LockRequestCallback<T extends MessageLite> implements RequestCallback<T> {
+    private static abstract class LockRequestCallback<T extends MessageLite> implements RequestCallback<T> {
 
-        private static Handler mHandler = new Handler(Looper.getMainLooper());
+        public abstract void onSuccessful(T resp);
 
-        private RequestCallback<T> mCallback;
-
-        LockRequestCallback(RequestCallback<T> callback) {
-            assertTrue(isContinue);
-            mCallback = callback;
-            sLatch = new CountDownLatch(1);
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
+        LockRequestCallback() {
+            while (isLock) {
+                synchronized (sLock) {
                     try {
-                        sLatch.await();
+                        sLock.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            }
+            assertTrue(isContinue);
+            isLock = true;
         }
 
         @Override
         public void onCompleted(T response) {
             Logger.e(TAG, response.toString());
-            if (mCallback != null) {
-                mCallback.onCompleted(response);
+            onSuccessful(response);
+            synchronized (sLock) {
+                isLock = false;
+                sLock.notify();
             }
-            sLatch.countDown();
         }
 
         @Override
         public void onFailure(ErrorCode code) {
             Logger.e(TAG, code.toString());
             isContinue = false;
-            if (mCallback != null) {
-                mCallback.onFailure(code);
+            synchronized (sLock) {
+                isLock = false;
+                sLock.notify();
             }
-            sLatch.countDown();
-
         }
     }
 
-    private static abstract class SimpleRequestCallback<T extends MessageLite> implements RequestCallback<T> {
-        @Override
-        public void onFailure(ErrorCode code) {
-
-        }
-    }
 }

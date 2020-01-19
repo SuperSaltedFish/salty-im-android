@@ -194,7 +194,7 @@ public class Logger {
         }
 
         private String[] generateStackInfo() {
-            StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[4];
+            StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[6];
             String className = stackTraceElement.getClassName();
             className = className.substring(className.lastIndexOf('.') + 1);
             return new String[]{

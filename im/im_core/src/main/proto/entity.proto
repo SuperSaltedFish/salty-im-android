@@ -76,7 +76,8 @@ message LoginReq {
 }
 
 message LoginResp {
-    UserProfile profile = 1;
+    string token = 1;
+    UserProfile profile = 2;
 }
 
 message SMSReq {

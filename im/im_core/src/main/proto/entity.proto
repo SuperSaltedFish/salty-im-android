@@ -57,15 +57,9 @@ message UserProfile {
 }
 
 message RegisterReq {
-    RegisterType registerType = 1;
-    string password = 2;
-    string verificationCode = 3;
-    UserProfile userProfile = 4;
-
-    enum RegisterType {
-        TELEPHONE = 0;
-        EMAIL = 1;
-    }
+    string password = 1;
+    string verificationCode = 2;
+    UserProfile profile = 3;
 }
 
 message RegisterResp {
@@ -73,16 +67,11 @@ message RegisterResp {
 }
 
 message LoginReq {
-    LoginType loginType = 1;
+    string password = 1;
+    string verificationCode = 2;
     oneof targetAccount {
-        string telephone = 2;
-        string email = 3;
-    }
-    string password = 4;
-    string verificationCode = 5;
-    enum LoginType {
-        TELEPHONE = 0;
-        EMAIL = 1;
+        string telephone = 3;
+        string email = 4;
     }
 }
 

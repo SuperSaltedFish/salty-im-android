@@ -32,11 +32,11 @@ public class UserService extends BasicService {
                 .build();
 
         RegisterReq req = RegisterReq.newBuilder()
-                .setUserProfile(profile)
+                .setProfile(profile)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
                 .setVerificationCode(verificationCode)
-                .setRegisterType(RegisterReq.RegisterType.TELEPHONE)
                 .build();
+
 
         mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
@@ -44,7 +44,6 @@ public class UserService extends BasicService {
     public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
         LoginReq req = LoginReq.newBuilder()
                 .setTelephone(telephone)
-                .setLoginType(LoginReq.LoginType.TELEPHONE)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
                 .setVerificationCode(verificationCode)
                 .build();

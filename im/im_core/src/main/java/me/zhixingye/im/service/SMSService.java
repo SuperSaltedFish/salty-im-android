@@ -1,7 +1,7 @@
 package me.zhixingye.im.service;
 
-import com.salty.protos.SMSReq;
-import com.salty.protos.SMSResp;
+import com.salty.protos.ObtainSMSCodeReq;
+import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.SMSServiceGrpc;
 
 import me.zhixingye.im.listener.RequestCallback;
@@ -19,19 +19,11 @@ public class SMSService extends BasicService {
         mSMSServiceStub = SMSServiceGrpc.newStub(getChannel());
     }
 
-    public void obtainVerificationCodeForTelephoneType(String telephone, SMSReq.CodeType type, RequestCallback<SMSResp> callback) {
-        SMSReq smsReq = SMSReq.newBuilder()
+    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
+        ObtainSMSCodeReq smsReq = ObtainSMSCodeReq.newBuilder()
                 .setTelephone(telephone)
                 .setCodeType(type)
                 .build();
-        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(SMSResp.getDefaultInstance(), callback));
-    }
-
-    public void obtainVerificationCodeForMailType(String email, SMSReq.CodeType type, RequestCallback<SMSResp> callback) {
-        SMSReq smsReq = SMSReq.newBuilder()
-                .setEmail(email)
-                .setCodeType(type)
-                .build();
-        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(SMSResp.getDefaultInstance(), callback));
+        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), callback));
     }
 }

@@ -81,7 +81,7 @@ public class ExampleInstrumentedTest {
                     @Override
                     public void onSuccessful(SMSResp resp) {
 
-                        
+
                     }
                 });
     }

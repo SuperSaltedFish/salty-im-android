@@ -35,7 +35,7 @@ class BasicService {
                 .build();
 
         return GrpcReq.newBuilder()
-                .setDeviceID(IMClient.get().getDeviceID())
+                .setDeviceId(IMClient.get().getDeviceID())
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
                 .setVersion(IMClient.get().getAppVersion())

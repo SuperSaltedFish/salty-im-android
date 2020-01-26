@@ -8,7 +8,7 @@ option java_multiple_files = true;
 
 // Basic Request
 message GrpcReq {
-    string deviceID = 1;
+    string deviceId = 1;
     string version = 2;
     Language language = 3;
     OS os = 4;
@@ -38,16 +38,15 @@ message GrpcResp {
 }
 
 message UserProfile {
-    string userID = 1;
+    string userId = 1;
     string telephone = 2;
     string email = 3;
-    string username = 4;
-    string nickname = 5;
-    string avatar = 6;
-    string description = 7;
-    Sex sex = 8;
-    int64 birthday = 9;
-    string location = 10;
+    string nickname = 4;
+    string avatar = 5;
+    string description = 6;
+    Sex sex = 7;
+    int64 birthday = 8;
+    string location = 9;
 
     enum Sex {
         NOT_SET = 0;
@@ -56,43 +55,26 @@ message UserProfile {
     }
 }
 
-message RegisterReq {
-    string password = 1;
-    string verificationCode = 2;
-    UserProfile profile = 3;
-}
-
-message RegisterResp {
+message contactProfile {
     UserProfile profile = 1;
+    ContactRemark remarkInfo = 2;
 }
 
-message LoginReq {
-    string password = 1;
-    string verificationCode = 2;
-    oneof targetAccount {
-        string telephone = 3;
-        string email = 4;
-    }
+message GroupProfile {
+    string groupId = 1;
+    string name = 2;
+    int64 createTime = 3;
+    string ownerUserId = 4; //群组的UserId
+    string avatar = 5; //群头像
+    string notice = 6; //群公告
+    repeated contactProfile members = 7; //群成员，所有人，包含自己
 }
 
-message LoginResp {
-    string token = 1;
-    UserProfile profile = 2;
-}
-
-message SMSReq {
-    CodeType codeType = 1;
-    oneof targetAccount {
-        string telephone = 2;
-        string email = 3;
-    }
-    enum CodeType {
-        REGISTER = 0;
-        LOGIN = 1;
-    }
-}
-
-message SMSResp {
+message ContactRemark {
+    string remarkName = 1;
+    string description = 2;
+    repeated string telephones = 3;
+    repeated string tags = 4;
 }
 
 message EmptyResp {

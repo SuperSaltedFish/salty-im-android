@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package com.salty.protos;
+
+import "entity.proto";
+
+option java_multiple_files = true;
+
+/* [USER] */
+// user service
+service UserService {
+    //注册，单纯的注册接口，注册后不会自动登录
+    rpc Register (GrpcReq) returns (GrpcResp) {
+    }
+
+    //登录
+    rpc Login (GrpcReq) returns (GrpcResp) {
+    }
+
+    //更新用户信息，目前不包含头像,更新头像的接口另外定义
+    rpc UpdateUserInfo (GrpcReq) returns (GrpcResp) {
+
+    }
+
+    //重置/找回密码，包含已登录和未登录状态下的重置/找回密码
+    rpc ResetPassword (GrpcReq) returns (GrpcResp) {
+    }
+
+    //通过UserId获取用户信息,包括获取自己或者别人
+    rpc GetUserInfo (GrpcReq) returns (GrpcResp) {
+    }
+
+    //通过账号获取用户信息,包括获取自己或者别人
+    rpc QueryUserInfo (GrpcReq) returns (GrpcResp) {
+    }
+}
+
+message RegisterReq {
+    string password = 1;
+    string verificationCode = 2;
+    UserProfile profile = 3;
+}
+
+message RegisterResp {
+    UserProfile profile = 1;
+}
+
+message LoginReq {
+    string password = 1;
+    string verificationCode = 2;
+    oneof targetAccount {
+        string telephone = 3;
+        string email = 4;
+    }
+}
+
+message LoginResp {
+    string token = 1;
+    UserProfile profile = 2;
+}
+
+message ResetPasswordReq {
+    string oldPassword = 1;
+    string newPassword = 2;
+    string verificationCode = 3;
+    oneof targetAccount {
+        string telephone = 4;
+        string email = 5;
+    }
+}
+
+message ResetPasswordResp {
+    //是否需要重新登录，有的场景下重置完密码后需要重新登录，先保留这个字段
+    bool isNeedReLogin = 1;
+}
+
+message UpdateUserInfoReq {
+    UserProfile profile = 1;
+}
+
+message UpdateUserInfoResp {
+
+}
+
+message GetUserInfoReq {
+    string userId = 1;
+}
+
+message GetUserInfoResp {
+    UserProfile profile = 1;
+}
+
+message QueryUserInfoReq {
+    oneof targetAccount {
+        string telephone = 1;
+        string email = 2;
+    }
+}
+
+message QueryUserInfoResp {
+    UserProfile profile = 1;
+}

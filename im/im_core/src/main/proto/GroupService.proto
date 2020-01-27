@@ -9,7 +9,7 @@ option java_multiple_files = true;
 
 service GroupService {
     //创建群组
-    rpc createGroup (GrpcReq) returns (GrpcResp) {
+    rpc CreateGroup (GrpcReq) returns (GrpcResp) {
     }
 
     //加入群组
@@ -42,12 +42,12 @@ service GroupService {
 }
 
 
-message createGroupReq {
+message CreateGroupReq {
     string groupName = 1;
-    repeated string userId = 2; //成员的userId列表，可以包含自己也可以不包含
+    repeated string memberUserIdArr = 2; //成员的userId列表，可以包含自己也可以不包含
 }
 
-message createGroupResp {
+message CreateGroupResp {
     GroupProfile profile = 1;
 }
 
@@ -70,7 +70,7 @@ message QuitGroupResp {
 
 message AddGroupMemberReq {
     string groupId = 1;
-    repeated string userId = 2; //成员的userId列表
+    repeated string memberUserIdArr = 2; //成员的userId列表
 }
 
 message AddGroupMemberResp {
@@ -79,7 +79,7 @@ message AddGroupMemberResp {
 
 message KickGroupMemberReq {
     string groupId = 1;
-    string userId = 2;
+    string memberUserId = 2;
 }
 
 message KickGroupMemberResp {

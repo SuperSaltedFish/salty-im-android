@@ -8,7 +8,7 @@ option java_multiple_files = true;
 
 /* [USER] */
 // user service
-service ContractService {
+service ContactService {
     //请求添加好友
     rpc RequestContact (GrpcReq) returns (GrpcResp) {
     }

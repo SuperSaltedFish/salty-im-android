@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package com.salty.protos;
+
+import "entity.proto";
+
+option java_multiple_files = true;
+
+/* [USER] */
+// user service
+service ConversationService {
+    //获取所有会话
+    rpc GetAllConversation (GrpcReq) returns (GrpcResp) {
+    }
+
+    //获取某一个会话
+    rpc GetConversationDetail (GrpcReq) returns (GrpcResp) {
+    }
+
+    //更新会话信息，比如标题，是否置顶，免打扰等
+    rpc UpdateConversationInfo (GrpcReq) returns (GrpcResp) {
+    }
+
+    //删除会话
+    rpc RemoveConversation (GrpcReq) returns (GrpcResp) {
+    }
+
+    //清空会话消息(清空该会话的聊天记录)
+    rpc ClearConversationMessage (GrpcReq) returns (GrpcResp) {
+    }
+}
+
+message GetAllConversationReq {
+
+}
+
+message GetAllConversationResp {
+    repeated Conversation conversationArr = 1;
+}
+
+message GetConversationDetailReq {
+    string conversationId = 1;
+}
+
+message GetConversationDetailResp {
+    Conversation conversation = 1;
+}
+
+message UpdateConversationInfoReq {
+    Conversation conversation = 1;
+}
+
+message UpdateConversationInfoResp {
+    Conversation conversation = 1;
+}
+
+message RemoveConversationReq {
+    string conversationId = 1;
+}
+
+message RemoveConversationResp {
+
+}
+
+message ClearConversationMessageReq {
+    string conversationId = 1;
+}
+
+message ClearConversationMessageResp {
+    Conversation conversation = 1;
+}

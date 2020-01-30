@@ -55,8 +55,8 @@ message UserProfile {
     }
 }
 
-message contactProfile {
-    UserProfile profile = 1;
+message ContactProfile {
+    UserProfile userProfile = 1;
     ContactRemark remarkInfo = 2;
 }
 
@@ -74,7 +74,20 @@ message GroupProfile {
     string ownerUserId = 4; //群组的UserId
     string avatar = 5; //群头像
     string notice = 6; //群公告
-    repeated contactProfile members = 7; //群成员，所有人，包含自己
+    repeated GroupMemberProfile members = 7; //群成员，所有人，包含自己
+}
+
+message GroupMemberProfile {
+    string groupId = 1;
+    string alias = 2;
+    GroupRole role = 3;
+    int64 joinTime = 4;
+    UserProfile userProfile = 5;
+
+    enum GroupRole {
+        NONE = 0;
+        ADMINISTRATOR = 1;
+    }
 }
 
 message Conversation {

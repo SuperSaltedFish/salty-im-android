@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.salty.protos.UserProfile;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import me.zhixingye.im.service.SQLiteService;
+
 /**
  * Created by YZX on 2017年11月17日.
  * 每一个不曾起舞的日子 都是对生命的辜负
@@ -41,22 +45,30 @@ public class UserDao extends AbstractDao<UserProfile> {
                     + "PRIMARY KEY (" + COLUMN_NAME_UserId + ")"
                     + ")";
 
-    public UserDao(ReadWriteHelper helper) {
+    public UserDao(SQLiteService.ReadWriteHelper helper) {
         super(helper);
     }
 
+    @NonNull
     @Override
     protected String getTableName() {
         return TABLE_NAME;
     }
 
+    @Nullable
     @Override
-    protected String getWhereClauseOfKey() {
-        return COLUMN_NAME_UserId + "=?";
+    protected String getViewTableView() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    protected String getPrimaryKeySelection() {
+        return COLUMN_NAME_UserId + " = ?";
     }
 
     @Override
-    protected String[] toWhereArgsOfKey(UserProfile entity) {
+    protected String[] getPrimaryKeySelectionArgs(UserProfile entity) {
         return new String[]{entity.getUserId()};
     }
 

@@ -2,14 +2,17 @@ package me.zhixingye.im.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.salty.protos.GroupMemberProfile;
+import com.salty.protos.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import me.zhixingye.im.service.SQLiteService;
 
 /**
  * Created by YZX on 2018年03月08日.
@@ -19,7 +22,7 @@ import androidx.annotation.NonNull;
 public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
 
     private static final String TABLE_NAME = "GroupMember";
-    private static final String VIEW_NAME = "GroupMemberView";
+    private static final String VIEW_TABLE_NAME = "GroupMemberView";
 
     private static final String COLUMN_NAME_GroupId = GroupDao.COLUMN_NAME_GroupId;
     private static final String COLUMN_NAME_UserId = UserDao.COLUMN_NAME_UserId;
@@ -36,41 +39,101 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
                     + ")";
 
     public static final String CREATE_VIEW_SQL =
-            "CREATE VIEW " + VIEW_NAME
+            "CREATE VIEW " + VIEW_TABLE_NAME
                     + " AS "
                     + "SELECT * FROM " + TABLE_NAME + " INNER JOIN " + UserDao.TABLE_NAME
                     + " USING(" + UserDao.COLUMN_NAME_UserId + ")";
 
+    private UserDao mUserDao;
 
-    public GroupMemberDao(ReadWriteHelper readWriteHelper) {
+    public GroupMemberDao(SQLiteService.ReadWriteHelper readWriteHelper) {
         super(readWriteHelper);
+        mUserDao = new UserDao(readWriteHelper);
     }
 
     @NonNull
     public List<GroupMemberProfile> loadAllByGroupId(String groupId) {
-        SQLiteDatabase database = mReadWriteHelper.openReadableDatabase();
-        Cursor cursor = database.query(getTableName(), null, COLUMN_NAME_GroupId + " = ?", new String[]{groupId}, null, null, null);
-        List<GroupMemberProfile> list = new ArrayList<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            list.add(toEntity(cursor));
+        if (!TextUtils.isEmpty(groupId)) {
+            try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
+                Cursor cursor = database.query(getViewTableNameIfHas(), null, COLUMN_NAME_GroupId + " = ?", new String[]{groupId}, null, null, null, null);
+                List<GroupMemberProfile> list = new ArrayList<>(cursor.getCount());
+                while (cursor.moveToNext()) {
+                    list.add(toEntity(cursor));
+                }
+                cursor.close();
+                return list;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        cursor.close();
-        mReadWriteHelper.closeReadableDatabase();
-        return list;
+        return new ArrayList<>(0);
     }
 
+    @Override
+    protected boolean insertToDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.insertToDatabase(entity, database, values) && mUserDao.replaceFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    @Override
+    protected boolean replaceFromDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.replaceFromDatabase(entity, database, values) && mUserDao.replaceFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    @Override
+    protected boolean updateFromDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.updateFromDatabase(entity, database, values) && mUserDao.updateFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    @NonNull
     @Override
     protected String getTableName() {
-        return VIEW_NAME;
+        return TABLE_NAME;
+    }
+
+    @Nullable
+    @Override
+    protected String getViewTableView() {
+        return VIEW_TABLE_NAME;
+    }
+
+    @NonNull
+    @Override
+    protected String getPrimaryKeySelection() {
+        return COLUMN_NAME_GroupId + " = ? AND " + COLUMN_NAME_UserId + " = ?";
     }
 
     @Override
-    protected String getWhereClauseOfKey() {
-        return COLUMN_NAME_GroupId + "=? AND " + COLUMN_NAME_UserId + "=?";
-    }
-
-    @Override
-    protected String[] toWhereArgsOfKey(GroupMemberProfile entity) {
+    protected String[] getPrimaryKeySelectionArgs(GroupMemberProfile entity) {
         return new String[]{entity.getGroupId(), entity.getUserProfile().getUserId()};
     }
 

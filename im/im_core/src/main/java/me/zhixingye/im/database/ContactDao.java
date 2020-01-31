@@ -2,7 +2,6 @@ package me.zhixingye.im.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.salty.protos.ContactProfile;
@@ -11,13 +10,11 @@ import com.salty.protos.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import me.zhixingye.im.bean.ContactTag;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import me.zhixingye.im.service.SQLiteService;
 
 /**
  * Created by YZX on 2017年11月24日.
@@ -28,6 +25,7 @@ import me.zhixingye.im.bean.ContactTag;
 public class ContactDao extends AbstractDao<ContactProfile> {
 
     static final String TABLE_NAME = "Contact";
+    static final String VIEW_TABLE_NAME = "ContactView";
 
     static final String COLUMN_NAME_ContactId = UserDao.COLUMN_NAME_UserId;
     static final String COLUMN_NAME_RemarkName = "RemarkName";
@@ -45,120 +43,90 @@ public class ContactDao extends AbstractDao<ContactProfile> {
                     + "PRIMARY KEY (" + COLUMN_NAME_ContactId + ")"
                     + ")";
 
-    private static final String MULTI_TABLE_SELECT = "SELECT * FROM " + TABLE_NAME + " INNER JOIN " + UserDao.TABLE_NAME + " ON " + TABLE_NAME + "." + COLUMN_NAME_ContactId + "=" + UserDao.TABLE_NAME + "." + UserDao.COLUMN_NAME_UserId;
+    public static final String CREATE_VIEW_SQL =
+            "CREATE VIEW " + VIEW_TABLE_NAME
+                    + " AS "
+                    + "SELECT * FROM " + TABLE_NAME + " INNER JOIN " + UserDao.TABLE_NAME
+                    + " USING(" + UserDao.COLUMN_NAME_UserId + ")";
 
-    public ContactDao(ReadWriteHelper helper) {
+    private UserDao mUserDao;
+
+    public ContactDao(SQLiteService.ReadWriteHelper helper) {
         super(helper);
+        mUserDao = new UserDao(helper);
     }
 
     @Override
-    public ContactProfile loadByKey(String... keyValues) {
-        if (keyValues == null || keyValues.length != 1) {
-            return null;
-        }
-
-        String contactId = keyValues[0];
-        if (TextUtils.isEmpty(contactId)) {
-            return null;
-        }
-
-        SQLiteDatabase database = mReadWriteHelper.openReadableDatabase();
-        Cursor cursor = database.rawQuery(MULTI_TABLE_SELECT + " AND " + TABLE_NAME + "." + COLUMN_NAME_ContactId + "=?", new String[]{contactId});
-        ContactProfile contact = null;
-        if (cursor.moveToFirst()) {
-            contact = toEntity(cursor);
-        }
-        cursor.close();
-        mReadWriteHelper.closeReadableDatabase();
-        return contact;
-    }
-
-
-    public ArrayList<ContactProfile> loadAllContacts() {
-        SQLiteDatabase database = mReadWriteHelper.openReadableDatabase();
-        Cursor cursor = database.rawQuery(MULTI_TABLE_SELECT, null);
-        ArrayList<ContactProfile> contactList = new ArrayList<>(cursor.getCount());
-        while (cursor.moveToNext()) {
-            contactList.add(toEntity(cursor));
-        }
-        cursor.close();
-        mReadWriteHelper.closeReadableDatabase();
-        return contactList;
-    }
-
-    public boolean insertAllContacts(List<ContactProfile> contactList) {
-        if (contactList == null || contactList.size() == 0) {
-            return true;
-        }
-        List<UserProfile> userList = new LinkedList<>();
-        for (ContactProfile contact : contactList) {
-            userList.add(contact.getProfile());
-        }
-        return new UserDao(mReadWriteHelper).replaceAll(userList) && insertAll(contactList);
-    }
-
-    public HashSet<String> getAllTagsType() {
-        SQLiteDatabase database = mReadWriteHelper.openReadableDatabase();
-        Cursor cursor = database.query(true, TABLE_NAME, new String[]{COLUMN_NAME_Tags}, COLUMN_NAME_Tags + " IS NOT NULL", null, null, null, null, null);
-        HashSet<String> tagsSet = new HashSet<>();
-        String tags;
-        while (cursor.moveToNext()) {
-            tags = cursor.getString(0);
-            if (!TextUtils.isEmpty(tags)) {
-                tagsSet.addAll(Arrays.asList(tags.split(";")));
+    protected boolean insertToDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.insertToDatabase(entity, database, values) && mUserDao.replaceFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
             }
+            return false;
+        } finally {
+            database.endTransaction();
         }
-        cursor.close();
-        mReadWriteHelper.closeReadableDatabase();
-        return tagsSet;
     }
 
-    public ArrayList<ContactTag> getAllTagAndMemberCount() {
-        SQLiteDatabase database = mReadWriteHelper.openReadableDatabase();
-        Cursor cursor = database.query(false, TABLE_NAME, new String[]{COLUMN_NAME_Tags}, COLUMN_NAME_Tags + " IS NOT NULL", null, null, null, null, null);
-        HashMap<String, Integer> tagsMap = new HashMap<>(16);
-        String tags;
-        Integer value;
-        while (cursor.moveToNext()) {
-            tags = cursor.getString(0);
-            if (!TextUtils.isEmpty(tags)) {
-                for (String tag : tags.split(";")) {
-                    value = tagsMap.get(tag);
-                    if (value == null) {
-                        tagsMap.put(tag, 1);
-                    } else {
-                        tagsMap.put(tag, value + 1);
-                    }
-                }
+    @Override
+    protected boolean replaceFromDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.replaceFromDatabase(entity, database, values) && mUserDao.replaceFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
             }
+            return false;
+        } finally {
+            database.endTransaction();
         }
-        cursor.close();
-        mReadWriteHelper.closeReadableDatabase();
-        ArrayList<ContactTag> tagList = new ArrayList<>(tagsMap.size());
-        for (Map.Entry<String, Integer> entry : tagsMap.entrySet()) {
-            tagList.add(new ContactTag(entry.getKey(), entry.getValue()));
-        }
-        return tagList;
     }
 
+    @Override
+    protected boolean updateFromDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            UserProfile profile = entity.getUserProfile();
+            if (super.updateFromDatabase(entity, database, values) && mUserDao.updateFromDatabase(profile, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
+    }
+
+    @NonNull
     @Override
     protected String getTableName() {
         return TABLE_NAME;
     }
 
+    @Nullable
     @Override
-    protected String getWhereClauseOfKey() {
-        return COLUMN_NAME_ContactId + "=?";
+    protected String getViewTableView() {
+        return VIEW_TABLE_NAME;
+    }
+
+    @NonNull
+    @Override
+    protected String getPrimaryKeySelection() {
+        return COLUMN_NAME_ContactId + " = ?";
     }
 
     @Override
-    protected String[] toWhereArgsOfKey(ContactProfile entity) {
-        return new String[]{entity.getProfile().getUserId()};
+    protected String[] getPrimaryKeySelectionArgs(ContactProfile entity) {
+        return new String[]{entity.getUserProfile().getUserId()};
     }
 
     @Override
     protected void parseToContentValues(ContactProfile entity, ContentValues values) {
-        values.put(COLUMN_NAME_ContactId, entity.getProfile().getUserId());
+        values.put(COLUMN_NAME_ContactId, entity.getUserProfile().getUserId());
         values.put(COLUMN_NAME_RemarkName, entity.getRemarkInfo().getRemarkName());
         values.put(COLUMN_NAME_Description, entity.getRemarkInfo().getDescription());
         values.put(COLUMN_NAME_Telephones, listToString(entity.getRemarkInfo().getTelephonesList()));
@@ -174,7 +142,7 @@ public class ContactDao extends AbstractDao<ContactProfile> {
                 .addAllTags(stringToList(getString(cursor, COLUMN_NAME_Tags)))
                 .build();
         return ContactProfile.newBuilder()
-                .setProfile(UserDao.toEntityFromCursor(cursor))
+                .setUserProfile(UserDao.toEntityFromCursor(cursor))
                 .setRemarkInfo(remark)
                 .build();
     }

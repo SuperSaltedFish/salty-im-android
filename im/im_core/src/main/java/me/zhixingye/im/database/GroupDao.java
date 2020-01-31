@@ -2,13 +2,15 @@ package me.zhixingye.im.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 
+import com.salty.protos.GroupMemberProfile;
 import com.salty.protos.GroupProfile;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import me.zhixingye.im.service.SQLiteService;
 
 /**
  * Created by YZX on 2018年03月08日.
@@ -38,31 +40,24 @@ public class GroupDao extends AbstractDao<GroupProfile> {
 
     private GroupMemberDao mGroupMemberDao;
 
-    public GroupDao(ReadWriteHelper readWriteHelper) {
+    public GroupDao(SQLiteService.ReadWriteHelper readWriteHelper) {
         super(readWriteHelper);
         mGroupMemberDao = new GroupMemberDao(readWriteHelper);
     }
 
 
     @Override
-    public GroupProfile loadByKey(String... keyValues) {
-        if (keyValues == null || keyValues.length != 1) {
+    public GroupProfile loadBy(GroupProfile entity) {
+        if (isIllegalParameter(entity)) {
             return null;
         }
 
-        String groupId = keyValues[0];
-        if (TextUtils.isEmpty(groupId)) {
-            return null;
+        GroupProfile profile = super.loadBy(entity);
+        if (profile != null) {
+            profile = profile.toBuilder()
+                    .addAllMembers(mGroupMemberDao.loadAllByGroupId(profile.getGroupId()))
+                    .build();
         }
-
-        GroupProfile profile = super.loadByKey(keyValues);
-        if (profile == null) {
-            return null;
-        }
-
-        profile = profile.toBuilder()
-                .addAllMembers(mGroupMemberDao.loadAll())
-                .build();
         return profile;
     }
 
@@ -86,54 +81,85 @@ public class GroupDao extends AbstractDao<GroupProfile> {
     }
 
     @Override
-    public boolean insert(GroupProfile entity) {
-        if (entity == null) {
+    protected boolean insertToDatabase(GroupProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            List<GroupMemberProfile> list = entity.getMembersList();
+            if (super.insertToDatabase(entity, database, values) && mGroupMemberDao.insertAllToDatabase(list, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
             return false;
+        } finally {
+            database.endTransaction();
         }
-        ContentValues values = new ContentValues();
-        parseToContentValues(entity, values);
-        boolean result = mReadWriteHelper.openWritableDatabase().insert(getTableName(), null, values) > 0;
-        mReadWriteHelper.closeWritableDatabase();
-        return super.insert(entity);
     }
 
     @Override
-    public boolean insertAll(Iterable<GroupProfile> entityIterable) {
-        return super.insertAll(entityIterable);
+    protected boolean replaceFromDatabase(GroupProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            List<GroupMemberProfile> list = entity.getMembersList();
+            if (super.replaceFromDatabase(entity, database, values) && mGroupMemberDao.replaceAllFromDatabase(list, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
     }
 
     @Override
-    public boolean update(GroupProfile entity) {
-        return super.update(entity);
+    protected boolean updateFromDatabase(GroupProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        database.beginTransactionNonExclusive();
+        try {
+            List<GroupMemberProfile> list = entity.getMembersList();
+            if (super.updateFromDatabase(entity, database, values) && mGroupMemberDao.updateAllFromDatabase(list, database, values)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
     }
 
     @Override
-    public boolean updateAll(Iterable<GroupProfile> entityIterable) {
-        return super.updateAll(entityIterable);
+    protected boolean deleteFromDatabase(GroupProfile entity, SQLiteService.WritableDatabase database) {
+        database.beginTransactionNonExclusive();
+        try {
+            List<GroupMemberProfile> list = entity.getMembersList();
+            if (super.deleteFromDatabase(entity, database) && mGroupMemberDao.deleteAllFromDatabase(list, database)) {
+                database.setTransactionSuccessful();
+                return true;
+            }
+            return false;
+        } finally {
+            database.endTransaction();
+        }
     }
 
-    @Override
-    public boolean deleteByKey(String... keyValue) {
-        return super.deleteByKey(keyValue);
-    }
-
-    @Override
-    public boolean deleteAll(Iterable<GroupProfile> entityIterable) {
-        return super.deleteAll(entityIterable);
-    }
-
+    @NonNull
     @Override
     protected String getTableName() {
         return TABLE_NAME;
     }
 
+    @Nullable
     @Override
-    protected String getWhereClauseOfKey() {
+    protected String getViewTableView() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    protected String getPrimaryKeySelection() {
         return COLUMN_NAME_GroupId + "=?";
     }
 
     @Override
-    protected String[] toWhereArgsOfKey(GroupProfile entity) {
+    protected String[] getPrimaryKeySelectionArgs(GroupProfile entity) {
         return new String[]{entity.getGroupId()};
     }
 

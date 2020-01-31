@@ -112,12 +112,12 @@ package me.zhixingye.im.database;//package com.yzx.chat.database;
 //    }
 //
 //    @Override
-//    protected String getWhereClauseOfKey() {
+//    protected String getPrimaryKeySelection() {
 //        return COLUMN_NAME_UserId + "=? and " + COLUMN_NAME_ConversationID + "=?";
 //    }
 //
 //    @Override
-//    protected String[] toWhereArgsOfKey(ConversationEntity entity) {
+//    protected String[] getPrimaryKeySelectionArgs(ConversationEntity entity) {
 //        return new String[]{entity.getUserID(), entity.getConversationID()};
 //    }
 //

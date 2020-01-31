@@ -30,9 +30,9 @@ public abstract class AbstractDao<T> {
     protected abstract String getViewTableView();
 
     @NonNull
-    protected abstract String[] getPrimaryKeyColumnsName();
+    protected abstract String getPrimaryKeySelection();
 
-    protected abstract String[] getPrimaryKeyColumnsValue(T entity);
+    protected abstract String[] getPrimaryKeySelectionArgs(T entity);
 
     protected abstract void parseToContentValues(T entity, ContentValues values);
 
@@ -59,17 +59,11 @@ public abstract class AbstractDao<T> {
     }
 
     public T loadBy(T entity) {
-        if (entity == null) {
+        if (isIllegalParameter(entity)) {
             return null;
         }
-
-        String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-        if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-            return null;
-        }
-
         try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
-            Cursor cursor = database.query(getViewTableNameIfHas(), null, generatePrimaryKeySelection(getPrimaryKeyColumnsName()), whereArgsOfKey, null, null, null, null);
+            Cursor cursor = database.query(getViewTableNameIfHas(), null, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity), null, null, null, null);
             T result = null;
             if (cursor.moveToFirst()) {
                 result = toEntity(cursor);
@@ -83,13 +77,8 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean insert(T entity) {
-        if (entity == null) {
-            return false;
-        }
         try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
-            ContentValues values = new ContentValues();
-            parseToContentValues(entity, values);
-            return database.insert(getTableName(), null, values) > 0;
+            return insertToDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,15 +89,14 @@ public abstract class AbstractDao<T> {
         if (entityIterable == null) {
             return false;
         }
+
         try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.beginTransactionNonExclusive();
             boolean isBeInterrupted = false;
             try {
                 ContentValues values = new ContentValues();
                 for (T entity : entityIterable) {
-                    values.clear();
-                    parseToContentValues(entity, values);
-                    if (database.insert(getTableName(), null, values) <= 0) {
+                    if (!insertToDatabase(entity, database, values)) {
                         isBeInterrupted = true;
                         break;
                     }
@@ -127,13 +115,8 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean replace(T entity) {
-        if (entity == null) {
-            return false;
-        }
         try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
-            ContentValues values = new ContentValues();
-            parseToContentValues(entity, values);
-            return database.replace(getTableName(), null, values) > 0;
+            return replaceFromDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,9 +133,7 @@ public abstract class AbstractDao<T> {
             try {
                 ContentValues values = new ContentValues();
                 for (T entity : entityIterable) {
-                    values.clear();
-                    parseToContentValues(entity, values);
-                    if (database.replace(getTableName(), null, values) <= 0) {
+                    if (!replaceFromDatabase(entity, database, values)) {
                         isBeInterrupted = true;
                         break;
                     }
@@ -171,33 +152,13 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean update(T entity) {
-        if (entity == null) {
-            return false;
-        }
-
-        String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-        if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-            return false;
-        }
-
         try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
-            ContentValues values = new ContentValues();
-            parseToContentValues(entity, values);
-            return database.update(getTableName(), values, generatePrimaryKeySelection(getPrimaryKeyColumnsName()), whereArgsOfKey) > 0;
+            return updateFromDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
-    }
 
-    private boolean update(T entity,SQLiteService.WritableDatabase database,ContentValues values,String primaryKeySelection){
-        String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-        if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-            return false;
-        }
-        values.clear();
-        parseToContentValues(entity, values);
-        return database.update(getTableName(), values,primaryKeySelection, whereArgsOfKey) > 0;
+        return false;
     }
 
     public boolean updateAll(Iterable<T> entityIterable) {
@@ -209,16 +170,8 @@ public abstract class AbstractDao<T> {
             boolean isBeInterrupted = false;
             try {
                 ContentValues values = new ContentValues();
-                String primaryKeySelection = generatePrimaryKeySelection(getPrimaryKeyColumnsName());
                 for (T entity : entityIterable) {
-                    String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-                    if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-                        isBeInterrupted = true;
-                        break;
-                    }
-                    values.clear();
-                    parseToContentValues(entity, values);
-                    if (database.update(getTableName(), values, primaryKeySelection, whereArgsOfKey) <= 0) {
+                    if (!updateFromDatabase(entity, database, values)) {
                         isBeInterrupted = true;
                         break;
                     }
@@ -236,18 +189,9 @@ public abstract class AbstractDao<T> {
         return false;
     }
 
-    public boolean deleteBy(T entity) {
-        if (entity == null) {
-            return false;
-        }
-
-        String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-        if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-            return false;
-        }
-
+    public boolean delete(T entity) {
         try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
-            return database.delete(getTableName(), generatePrimaryKeySelection(getPrimaryKeyColumnsName()), whereArgsOfKey) > 0;
+            return deleteFromDatabase(entity, database);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,12 +207,7 @@ public abstract class AbstractDao<T> {
             boolean isBeInterrupted = false;
             try {
                 for (T entity : entityIterable) {
-                    String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
-                    if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
-                        isBeInterrupted = true;
-                        break;
-                    }
-                    if (database.delete(getTableName(), generatePrimaryKeySelection(getPrimaryKeyColumnsName()), whereArgsOfKey) <= 0) {
+                    if (!deleteFromDatabase(entity, database)) {
                         isBeInterrupted = true;
                         break;
                     }
@@ -299,13 +238,13 @@ public abstract class AbstractDao<T> {
             return false;
         }
 
-        String[] whereArgsOfKey = getPrimaryKeyColumnsValue(entity);
+        String[] whereArgsOfKey = getPrimaryKeySelectionArgs(entity);
         if (whereArgsOfKey == null || whereArgsOfKey.length == 0) {
             return false;
         }
 
         try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
-            Cursor cursor = database.query(getViewTableNameIfHas(), null, generatePrimaryKeySelection(getPrimaryKeyColumnsName()), getPrimaryKeyColumnsValue(entity), null, null, null, null);
+            Cursor cursor = database.query(getViewTableNameIfHas(), null, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity), null, null, null, null);
             boolean result = (cursor.getCount() > 0);
             cursor.close();
             return result;
@@ -315,22 +254,106 @@ public abstract class AbstractDao<T> {
         return false;
     }
 
-    private static String generatePrimaryKeySelection(String[] primaryKey) {
-        if (primaryKey == null || primaryKey.length == 0) {
-            throw new RuntimeException("主键字段名字不能为空");
+    protected boolean insertToDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (isIllegalParameter(entity)) {
+            return false;
         }
-        StringBuilder builder = new StringBuilder(primaryKey.length * 18);
-        for (int i = 0, size = primaryKey.length; i < size; i++) {
-            if (i != 0) {
-                builder.append(" AND ");
-            }
-            builder.append(primaryKey[i]);
-            builder.append(" = ?");
-        }
-        return builder.toString();
+        values.clear();
+        parseToContentValues(entity, values);
+        return database.insert(getTableName(), null, values) > 0;
     }
 
-    private String getViewTableNameIfHas() {
+    protected boolean insertAllToDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (entityList == null) {
+            return false;
+        }
+        boolean isBeInterrupted = false;
+        for (T entity : entityList) {
+            if (!insertToDatabase(entity, database, values)) {
+                isBeInterrupted = true;
+                break;
+            }
+        }
+        return !isBeInterrupted;
+    }
+
+    protected boolean replaceFromDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (isIllegalParameter(entity)) {
+            return false;
+        }
+        values.clear();
+        parseToContentValues(entity, values);
+        return database.replace(getTableName(), null, values) > 0;
+    }
+
+    protected boolean replaceAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (entityList == null) {
+            return false;
+        }
+        boolean isBeInterrupted = false;
+        for (T entity : entityList) {
+            if (!replaceFromDatabase(entity, database, values)) {
+                isBeInterrupted = true;
+                break;
+            }
+        }
+        return !isBeInterrupted;
+    }
+
+    protected boolean updateFromDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (isIllegalParameter(entity)) {
+            return false;
+        }
+        values.clear();
+        parseToContentValues(entity, values);
+        return database.update(getTableName(), values, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity)) > 0;
+    }
+
+    protected boolean updateAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+        if (entityList == null) {
+            return false;
+        }
+        boolean isBeInterrupted = false;
+        for (T entity : entityList) {
+            if (!updateFromDatabase(entity, database, values)) {
+                isBeInterrupted = true;
+                break;
+            }
+        }
+        return !isBeInterrupted;
+    }
+
+    protected boolean deleteFromDatabase(T entity, SQLiteService.WritableDatabase database) {
+        if (isIllegalParameter(entity)) {
+            return false;
+        }
+        return database.delete(getTableName(), getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity)) >= 0;
+    }
+
+    protected boolean deleteAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database) {
+        if (entityList == null) {
+            return false;
+        }
+        boolean isBeInterrupted = false;
+        for (T entity : entityList) {
+            if (!deleteFromDatabase(entity, database)) {
+                isBeInterrupted = true;
+                break;
+            }
+        }
+        return !isBeInterrupted;
+    }
+
+    protected boolean isIllegalParameter(T entity) {
+        if (entity == null) {
+            return true;
+        }
+
+        String[] whereArgsOfKey = getPrimaryKeySelectionArgs(entity);
+        return whereArgsOfKey == null || whereArgsOfKey.length == 0;
+    }
+
+    protected String getViewTableNameIfHas() {
         String viewTableName = getViewTableView();
         if (TextUtils.isEmpty(viewTableName)) {
             return getTableName();

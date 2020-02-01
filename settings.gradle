@@ -1,6 +1,6 @@
 rootProject.name='Salty'
 
-include ':app', ':im_core'
+include ':app', ':im_core', ':im_sdk'
 
 include ':im_core'
 project(':im_core').projectDir = file('im/im_core')

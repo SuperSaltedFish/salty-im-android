@@ -9,7 +9,7 @@ import com.salty.protos.GrpcResp;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import me.zhixingye.im.IMClient;
+import me.zhixingye.im.IMCore;
 import me.zhixingye.im.constant.ErrorCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
@@ -35,10 +35,10 @@ class BasicService {
                 .build();
 
         return GrpcReq.newBuilder()
-                .setDeviceId(IMClient.get().getDeviceID())
+                .setDeviceId(IMCore.get().getDeviceID())
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
-                .setVersion(IMClient.get().getAppVersion())
+                .setVersion(IMCore.get().getAppVersion())
                 .setData(data)
                 .build();
     }

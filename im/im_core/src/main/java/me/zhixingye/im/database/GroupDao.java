@@ -155,7 +155,7 @@ public class GroupDao extends AbstractDao<GroupProfile> {
     @NonNull
     @Override
     protected String getPrimaryKeySelection() {
-        return COLUMN_NAME_GroupId + "=?";
+        return COLUMN_NAME_GroupId + " = ?";
     }
 
     @Override

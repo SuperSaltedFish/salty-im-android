@@ -23,6 +23,14 @@ public class ErrorCode {
         this.msg = msg;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
     @Override
     public int hashCode() {
         return ErrorCode.class.hashCode() + code;

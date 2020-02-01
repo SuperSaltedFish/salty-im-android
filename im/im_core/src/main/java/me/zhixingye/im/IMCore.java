@@ -17,25 +17,25 @@ import me.zhixingye.im.tool.Logger;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class IMClient {
+public class IMCore {
 
-    private static final String TAG = "IMClient";
+    private static final String TAG = "IMCore";
 
-    private volatile static IMClient sClient;
+    private volatile static IMCore sClient;
 
     public synchronized static void init(Context context, String serverIP, int serverPort, String appVersion) {
         if (sClient != null) {
-            throw new RuntimeException("IMClient 已经初始化");
+            throw new RuntimeException("IMCore 已经初始化");
         }
         if (context == null) {
             throw new RuntimeException("context == null");
         }
-        sClient = new IMClient(context, serverIP, serverPort, appVersion);
+        sClient = new IMCore(context, serverIP, serverPort, appVersion);
     }
 
-    public static IMClient get() {
+    public static IMCore get() {
         if (sClient == null) {
-            throw new RuntimeException("IMClient 未初始化");
+            throw new RuntimeException("IMCore 未初始化");
         }
         return sClient;
     }
@@ -52,7 +52,7 @@ public class IMClient {
     private SMSService mSMSService;
     private UserService mUserService;
 
-    public IMClient(Context context, String serverIP, int serverPort, String version) {
+    public IMCore(Context context, String serverIP, int serverPort, String version) {
         mAppContext = context.getApplicationContext();
         mAppVersion = version;
         mLanguage = Locale.CHINESE;

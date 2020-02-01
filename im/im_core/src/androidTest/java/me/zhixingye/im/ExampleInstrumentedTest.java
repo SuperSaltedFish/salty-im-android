@@ -41,7 +41,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        IMClient.init(appContext, "111.231.238.209", 9090, "1.0");
+        IMCore.init(appContext, "111.231.238.209", 9090, "1.0");
 
         startTest();
         Log.e(TAG, "测试结束");
@@ -74,7 +74,7 @@ public class ExampleInstrumentedTest {
             builder.append(random.nextInt(10));
         }
         mAccount = builder.toString();
-        IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
+        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 SMSReq.CodeType.REGISTER,
                 new LockRequestCallback<SMSResp>() {
@@ -90,7 +90,7 @@ public class ExampleInstrumentedTest {
 
     private void testRegisterReq() {
         mPassword = "yezhixing123";
-        IMClient.get().getUserService().registerByTelephone(
+        IMCore.get().getUserService().registerByTelephone(
                 mAccount,
                 mPassword,
                 "123456",
@@ -103,7 +103,7 @@ public class ExampleInstrumentedTest {
     }
 
     private void testLoginReq() {
-        IMClient.get().getUserService().loginByTelephone(
+        IMCore.get().getUserService().loginByTelephone(
                 mAccount,
                 mPassword,
                 "",

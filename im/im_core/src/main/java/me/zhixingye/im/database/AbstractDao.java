@@ -9,7 +9,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import me.zhixingye.im.service.SQLiteService;
+import me.zhixingye.im.service.impl.SQLiteServiceImpl;
 
 /**
  * Created by YZX on 2017年11月17日.
@@ -21,7 +21,7 @@ public abstract class AbstractDao<T> {
 
     protected static final String COLUMN_NAME_RowID = "ROWID";
 
-    protected SQLiteService.ReadWriteHelper mReadWriteHelper;
+    protected SQLiteServiceImpl.ReadWriteHelper mReadWriteHelper;
 
     @NonNull
     protected abstract String getTableName();
@@ -38,13 +38,13 @@ public abstract class AbstractDao<T> {
 
     protected abstract T toEntity(Cursor cursor);
 
-    public AbstractDao(SQLiteService.ReadWriteHelper readWriteHelper) {
+    public AbstractDao(SQLiteServiceImpl.ReadWriteHelper readWriteHelper) {
         mReadWriteHelper = readWriteHelper;
     }
 
     @NonNull
     public List<T> loadAll() {
-        try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
+        try (SQLiteServiceImpl.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
             Cursor cursor = database.query(getViewTableNameIfHas(), null, null, null, null, null, null, null);
             List<T> list = new ArrayList<>(cursor.getCount());
             while (cursor.moveToNext()) {
@@ -62,7 +62,7 @@ public abstract class AbstractDao<T> {
         if (isIllegalParameter(entity)) {
             return null;
         }
-        try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
+        try (SQLiteServiceImpl.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
             Cursor cursor = database.query(getViewTableNameIfHas(), null, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity), null, null, null, null);
             T result = null;
             if (cursor.moveToFirst()) {
@@ -77,7 +77,7 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean insert(T entity) {
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             return insertToDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public abstract class AbstractDao<T> {
             return false;
         }
 
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.beginTransactionNonExclusive();
             boolean isBeInterrupted = false;
             try {
@@ -115,7 +115,7 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean replace(T entity) {
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             return replaceFromDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,7 +127,7 @@ public abstract class AbstractDao<T> {
         if (entityIterable == null) {
             return false;
         }
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.beginTransactionNonExclusive();
             boolean isBeInterrupted = false;
             try {
@@ -152,7 +152,7 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean update(T entity) {
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             return updateFromDatabase(entity, database, new ContentValues());
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +165,7 @@ public abstract class AbstractDao<T> {
         if (entityIterable == null) {
             return false;
         }
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.beginTransactionNonExclusive();
             boolean isBeInterrupted = false;
             try {
@@ -190,7 +190,7 @@ public abstract class AbstractDao<T> {
     }
 
     public boolean delete(T entity) {
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             return deleteFromDatabase(entity, database);
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +202,7 @@ public abstract class AbstractDao<T> {
         if (entityIterable == null) {
             return false;
         }
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.beginTransactionNonExclusive();
             boolean isBeInterrupted = false;
             try {
@@ -226,7 +226,7 @@ public abstract class AbstractDao<T> {
     }
 
     public void cleanTable() {
-        try (SQLiteService.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
+        try (SQLiteServiceImpl.WritableDatabase database = mReadWriteHelper.openWritableDatabase()) {
             database.delete(getTableName(), null, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,7 +243,7 @@ public abstract class AbstractDao<T> {
             return false;
         }
 
-        try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
+        try (SQLiteServiceImpl.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
             Cursor cursor = database.query(getViewTableNameIfHas(), null, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity), null, null, null, null);
             boolean result = (cursor.getCount() > 0);
             cursor.close();
@@ -254,7 +254,7 @@ public abstract class AbstractDao<T> {
         return false;
     }
 
-    protected boolean insertToDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean insertToDatabase(T entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (isIllegalParameter(entity)) {
             return false;
         }
@@ -263,7 +263,7 @@ public abstract class AbstractDao<T> {
         return database.insert(getTableName(), null, values) > 0;
     }
 
-    protected boolean insertAllToDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean insertAllToDatabase(List<T> entityList, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (entityList == null) {
             return false;
         }
@@ -277,7 +277,7 @@ public abstract class AbstractDao<T> {
         return !isBeInterrupted;
     }
 
-    protected boolean replaceFromDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean replaceFromDatabase(T entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (isIllegalParameter(entity)) {
             return false;
         }
@@ -286,7 +286,7 @@ public abstract class AbstractDao<T> {
         return database.replace(getTableName(), null, values) > 0;
     }
 
-    protected boolean replaceAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean replaceAllFromDatabase(List<T> entityList, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (entityList == null) {
             return false;
         }
@@ -300,7 +300,7 @@ public abstract class AbstractDao<T> {
         return !isBeInterrupted;
     }
 
-    protected boolean updateFromDatabase(T entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean updateFromDatabase(T entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (isIllegalParameter(entity)) {
             return false;
         }
@@ -309,7 +309,7 @@ public abstract class AbstractDao<T> {
         return database.update(getTableName(), values, getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity)) > 0;
     }
 
-    protected boolean updateAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean updateAllFromDatabase(List<T> entityList, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         if (entityList == null) {
             return false;
         }
@@ -323,14 +323,14 @@ public abstract class AbstractDao<T> {
         return !isBeInterrupted;
     }
 
-    protected boolean deleteFromDatabase(T entity, SQLiteService.WritableDatabase database) {
+    protected boolean deleteFromDatabase(T entity, SQLiteServiceImpl.WritableDatabase database) {
         if (isIllegalParameter(entity)) {
             return false;
         }
         return database.delete(getTableName(), getPrimaryKeySelection(), getPrimaryKeySelectionArgs(entity)) >= 0;
     }
 
-    protected boolean deleteAllFromDatabase(List<T> entityList, SQLiteService.WritableDatabase database) {
+    protected boolean deleteAllFromDatabase(List<T> entityList, SQLiteServiceImpl.WritableDatabase database) {
         if (entityList == null) {
             return false;
         }

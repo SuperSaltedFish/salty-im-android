@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import java.util.Locale;
 import java.util.UUID;
 
-import me.zhixingye.im.service.NetworkService;
-import me.zhixingye.im.service.SMSService;
-import me.zhixingye.im.service.StorageService;
-import me.zhixingye.im.service.UserService;
+import me.zhixingye.im.service.impl.NetworkServiceImpl;
+import me.zhixingye.im.service.impl.SMSServiceImpl;
+import me.zhixingye.im.service.impl.StorageServiceImpl;
+import me.zhixingye.im.service.impl.UserServiceImpl;
 import me.zhixingye.im.tool.Logger;
 
 /**
@@ -48,27 +48,27 @@ public class IMCore {
     private String mAppVersion;
     private Locale mLanguage;
 
-    private StorageService mStorageService;
-    private SMSService mSMSService;
-    private UserService mUserService;
+    private StorageServiceImpl mStorageService;
+    private SMSServiceImpl mSMSService;
+    private UserServiceImpl mUserService;
 
     public IMCore(Context context, String serverIP, int serverPort, String version) {
         mAppContext = context.getApplicationContext();
         mAppVersion = version;
         mLanguage = Locale.CHINESE;
 
-        NetworkService.init(serverIP, serverPort);
+        NetworkServiceImpl.init(serverIP, serverPort);
 
-        mStorageService = new StorageService(mAppContext);
-        mSMSService = new SMSService();
-        mUserService = new UserService();
+        mStorageService = new StorageServiceImpl(mAppContext);
+        mSMSService = new SMSServiceImpl();
+        mUserService = new UserServiceImpl();
     }
 
-    public SMSService getSMSService() {
+    public SMSServiceImpl getSMSService() {
         return mSMSService;
     }
 
-    public UserService getUserService() {
+    public UserServiceImpl getUserService() {
         return mUserService;
     }
 

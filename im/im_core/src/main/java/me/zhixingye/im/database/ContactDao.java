@@ -14,7 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import me.zhixingye.im.service.SQLiteService;
+import me.zhixingye.im.service.impl.SQLiteServiceImpl;
 
 /**
  * Created by YZX on 2017年11月24日.
@@ -51,13 +51,13 @@ public class ContactDao extends AbstractDao<ContactProfile> {
 
     private UserDao mUserDao;
 
-    public ContactDao(SQLiteService.ReadWriteHelper helper) {
+    public ContactDao(SQLiteServiceImpl.ReadWriteHelper helper) {
         super(helper);
         mUserDao = new UserDao(helper);
     }
 
     @Override
-    protected boolean insertToDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean insertToDatabase(ContactProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();
@@ -72,7 +72,7 @@ public class ContactDao extends AbstractDao<ContactProfile> {
     }
 
     @Override
-    protected boolean replaceFromDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean replaceFromDatabase(ContactProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();
@@ -87,7 +87,7 @@ public class ContactDao extends AbstractDao<ContactProfile> {
     }
 
     @Override
-    protected boolean updateFromDatabase(ContactProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
+    protected boolean updateFromDatabase(ContactProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();

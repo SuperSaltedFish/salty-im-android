@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.service.impl;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.GeneratedMessageLite;
@@ -22,7 +22,7 @@ class BasicService {
 
     private static final String TAG = "BasicService";
 
-    private NetworkService mNetworkService = NetworkService.get();
+    private NetworkServiceImpl mNetworkService = NetworkServiceImpl.get();
 
     protected ManagedChannel getChannel() {
         return mNetworkService.getChannel();

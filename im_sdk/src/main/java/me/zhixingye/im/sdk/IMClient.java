@@ -7,6 +7,21 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
+import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
+import me.zhixingye.im.sdk.proxy.GroupServiceProxy;
+import me.zhixingye.im.sdk.proxy.MessageServiceProxy;
+import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
+import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
+import me.zhixingye.im.sdk.proxy.UserServiceProxy;
+import me.zhixingye.im.service.ContactService;
+import me.zhixingye.im.service.ConversationService;
+import me.zhixingye.im.service.GroupService;
+import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.service.SMSService;
+import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.service.UserService;
+
 /**
  * Created by zhixingye on 2020年02月01日.
  * 每一个不曾起舞的日子 都是对生命的辜负
@@ -30,32 +45,61 @@ public class IMClient {
         return sIMClient;
     }
 
-    private IRemoteService mRemoteService;
-    private IUserServiceHandle mUserServiceHandle;
-    private ISMSServiceHandle mSMSServiceHandle;
+    private Context mAppContext;
+
+    private ContactServiceProxy mContactService;
+    private ConversationServiceProxy mConversationService;
+    private GroupServiceProxy mGroupService;
+    private MessageServiceProxy mMessageService;
+    private SMSServiceProxy mSMSService;
+    private StorageServiceProxy mStorageService;
+    private UserServiceProxy mUserService;
 
     private IMClient(Context context) {
-        initRemoteIMService(context);
+        mAppContext = context;
+        initProxyService();
+        initRemoteIMService();
     }
 
-    private void initRemoteIMService(Context context) {
-        context.bindService(new Intent(context, IMService.class), new ServiceConnection() {
+    private void initProxyService() {
+        mContactService = new ContactServiceProxy();
+        mConversationService = new ConversationServiceProxy();
+        mGroupService = new GroupServiceProxy();
+        mMessageService = new MessageServiceProxy();
+        mSMSService = new SMSServiceProxy();
+        mStorageService = new StorageServiceProxy();
+        mUserService = new UserServiceProxy();
+    }
+
+    private void initRemoteIMService() {
+        mAppContext.bindService(new Intent(mAppContext, IMRemoteService.class), new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                mRemoteService = IRemoteService.Stub.asInterface(service);
+                IRemoteService remoteService = IRemoteService.Stub.asInterface(service);
                 try {
-                    mUserServiceHandle = mRemoteService.getUserServiceHandle();
-                    mSMSServiceHandle = mRemoteService.getSMSServiceHandle();
+                    mContactService.bindHandle(remoteService.getContactServiceHandle());
+                    mConversationService.bindHandle(remoteService.getConversationServiceHandle());
+                    mGroupService.bindHandle(remoteService.getGroupServiceHandle());
+                    mMessageService.bindHandle(remoteService.getMessageServiceHandle());
+                    mSMSService.bindHandle(remoteService.getSMSServiceHandle());
+                    mStorageService.bindHandle(remoteService.getStorageServiceHandle());
+                    mUserService.bindHandle(remoteService.getUserServiceHandle());
                 } catch (RemoteException e) {
                     e.printStackTrace();
+                    onServiceDisconnected(name);
                 }
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                mRemoteService = null;
-                mUserServiceHandle = null;
-                mSMSServiceHandle = null;
+                mAppContext.unbindService(this);
+                mContactService.unbindHandle();
+                mConversationService.unbindHandle();
+                mGroupService.unbindHandle();
+                mMessageService.unbindHandle();
+                mSMSService.unbindHandle();
+                mStorageService.unbindHandle();
+                mUserService.unbindHandle();
             }
 
             @Override
@@ -66,5 +110,31 @@ public class IMClient {
         }, Context.BIND_AUTO_CREATE);
     }
 
+    public ContactService getContactService() {
+        return mContactService;
+    }
 
+    public ConversationService getConversationService() {
+        return mConversationService;
+    }
+
+    public GroupService getGroupService() {
+        return mGroupService;
+    }
+
+    public MessageService getMessageService() {
+        return mMessageService;
+    }
+
+    public SMSService getSMSService() {
+        return mSMSService;
+    }
+
+    public StorageService getStorageService() {
+        return mStorageService;
+    }
+
+    public UserService getUserService() {
+        return mUserService;
+    }
 }

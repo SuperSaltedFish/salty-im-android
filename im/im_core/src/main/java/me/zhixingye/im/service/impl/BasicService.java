@@ -10,7 +10,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.IMCore;
-import me.zhixingye.im.constant.ErrorCode;
+import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
 
@@ -63,10 +63,10 @@ class BasicService {
             Status status = Status.fromThrowable(t);
             if (status == null) {
                 Logger.e(TAG, "Status == null", t);
-                callError(mCallback, ErrorCode.INTERNAL_UNKNOWN);
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
             } else {
                 Logger.e(TAG, status.toString());
-                callError(mCallback, new ErrorCode(status.getCode().value(), status.getDescription()));
+                callError(mCallback, status.getCode().value(), status.getDescription());
             }
         }
 
@@ -75,12 +75,12 @@ class BasicService {
         public void onCompleted() {
             if (mResponse == null) {
                 Logger.e(TAG, "GrpcResp == null");
-                callError(mCallback, ErrorCode.INTERNAL_UNKNOWN);
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
                 return;
             }
 
-            if (ErrorCode.isErrorCode(mResponse.getCode())) {
-                callError(mCallback, new ErrorCode(mResponse.getCode(), mResponse.getMessage()));
+            if (ResponseCode.isErrorCode(mResponse.getCode())) {
+                callError(mCallback, mResponse.getCode(), mResponse.getMessage());
                 return;
             }
 
@@ -93,15 +93,19 @@ class BasicService {
                     }
                 } catch (Exception e) {
                     Logger.e(TAG, "parse 'ProtocolBuffer' fail", e);
-                    callError(mCallback, ErrorCode.INTERNAL_UNKNOWN_RESP_DATA);
+                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
                 }
             }
         }
     }
 
-    private static void callError(RequestCallback<?> callback, ErrorCode errorCode) {
+    private static void callError(RequestCallback<?> callback, ResponseCode responseCode) {
+        callError(callback, responseCode.getCode(), responseCode.getMsg());
+    }
+
+    private static void callError(RequestCallback<?> callback, int code, String error) {
         if (callback != null) {
-            callback.onFailure(errorCode);
+            callback.onFailure(code, error);
         }
     }
 

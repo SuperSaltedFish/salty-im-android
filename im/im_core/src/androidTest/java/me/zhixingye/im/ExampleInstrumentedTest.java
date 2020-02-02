@@ -16,7 +16,7 @@ import java.util.Random;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import me.zhixingye.im.constant.ErrorCode;
+import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
 
@@ -146,7 +146,7 @@ public class ExampleInstrumentedTest {
         }
 
         @Override
-        public void onFailure(ErrorCode code) {
+        public void onFailure(ResponseCode code) {
             Logger.e(TAG, code.toString());
             isContinue = false;
             synchronized (sLock) {

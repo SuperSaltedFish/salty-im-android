@@ -3,7 +3,6 @@ package me.zhixingye.im.sdk.util;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
-import me.zhixingye.im.constant.ErrorCode;
 import me.zhixingye.im.sdk.IResultCallback;
 import me.zhixingye.im.sdk.RemoteResultWrap;
 
@@ -17,18 +16,18 @@ public class CallbackUtil {
             return;
         }
         try {
-            callback.onComplete(new RemoteResultWrap(parcelable));
+            callback.onCompleted(new RemoteResultWrap(parcelable));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public static void callFailure(IResultCallback callback, ErrorCode code) {
+    public static void callFailure(IResultCallback callback, int code, String error) {
         if (callback == null) {
             return;
         }
         try {
-            callback.onFailure(code.getCode(), code.getMsg());
+            callback.onFailure(code, error);
         } catch (RemoteException e) {
             e.printStackTrace();
         }

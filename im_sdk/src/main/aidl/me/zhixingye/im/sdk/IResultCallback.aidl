@@ -6,7 +6,7 @@ import me.zhixingye.im.sdk.RemoteResultWrap;
 
 interface IResultCallback {
 
-    void onComplete(in RemoteResultWrap result);
+    void onCompleted(in RemoteResultWrap result);
 
     void onFailure(int code,String error);
 }

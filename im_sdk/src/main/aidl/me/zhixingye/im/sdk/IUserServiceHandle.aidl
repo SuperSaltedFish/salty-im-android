@@ -5,4 +5,7 @@ package me.zhixingye.im.sdk;
 import me.zhixingye.im.sdk.IResultCallback;
 
 interface IUserServiceHandle {
+    void registerByTelephone(String telephone, String password, String verificationCode, IResultCallback callback);
+
+    void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback);
 }

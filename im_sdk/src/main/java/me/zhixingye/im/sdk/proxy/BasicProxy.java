@@ -3,9 +3,14 @@ package me.zhixingye.im.sdk.proxy;
 
 import com.google.protobuf.GeneratedMessageLite;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+
+import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IResultCallback;
 import me.zhixingye.im.sdk.util.CallbackUtil;
+import me.zhixingye.im.tool.Logger;
 
 /**
  * Created by zhixingye on 2020年02月02日.
@@ -23,27 +28,47 @@ class BasicProxy {
 
     protected class ResultCallbackWrapper<T extends GeneratedMessageLite> extends IResultCallback.Stub {
 
+        private static final String TAG = "ResultCallbackWrapper";
+
         private RequestCallback<T> mCallback;
 
         ResultCallbackWrapper(RequestCallback<T> callback) {
             mCallback = callback;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void onCompleted(byte[] protoData) {
             if (mCallback == null) {
                 return;
             }
-//            ParameterizedType pType = (ParameterizedType) this.getClass().getGenericSuperclass();
-//            if (pType != null) {
-//                Class type = (Class) pType.getActualTypeArguments()[0];
-//                try {
-//                    Method method = type.getMethod("parseFrom", byte[].class);
-//                    mCallback.onCompleted(method.invoke(null,protoData));
-//                } catch (NoSuchMethodException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+
+            ParameterizedType pType = (ParameterizedType) mCallback.getClass().getGenericSuperclass();
+            if (pType == null) {
+                Logger.e(TAG, "pType == null");
+                callUnknownError();
+                return;
+            }
+
+            try {
+                Class type = (Class) pType.getActualTypeArguments()[0];
+                Method method = type.getMethod("parseFrom", byte[].class);
+                T resultMessage = (T) method.invoke(null, (Object) protoData);
+                if (resultMessage == null) {
+                    Logger.e(TAG, "resultMessage == null");
+                    callUnknownError();
+                } else {
+                    mCallback.onCompleted(resultMessage);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                callUnknownError();
+            }
+        }
+
+        private void callUnknownError() {
+            onFailure(ResponseCode.INTERNAL_UNKNOWN.getCode(), ResponseCode.INTERNAL_UNKNOWN.getMsg());
         }
 
         @Override

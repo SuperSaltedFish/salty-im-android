@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.text.TextUtils;
 
 import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
 import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
@@ -14,6 +15,7 @@ import me.zhixingye.im.sdk.proxy.MessageServiceProxy;
 import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
 import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
 import me.zhixingye.im.sdk.proxy.UserServiceProxy;
+import me.zhixingye.im.sdk.util.SystemUtils;
 import me.zhixingye.im.service.ContactService;
 import me.zhixingye.im.service.ConversationService;
 import me.zhixingye.im.service.GroupService;
@@ -31,11 +33,15 @@ public class IMClient {
     private static IMClient sIMClient;
 
     public synchronized static void init(Context context, InitCallback callback) {
-        if (sIMClient != null) {
-            throw new RuntimeException("IMClient 已经初始化");
+        String currentProcess = SystemUtils.getCurrentProcessName(context);
+        String mainProcess = context.getPackageName();
+        if (TextUtils.equals(currentProcess, mainProcess)) {
+            if (sIMClient != null) {
+                throw new RuntimeException("IMClient 已经初始化");
+            }
+            context = context.getApplicationContext();
+            sIMClient = new IMClient(context, callback);
         }
-        context = context.getApplicationContext();
-        sIMClient = new IMClient(context, callback);
     }
 
     public static IMClient get() {

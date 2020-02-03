@@ -26,6 +26,10 @@ public class SMSServiceImpl extends BasicService implements SMSService {
                 .setTelephone(telephone)
                 .setCodeType(type)
                 .build();
-        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), callback));
+        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(callback));
+    }
+
+    public void destroy() {
+
     }
 }

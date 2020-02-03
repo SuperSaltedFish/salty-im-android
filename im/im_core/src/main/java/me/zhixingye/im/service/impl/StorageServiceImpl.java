@@ -108,4 +108,8 @@ public class StorageServiceImpl implements StorageService {
 //        }
         return value;
     }
+
+    public void destroy() {
+
+    }
 }

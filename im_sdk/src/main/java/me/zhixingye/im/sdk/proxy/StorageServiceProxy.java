@@ -1,6 +1,7 @@
 package me.zhixingye.im.sdk.proxy;
 
 import android.annotation.SuppressLint;
+import android.os.RemoteException;
 
 import me.zhixingye.im.sdk.IStorageServiceHandle;
 
@@ -29,21 +30,53 @@ public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public boolean putToConfigurationPreferences(String key, String value) {
-        return false;
+        if (checkServiceState(mServiceHandle, null)) {
+            return false;
+        }
+        try {
+            return mServiceHandle.putToConfigurationPreferences(key, value);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public String getFromConfigurationPreferences(String key) {
-        return null;
+        if (checkServiceState(mServiceHandle, null)) {
+            return "";
+        }
+        try {
+            return mServiceHandle.getFromConfigurationPreferences(key);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override
     public boolean putToUserPreferences(String key, String value) {
-        return false;
+        if (checkServiceState(mServiceHandle, null)) {
+            return false;
+        }
+        try {
+            return mServiceHandle.putToUserPreferences(key, value);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public String getFromUserPreferences(String key) {
-        return null;
+        if (checkServiceState(mServiceHandle, null)) {
+            return "";
+        }
+        try {
+            return mServiceHandle.getFromUserPreferences(key);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

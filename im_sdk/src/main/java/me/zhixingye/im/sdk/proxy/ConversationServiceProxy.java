@@ -1,5 +1,7 @@
 package me.zhixingye.im.sdk.proxy;
 
+import android.os.RemoteException;
+
 import com.salty.protos.ClearConversationMessageResp;
 import com.salty.protos.Conversation;
 import com.salty.protos.GetAllConversationResp;
@@ -11,6 +13,7 @@ import com.salty.protos.UpdateNotificationStatusResp;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IConversationServiceHandle;
+import me.zhixingye.im.sdk.util.CallbackUtil;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -33,29 +36,92 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.getAllConversations(new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void getConversationDetail(String conversationId, Conversation.ConversationType type, RequestCallback<GetConversationDetailResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.getConversationDetail(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void removeConversation(String conversationId, Conversation.ConversationType type, RequestCallback<RemoveConversationResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.removeConversation(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void clearConversationMessage(String conversationId, Conversation.ConversationType type, RequestCallback<ClearConversationMessageResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.clearConversationMessage(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void updateConversationTitle(String conversationId, Conversation.ConversationType type, String title, RequestCallback<UpdateConversationTitleResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.updateConversationTitle(conversationId, type.getNumber(), title, new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void updateConversationTop(String conversationId, Conversation.ConversationType type, boolean isTop, RequestCallback<UpdateConversationTopResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.updateConversationTop(conversationId, type.getNumber(), isTop, new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 
     @Override
     public void updateNotificationStatus(String conversationId, Conversation.ConversationType type, Conversation.NotificationStatus status, RequestCallback<UpdateNotificationStatusResp> callback) {
+        if (checkServiceState(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.updateNotificationStatus(conversationId, type.getNumber(), status.getNumber(), new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
     }
 }

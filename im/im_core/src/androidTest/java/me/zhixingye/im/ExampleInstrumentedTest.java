@@ -5,9 +5,9 @@ import android.util.Log;
 
 import com.google.protobuf.MessageLite;
 import com.salty.protos.LoginResp;
+import com.salty.protos.ObtainSMSCodeReq;
+import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.RegisterResp;
-import com.salty.protos.SMSReq;
-import com.salty.protos.SMSResp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,6 @@ import java.util.Random;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
 
@@ -76,10 +75,10 @@ public class ExampleInstrumentedTest {
         mAccount = builder.toString();
         IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
-                SMSReq.CodeType.REGISTER,
-                new LockRequestCallback<SMSResp>() {
+                ObtainSMSCodeReq.CodeType.REGISTER,
+                new LockRequestCallback<ObtainSMSCodeResp>() {
                     @Override
-                    public void onSuccessful(SMSResp resp) {
+                    public void onSuccessful(ObtainSMSCodeResp resp) {
 
 
                     }
@@ -111,7 +110,7 @@ public class ExampleInstrumentedTest {
                     @Override
                     public void onSuccessful(LoginResp resp) {
                         assertTrue(resp.hasProfile());
-                        assertNotNull(resp.getProfile().getUserID());
+                        assertNotNull(resp.getProfile().getUserId());
                         assertEquals(resp.getProfile().getTelephone(), mAccount);
                     }
                 });
@@ -146,8 +145,8 @@ public class ExampleInstrumentedTest {
         }
 
         @Override
-        public void onFailure(ResponseCode code) {
-            Logger.e(TAG, code.toString());
+        public void onFailure(int code, String error) {
+            Logger.e(TAG, "code = " + code + "， error = " + error);
             isContinue = false;
             synchronized (sLock) {
                 isLock = false;

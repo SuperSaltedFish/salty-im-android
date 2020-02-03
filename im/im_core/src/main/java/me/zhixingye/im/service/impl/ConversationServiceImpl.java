@@ -36,7 +36,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
         GetAllConversationReq req = GetAllConversationReq.newBuilder()
                 .build();
-        mConversationServiceStub.getAllConversation(createReq(req), new DefaultStreamObserver<>(GetAllConversationResp.getDefaultInstance(), callback));
+        mConversationServiceStub.getAllConversation(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationId(conversationId)
                 .setConversationType(type)
                 .build();
-        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(GetConversationDetailResp.getDefaultInstance(), callback));
+        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationId(conversationId)
                 .setConversationType(type)
                 .build();
-        mConversationServiceStub.removeConversation(createReq(req), new DefaultStreamObserver<>(RemoveConversationResp.getDefaultInstance(), callback));
+        mConversationServiceStub.removeConversation(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationId(conversationId)
                 .setConversationType(type)
                 .build();
-        mConversationServiceStub.clearConversationMessage(createReq(req), new DefaultStreamObserver<>(ClearConversationMessageResp.getDefaultInstance(), callback));
+        mConversationServiceStub.clearConversationMessage(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationType(type)
                 .setTitle(title)
                 .build();
-        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(UpdateConversationTitleResp.getDefaultInstance(), callback));
+        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationType(type)
                 .setIsTop(isTop)
                 .build();
-        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(UpdateConversationTopResp.getDefaultInstance(), callback));
+        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -93,6 +93,10 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .setConversationType(type)
                 .setNotificationStatus(status)
                 .build();
-        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(UpdateNotificationStatusResp.getDefaultInstance(), callback));
+        mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(callback));
+    }
+
+    public void destroy() {
+
     }
 }

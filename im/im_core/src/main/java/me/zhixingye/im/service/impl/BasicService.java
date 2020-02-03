@@ -1,10 +1,12 @@
 package me.zhixingye.im.service.impl;
 
 import com.google.protobuf.Any;
-import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLite;
 import com.salty.protos.GrpcReq;
 import com.salty.protos.GrpcResp;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
@@ -28,7 +30,7 @@ class BasicService {
         return mNetworkService.getChannel();
     }
 
-    protected static GrpcReq createReq(MessageLite message) {
+    static GrpcReq createReq(MessageLite message) {
         Any data = Any.newBuilder()
                 .setTypeUrl("salty/" + message.getClass().getCanonicalName())
                 .setValue(message.toByteString())
@@ -43,13 +45,11 @@ class BasicService {
                 .build();
     }
 
-    static class DefaultStreamObserver<T extends GeneratedMessageLite> implements StreamObserver<GrpcResp> {
+    static class DefaultStreamObserver<T extends MessageLite> implements StreamObserver<GrpcResp> {
         private RequestCallback<T> mCallback;
         private GrpcResp mResponse;
-        private T mDefaultInstance;
 
-        DefaultStreamObserver(T defaultInstance, RequestCallback<T> callback) {
-            mDefaultInstance = defaultInstance;
+        DefaultStreamObserver(RequestCallback<T> callback) {
             mCallback = callback;
         }
 
@@ -84,17 +84,44 @@ class BasicService {
                 return;
             }
 
-            Any data = mResponse.getData();
-            if (data != null) {
-                try {
-                    T original = (T) mDefaultInstance.getParserForType().parseFrom(data.getValue());
-                    if (original != null) {
-                        callComplete(mCallback, original);
-                    }
-                } catch (Exception e) {
-                    Logger.e(TAG, "parse 'ProtocolBuffer' fail", e);
-                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
+            Any anyData = mResponse.getData();
+            if (anyData == null) {
+                Logger.e(TAG, "anyData == null");
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
+                return;
+            }
+
+            byte[] protoData = anyData.toByteArray();
+            if (protoData == null) {
+                Logger.e(TAG, "protoData == null");
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
+                return;
+            }
+
+            if (mCallback == null) {
+                return;
+            }
+            ParameterizedType pType = (ParameterizedType) mCallback.getClass().getGenericSuperclass();
+            if (pType == null) {
+                Logger.e(TAG, "pType == null");
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                return;
+            }
+
+            try {
+                Class type = (Class) pType.getActualTypeArguments()[0];
+                Method method = type.getMethod("parseFrom", byte[].class);
+                T resultMessage = (T) method.invoke(null, (Object) protoData);
+                if (resultMessage == null) {
+                    Logger.e(TAG, "resultMessage == null");
+                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                } else {
+                    callComplete(mCallback, resultMessage);
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
             }
         }
     }

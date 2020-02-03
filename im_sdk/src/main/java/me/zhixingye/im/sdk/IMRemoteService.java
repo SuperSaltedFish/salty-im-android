@@ -16,12 +16,19 @@ import me.zhixingye.im.sdk.handle.UserServiceHandle;
 public class IMRemoteService extends Service {
 
     public IMRemoteService() {
+
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         IMCore.init(this, "127.0.0.1", 5042, "1.0.0");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        IMCore.release();
     }
 
     @Override

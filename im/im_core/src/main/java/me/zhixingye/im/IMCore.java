@@ -7,6 +7,17 @@ import android.text.TextUtils;
 import java.util.Locale;
 import java.util.UUID;
 
+import me.zhixingye.im.service.ContactService;
+import me.zhixingye.im.service.ConversationService;
+import me.zhixingye.im.service.GroupService;
+import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.service.SMSService;
+import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.service.UserService;
+import me.zhixingye.im.service.impl.ContactServiceImpl;
+import me.zhixingye.im.service.impl.ConversationServiceImpl;
+import me.zhixingye.im.service.impl.GroupServiceImpl;
+import me.zhixingye.im.service.impl.MessageServiceImpl;
 import me.zhixingye.im.service.impl.NetworkServiceImpl;
 import me.zhixingye.im.service.impl.SMSServiceImpl;
 import me.zhixingye.im.service.impl.StorageServiceImpl;
@@ -33,6 +44,14 @@ public class IMCore {
         sClient = new IMCore(context, serverIP, serverPort, appVersion);
     }
 
+    public synchronized static void release() {
+        if (sClient != null) {
+            sClient.destroy();
+            sClient = null;
+        }
+    }
+
+
     public static IMCore get() {
         if (sClient == null) {
             throw new RuntimeException("IMCore 未初始化");
@@ -48,28 +67,64 @@ public class IMCore {
     private String mAppVersion;
     private Locale mLanguage;
 
+    private ContactServiceImpl mContactService;
+    private ConversationServiceImpl mConversationService;
+    private GroupServiceImpl mGroupService;
+    private MessageServiceImpl mMessageService;
     private StorageServiceImpl mStorageService;
     private SMSServiceImpl mSMSService;
     private UserServiceImpl mUserService;
 
-    public IMCore(Context context, String serverIP, int serverPort, String version) {
+    private IMCore(Context context, String serverIP, int serverPort, String version) {
         mAppContext = context.getApplicationContext();
         mAppVersion = version;
         mLanguage = Locale.CHINESE;
 
-        NetworkServiceImpl.init(serverIP, serverPort);
+        NetworkServiceImpl.init(serverIP, serverPort,mAppContext);
 
+        mContactService = new ContactServiceImpl();
+        mConversationService = new ConversationServiceImpl();
+        mGroupService = new GroupServiceImpl();
+        mMessageService = new MessageServiceImpl();
         mStorageService = new StorageServiceImpl(mAppContext);
         mSMSService = new SMSServiceImpl();
         mUserService = new UserServiceImpl();
     }
 
-    public SMSServiceImpl getSMSService() {
+    public ContactService getContactService() {
+        return mContactService;
+    }
+
+    public ConversationService getConversationService() {
+        return mConversationService;
+    }
+
+    public GroupService getGroupService() {
+        return mGroupService;
+    }
+
+    public MessageService getMessageService() {
+        return mMessageService;
+    }
+
+    public StorageService getStorageService() {
+        return mStorageService;
+    }
+
+    public SMSService getSMSService() {
         return mSMSService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserService getUserService() {
         return mUserService;
+    }
+
+    public String getAppVersion() {
+        return mAppVersion;
+    }
+
+    public Locale getLanguage() {
+        return mLanguage;
     }
 
     public String getDeviceID() {
@@ -79,6 +134,7 @@ public class IMCore {
         }
         //如果本地没有就初始化一个，目前设备ID的格式是我自己定的，uuid加上一些手机型号版本组成字符串
         if (TextUtils.isEmpty(mDeviceID)) {
+//            mDeviceID = Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
             mDeviceID = String.format(Locale.getDefault(), "%s(%s).%s", Build.BRAND, Build.MODEL, UUID.randomUUID().toString());
             //设备ID如果出现空格就替换成_,一些手机型号信息可能带空格
             mDeviceID = mDeviceID.replaceAll(" ", "_");
@@ -90,11 +146,35 @@ public class IMCore {
         return mDeviceID;
     }
 
-    public String getAppVersion() {
-        return mAppVersion;
-    }
-
-    public Locale getLanguage() {
-        return mLanguage;
+    private void destroy() {
+        NetworkServiceImpl.destroy();
+        if (mContactService != null) {
+            mContactService.destroy();
+            mContactService = null;
+        }
+        if (mConversationService != null) {
+            mConversationService.destroy();
+            mConversationService = null;
+        }
+        if (mGroupService != null) {
+            mGroupService.destroy();
+            mGroupService = null;
+        }
+        if (mMessageService != null) {
+            mMessageService.destroy();
+            mMessageService = null;
+        }
+        if (mStorageService != null) {
+            mStorageService.destroy();
+            mStorageService = null;
+        }
+        if (mSMSService != null) {
+            mSMSService.destroy();
+            mSMSService = null;
+        }
+        if (mUserService != null) {
+            mUserService.destroy();
+            mUserService = null;
+        }
     }
 }

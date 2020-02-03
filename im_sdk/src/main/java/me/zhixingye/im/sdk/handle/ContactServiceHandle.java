@@ -12,7 +12,6 @@ import me.zhixingye.im.sdk.IResultCallback;
 public class ContactServiceHandle extends IContactServiceHandle.Stub {
     @Override
     public void requestContact(String userId, String reason, IResultCallback callback) throws RemoteException {
-
     }
 
     @Override

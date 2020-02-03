@@ -42,7 +42,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupName(groupName)
                 .addAllMemberUserIdArr(memberUserIdArr)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(CreateGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .setReason(reason)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(JoinGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
         QuitGroupReq req = QuitGroupReq.newBuilder()
                 .setGroupId(groupId)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(QuitGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .addAllMemberUserIdArr(memberUserIdArr)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(AddGroupMemberResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .setMemberUserId(memberUserId)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(KickGroupMemberResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -86,7 +86,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .setGroupName(groupName)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateGroupNameResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .setNotice(notice)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateGroupNoticeResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
     }
 
     @Override
@@ -104,6 +104,10 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .setGroupId(groupId)
                 .setMemberNickname(memberNickname)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateMemberNicknameResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(callback));
+    }
+
+    public void destroy() {
+
     }
 }

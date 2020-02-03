@@ -1,22 +1,24 @@
 package me.zhixingye.im.sdk.util;
 
-import android.os.Parcelable;
 import android.os.RemoteException;
 
+import com.google.protobuf.MessageLite;
+
+import me.zhixingye.im.constant.ResponseCode;
+import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IResultCallback;
-import me.zhixingye.im.sdk.RemoteResultWrap;
 
 /**
  * Created by zhixingye on 2020年02月01日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
 public class CallbackUtil {
-    public static void callCompleted(IResultCallback callback, Parcelable parcelable) {
+    public static void callCompleted(IResultCallback callback, MessageLite message) {
         if (callback == null) {
             return;
         }
         try {
-            callback.onCompleted(new RemoteResultWrap(parcelable));
+            callback.onCompleted(message.toByteArray());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -30,6 +32,13 @@ public class CallbackUtil {
             callback.onFailure(code, error);
         } catch (RemoteException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void callRemoteError(RequestCallback callback) {
+        if (callback != null) {
+            ResponseCode responseCode = ResponseCode.INTERNAL_IPC_EXCEPTION;
+            callback.onFailure(responseCode.getCode(), responseCode.getMsg());
         }
     }
 }

@@ -2,11 +2,10 @@
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
-import me.zhixingye.im.sdk.RemoteResultWrap;
 
 interface IResultCallback {
 
-    void onCompleted(in RemoteResultWrap result);
+    void onCompleted(in byte[] protoData);
 
     void onFailure(int code,String error);
 }

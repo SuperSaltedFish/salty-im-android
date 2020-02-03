@@ -18,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
-        IMClient.init(this);
+        IMClient.init(this, new IMClient.InitCallback() {
+            @Override
+            public void onCompleted() {
+            }
+        });
     }
 }

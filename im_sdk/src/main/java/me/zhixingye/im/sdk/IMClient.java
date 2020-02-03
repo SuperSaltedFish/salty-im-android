@@ -30,12 +30,12 @@ public class IMClient {
 
     private static IMClient sIMClient;
 
-    public synchronized static void init(Context context) {
+    public synchronized static void init(Context context, InitCallback callback) {
         if (sIMClient != null) {
             throw new RuntimeException("IMClient 已经初始化");
         }
         context = context.getApplicationContext();
-        sIMClient = new IMClient(context);
+        sIMClient = new IMClient(context, callback);
     }
 
     public static IMClient get() {
@@ -55,10 +55,10 @@ public class IMClient {
     private StorageServiceProxy mStorageService;
     private UserServiceProxy mUserService;
 
-    private IMClient(Context context) {
+    private IMClient(Context context, InitCallback callback) {
         mAppContext = context;
         initProxyService();
-        initRemoteIMService();
+        initRemoteIMService(callback);
     }
 
     private void initProxyService() {
@@ -71,8 +71,10 @@ public class IMClient {
         mUserService = new UserServiceProxy();
     }
 
-    private void initRemoteIMService() {
+    private void initRemoteIMService(final InitCallback callback) {
         mAppContext.bindService(new Intent(mAppContext, IMRemoteService.class), new ServiceConnection() {
+            private boolean isFirstBind = true;
+
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 IRemoteService remoteService = IRemoteService.Stub.asInterface(service);
@@ -84,6 +86,12 @@ public class IMClient {
                     mSMSService.bindHandle(remoteService.getSMSServiceHandle());
                     mStorageService.bindHandle(remoteService.getStorageServiceHandle());
                     mUserService.bindHandle(remoteService.getUserServiceHandle());
+                    if (isFirstBind) {
+                        if (callback != null) {
+                            callback.onCompleted();
+                        }
+                        isFirstBind = false;
+                    }
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     onServiceDisconnected(name);
@@ -136,5 +144,9 @@ public class IMClient {
 
     public UserService getUserService() {
         return mUserService;
+    }
+
+    public interface InitCallback {
+        void onCompleted();
     }
 }

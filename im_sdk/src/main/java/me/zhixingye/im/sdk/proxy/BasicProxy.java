@@ -1,9 +1,11 @@
 package me.zhixingye.im.sdk.proxy;
 
 
+import com.google.protobuf.GeneratedMessageLite;
+
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IResultCallback;
-import me.zhixingye.im.sdk.RemoteResultWrap;
+import me.zhixingye.im.sdk.util.CallbackUtil;
 
 /**
  * Created by zhixingye on 2020年02月02日.
@@ -11,7 +13,15 @@ import me.zhixingye.im.sdk.RemoteResultWrap;
  */
 class BasicProxy {
 
-    protected class ResultCallbackWrapper<T> extends IResultCallback.Stub {
+    static boolean checkServiceState(Object serverHandle, RequestCallback<?> callback) {
+        if (serverHandle == null) {
+            CallbackUtil.callRemoteError(callback);
+            return false;
+        }
+        return true;
+    }
+
+    protected class ResultCallbackWrapper<T extends GeneratedMessageLite> extends IResultCallback.Stub {
 
         private RequestCallback<T> mCallback;
 
@@ -19,13 +29,21 @@ class BasicProxy {
             mCallback = callback;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        public void onCompleted(RemoteResultWrap result) {
+        public void onCompleted(byte[] protoData) {
             if (mCallback == null) {
                 return;
             }
-            mCallback.onCompleted((T) result.getResult());
+//            ParameterizedType pType = (ParameterizedType) this.getClass().getGenericSuperclass();
+//            if (pType != null) {
+//                Class type = (Class) pType.getActualTypeArguments()[0];
+//                try {
+//                    Method method = type.getMethod("parseFrom", byte[].class);
+//                    mCallback.onCompleted(method.invoke(null,protoData));
+//                } catch (NoSuchMethodException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
 
         @Override

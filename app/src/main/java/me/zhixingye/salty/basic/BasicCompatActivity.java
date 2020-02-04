@@ -172,7 +172,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                     .setTitle(getString(R.string.PermissionDialog_Help))
                     .setMessage(getString(R.string.PermissionDialog_MissPermissionHint))
                     .setNegativeButton(getString(R.string.PermissionDialog_Cancel), null)
-                    .setPositiveButton(getString(R.string.PermissionDialog_Cancel), (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.PermissionDialog_Setting), (dialog, which) -> {
                         startAppSettings();//调整到APP权限设置
                     })
                     .setOnDismissListener(dialog -> {
@@ -273,6 +273,9 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setNavigationBarColor(Color.TRANSPARENT);
                     window.setStatusBarColor(Color.TRANSPARENT);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    window.setNavigationBarContrastEnforced(false);
                 }
                 break;
             case SYSTEM_UI_MODE_FULLSCREEN:

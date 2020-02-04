@@ -5,4 +5,12 @@
     <string name="PermissionDialog_Setting">设置</string>
 
     <string name="Hint_Loading">正在加载…</string>
+
+    <string-array name="SplashActivity_Titles">
+        <item name="Splash_1">Easy to find events</item>
+        <item name="Splash_2">Fixed a Date for Event</item>
+        <item name="Splash_3">Meet with new folks</item>
+    </string-array>
+    <string name="SplashActivity_Content">There are many variations of passages of Lorem Ipsum available，but the majority have suffered alteration.</string>
+
 </resources>

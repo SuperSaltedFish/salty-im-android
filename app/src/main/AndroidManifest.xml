@@ -26,7 +26,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".module.login.view.SplashActivity"></activity>
+        <activity
+            android:name=".module.splash.view.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -38,13 +46,10 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <activity android:name=".module.main.view.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".module.main.view.MainActivity" />
+        <activity android:name=".module.login.view.LoginActivity" />
+        <activity android:name=".module.splash.view.GuideActivity" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

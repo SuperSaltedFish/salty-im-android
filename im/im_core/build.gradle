@@ -75,8 +75,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${depVersions.appcompat}"
     implementation "javax.annotation:javax.annotation-api:${depVersions.javax_annotation}"
     implementation "io.grpc:grpc-android:$depVersions.grpc"
-    implementation "io.grpc:grpc-okhttp:$depVersions.grpc"
     implementation "io.grpc:grpc-stub:$depVersions.grpc"
+    api "io.grpc:grpc-okhttp:$depVersions.grpc"
     api "io.grpc:grpc-protobuf-lite:$depVersions.grpc"
 
 

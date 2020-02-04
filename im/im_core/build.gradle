@@ -20,6 +20,10 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 buildscript {
@@ -28,7 +32,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.11'
+        classpath "com.google.protobuf:protobuf-gradle-plugin:$depVersions.protobuf_gradle_plugin"
     }
 }
 
@@ -40,7 +44,7 @@ protobuf {
     }
     plugins {
         javalite {
-            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+            artifact = "com.google.protobuf:protoc-gen-javalite:$depVersions.protoc_gen_javalite"
         }
         grpc {
             artifact = "io.grpc:protoc-gen-grpc-java:$depVersions.grpc"
@@ -64,19 +68,16 @@ protobuf {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation "junit:junit:${depVersions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${depVersions.android_junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${depVersions.android_junit_espresso}"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-
+    implementation "androidx.appcompat:appcompat:${depVersions.appcompat}"
+    implementation "javax.annotation:javax.annotation-api:${depVersions.javax_annotation}"
     implementation "io.grpc:grpc-android:$depVersions.grpc"
     implementation "io.grpc:grpc-okhttp:$depVersions.grpc"
     implementation "io.grpc:grpc-stub:$depVersions.grpc"
     api "io.grpc:grpc-protobuf-lite:$depVersions.grpc"
 
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
 }

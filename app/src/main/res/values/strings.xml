@@ -1,2 +1,8 @@
 <resources>
+    <string name="PermissionDialog_Help">无法使用此功能</string>
+    <string name="PermissionDialog_MissPermissionHint">当前的应用程序缺少必要的权限。\n请点击“设置”-“权限”-打开所需的权限。\n两次单击“后退”按钮以返回。</string>
+    <string name="PermissionDialog_Cancel">取消</string>
+    <string name="PermissionDialog_Setting">设置</string>
+
+    <string name="Hint_Loading">正在加载…</string>
 </resources>

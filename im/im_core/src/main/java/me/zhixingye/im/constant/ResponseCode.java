@@ -11,7 +11,7 @@ public enum ResponseCode {
     INTERNAL_IPC_EXCEPTION(-3, "客户端繁忙，请稍后再试：-3");
 
     public static boolean isErrorCode(int errorCode) {
-        return errorCode <= 200;
+        return errorCode != 200;
     }
 
     private int code;

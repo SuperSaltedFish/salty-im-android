@@ -1,11 +1,107 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:colorButtonNormal">@color/colorAccent</item><!--这个颜色会影响按钮置灰的颜色-->
+
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondaryBlack</item>
+        <item name="android:textColorTertiary">@color/textColorSecondaryBlack</item>
+        <item name="android:textDirection">locale</item>
+
+        <!--        定义统一样式-->
+        <item name="buttonStyle">@style/ButtonStyle</item>
+        <item name="buttonStyleSmall">@style/ButtonStyle</item>
+        <item name="editTextStyle">@style/EditTextStyle</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowEnableSplitTouch">false</item><!--全用多点触控-->
+
+        <item name="android:splitMotionEvents">false</item><!--全用多点触控-->
+    </style>
+
+    <!--    全局的按钮样式-->
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">?colorAccent</item>
+        <item name="android:minHeight">60dp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@android:color/white</item>>
+    </style>
+
+    <!--    全局的按钮样式，没有背景只有文字的那种-->
+    <style name="ButtonStyleNoBackground" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/selector_text_color_accent</item>
+    </style>
+
+    <!--    全局输入框的样式-->
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/selector_edit_default</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingBottom">12dp
+        </item><!--这里特别注意了，给所有的edittext加上了12DP，从设计图来看，下划线和文字的距离有要求-->
+        <item name="android:textColor">@color/selector_text_color_primary</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textColorHint">@color/textColorSecondaryBlackLight</item>
+    </style>
+
+    <!--    全局文字控件样式-->
+    <style name="TextViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+
+    <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    </style>
+
+    <style name="ToolbarLightStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="ToolbarTitleTextAppearance.Dark" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--全局DialogFragment样式-->
+    <style name="DialogFragmentStyle" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item><!--除去title-->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowElevation">0dp</item>
+        <item name="android:backgroundDimAmount">0.3</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:windowAnimationStyle">@style/BottomDialogFragmentAnimStyle</item>
+    </style>
+
+    <style name="BottomDialogFragmentAnimStyle" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/dialog_slide_out_bottom</item>
     </style>
 
 </resources>

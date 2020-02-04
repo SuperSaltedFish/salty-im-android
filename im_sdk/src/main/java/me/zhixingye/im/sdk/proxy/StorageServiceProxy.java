@@ -30,7 +30,7 @@ public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public boolean putToConfigurationPreferences(String key, String value) {
-        if (checkServiceState(mServiceHandle, null)) {
+        if (isServiceUnavailable(mServiceHandle, null)) {
             return false;
         }
         try {
@@ -43,7 +43,7 @@ public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public String getFromConfigurationPreferences(String key) {
-        if (checkServiceState(mServiceHandle, null)) {
+        if (isServiceUnavailable(mServiceHandle, null)) {
             return "";
         }
         try {
@@ -56,7 +56,7 @@ public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public boolean putToUserPreferences(String key, String value) {
-        if (checkServiceState(mServiceHandle, null)) {
+        if (isServiceUnavailable(mServiceHandle, null)) {
             return false;
         }
         try {
@@ -69,7 +69,7 @@ public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public String getFromUserPreferences(String key) {
-        if (checkServiceState(mServiceHandle, null)) {
+        if (isServiceUnavailable(mServiceHandle, null)) {
             return "";
         }
         try {

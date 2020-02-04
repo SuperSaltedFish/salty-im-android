@@ -36,7 +36,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -49,7 +49,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void getConversationDetail(String conversationId, Conversation.ConversationType type, RequestCallback<GetConversationDetailResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -62,7 +62,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void removeConversation(String conversationId, Conversation.ConversationType type, RequestCallback<RemoveConversationResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -75,7 +75,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void clearConversationMessage(String conversationId, Conversation.ConversationType type, RequestCallback<ClearConversationMessageResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -88,7 +88,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void updateConversationTitle(String conversationId, Conversation.ConversationType type, String title, RequestCallback<UpdateConversationTitleResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -101,7 +101,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void updateConversationTop(String conversationId, Conversation.ConversationType type, boolean isTop, RequestCallback<UpdateConversationTopResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -114,7 +114,7 @@ public class ConversationServiceProxy extends BasicProxy implements me.zhixingye
 
     @Override
     public void updateNotificationStatus(String conversationId, Conversation.ConversationType type, Conversation.NotificationStatus status, RequestCallback<UpdateNotificationStatusResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {

@@ -38,7 +38,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -61,7 +61,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -74,7 +74,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -87,7 +87,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -100,7 +100,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -113,7 +113,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -126,7 +126,7 @@ public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.ser
 
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {

@@ -32,7 +32,7 @@ public class ContactServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -45,7 +45,7 @@ public class ContactServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public void refusedContact(String userId, String reason, RequestCallback<RefusedContactResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -58,7 +58,7 @@ public class ContactServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public void acceptContact(String userId, RequestCallback<AcceptContactResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -71,7 +71,7 @@ public class ContactServiceProxy extends BasicProxy implements me.zhixingye.im.s
 
     @Override
     public void deleteContact(String userId, RequestCallback<DeleteContactResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {

@@ -18,12 +18,12 @@ import me.zhixingye.im.tool.Logger;
  */
 class BasicProxy {
 
-    static boolean checkServiceState(Object serverHandle, RequestCallback<?> callback) {
+    static boolean isServiceUnavailable(Object serverHandle, RequestCallback<?> callback) {
         if (serverHandle == null) {
             CallbackUtil.callRemoteError(callback);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     protected class ResultCallbackWrapper<T extends GeneratedMessageLite> extends IResultCallback.Stub {

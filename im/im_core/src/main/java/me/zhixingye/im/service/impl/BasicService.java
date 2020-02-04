@@ -7,6 +7,7 @@ import com.salty.protos.GrpcResp;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
@@ -101,9 +102,23 @@ class BasicService {
             if (mCallback == null) {
                 return;
             }
-            ParameterizedType pType = (ParameterizedType) mCallback.getClass().getGenericSuperclass();
-            if (pType == null) {
-                Logger.e(TAG, "pType == null");
+
+            ParameterizedType pType = null;
+            try {
+                Type[] types = mCallback.getClass().getGenericInterfaces();
+                for (Type t : types) {
+                    if (t instanceof ParameterizedType && ((ParameterizedType) t).getRawType() == RequestCallback.class) {
+                        pType = (ParameterizedType) t;
+                        break;
+                    }
+                }
+                if (pType == null) {
+                    Logger.e(TAG, "pType == null");
+                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
                 return;
             }

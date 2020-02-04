@@ -30,7 +30,7 @@ public class SMSServiceProxy extends BasicProxy implements me.zhixingye.im.servi
 
     @Override
     public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {

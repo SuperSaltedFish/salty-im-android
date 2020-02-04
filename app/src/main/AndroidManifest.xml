@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.zhixingye.salty">
-
-
     <!-- 以下为不需要手动申请的权限 -->
     <!-- 允许程序振动 -->
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 允许程序访问网络连接 -->
@@ -28,6 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".module.login.view.SplashActivity"></activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}"
@@ -38,7 +38,7 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".module.main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

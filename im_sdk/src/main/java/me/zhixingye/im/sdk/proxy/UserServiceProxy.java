@@ -31,7 +31,7 @@ public class UserServiceProxy extends BasicProxy implements me.zhixingye.im.serv
 
     @Override
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {
@@ -44,7 +44,7 @@ public class UserServiceProxy extends BasicProxy implements me.zhixingye.im.serv
 
     @Override
     public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        if (checkServiceState(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
             return;
         }
         try {

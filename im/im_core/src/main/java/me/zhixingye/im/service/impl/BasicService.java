@@ -3,7 +3,6 @@ package me.zhixingye.im.service.impl;
 import com.google.protobuf.Any;
 import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLite;
-import com.google.protobuf.Parser;
 import com.salty.protos.GrpcReq;
 import com.salty.protos.GrpcResp;
 
@@ -57,11 +56,11 @@ class BasicService {
 
         private RequestCallback<T> mCallback;
         private GrpcResp mResponse;
-        private Parser<T> mProtoParser;
+        private T mDefaultInstance;
 
         DefaultStreamObserver(T defaultInstance, RequestCallback<T> callback) {
             mCallback = callback;
-            mProtoParser = defaultInstance.getParserForType();
+            mDefaultInstance = defaultInstance;
         }
 
         @Override
@@ -113,7 +112,7 @@ class BasicService {
             }
 
             try {
-                T resultMessage = mProtoParser.parseFrom(protoData);
+                T resultMessage = (T) mDefaultInstance.getParserForType().parseFrom(protoData);
                 if (resultMessage == null) {
                     Logger.e(TAG, "resultMessage == null");
                     callError(ResponseCode.INTERNAL_UNKNOWN);
@@ -132,7 +131,7 @@ class BasicService {
         }
 
         private void callError(int code, String error) {
-            printErrorResponse(mResponse, code, error);
+            printErrorResponse(mDefaultInstance, code, error);
             if (mCallback != null) {
                 mCallback.onFailure(code, error);
             }

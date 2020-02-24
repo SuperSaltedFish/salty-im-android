@@ -87,7 +87,7 @@ public class IMCoreTest {
     private String mPassword;
 
     private void testRegisterReq() {
-        mPassword = "yezhixing123";
+        mPassword = "123";
         IMCore.get().getUserService().registerByTelephone(
                 mAccount,
                 mPassword,

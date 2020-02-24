@@ -31,7 +31,7 @@ public class ContactServiceImpl extends BasicService implements ContactService {
                 .setUserId(userId)
                 .setReason(reason)
                 .build();
-        mContactServiceStub.requestContact(createReq(req), new DefaultStreamObserver<>(callback));
+        mContactServiceStub.requestContact(createReq(req), new DefaultStreamObserver<>(RequestContactResp.getDefaultInstance(), callback));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ContactServiceImpl extends BasicService implements ContactService {
                 .setUserId(userId)
                 .setReason(reason)
                 .build();
-        mContactServiceStub.refusedContact(createReq(req), new DefaultStreamObserver<>(callback));
+        mContactServiceStub.refusedContact(createReq(req), new DefaultStreamObserver<>(RefusedContactResp.getDefaultInstance(), callback));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ContactServiceImpl extends BasicService implements ContactService {
         AcceptContactReq req = AcceptContactReq.newBuilder()
                 .setUserId(userId)
                 .build();
-        mContactServiceStub.acceptContact(createReq(req), new DefaultStreamObserver<>(callback));
+        mContactServiceStub.acceptContact(createReq(req), new DefaultStreamObserver<>(AcceptContactResp.getDefaultInstance(), callback));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ContactServiceImpl extends BasicService implements ContactService {
         DeleteContactReq req = DeleteContactReq.newBuilder()
                 .setUserId(userId)
                 .build();
-        mContactServiceStub.deleteContact(createReq(req), new DefaultStreamObserver<>(callback));
+        mContactServiceStub.deleteContact(createReq(req), new DefaultStreamObserver<>(DeleteContactResp.getDefaultInstance(), callback));
     }
 
     public void destroy() {

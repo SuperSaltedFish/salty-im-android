@@ -51,16 +51,18 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
     @Override
     public void startLoginActivity() {
         LoginActivity.startActivity(this);
+        finish();
     }
 
     @Override
     public void startHomeActivity() {
-
+        finish();
     }
 
     @Override
     public void startGuideActivity() {
         GuideActivity.startActivity(this);
+        finish();
     }
 
     @Override

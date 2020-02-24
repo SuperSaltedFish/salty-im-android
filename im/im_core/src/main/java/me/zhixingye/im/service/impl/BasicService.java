@@ -1,13 +1,15 @@
 package me.zhixingye.im.service.impl;
 
 import com.google.protobuf.Any;
+import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLite;
+import com.google.protobuf.Parser;
 import com.salty.protos.GrpcReq;
 import com.salty.protos.GrpcResp;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
@@ -37,21 +39,29 @@ class BasicService {
                 .setValue(message.toByteString())
                 .build();
 
-        return GrpcReq.newBuilder()
+        GrpcReq req = GrpcReq.newBuilder()
                 .setDeviceId(IMCore.get().getDeviceID())
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
                 .setVersion(IMCore.get().getAppVersion())
                 .setData(data)
                 .build();
+
+        printRequest(req, message);
+
+        return req;
     }
 
-    static class DefaultStreamObserver<T extends MessageLite> implements StreamObserver<GrpcResp> {
+    @SuppressWarnings("unchecked")
+    static class DefaultStreamObserver<T extends GeneratedMessageLite> implements StreamObserver<GrpcResp> {
+
         private RequestCallback<T> mCallback;
         private GrpcResp mResponse;
+        private Parser<T> mProtoParser;
 
-        DefaultStreamObserver(RequestCallback<T> callback) {
+        DefaultStreamObserver(T defaultInstance, RequestCallback<T> callback) {
             mCallback = callback;
+            mProtoParser = defaultInstance.getParserForType();
         }
 
         @Override
@@ -64,38 +74,37 @@ class BasicService {
             Status status = Status.fromThrowable(t);
             if (status == null) {
                 Logger.e(TAG, "Status == null", t);
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                callError(ResponseCode.INTERNAL_UNKNOWN);
             } else {
                 Logger.e(TAG, status.toString());
-                callError(mCallback, status.getCode().value(), status.getDescription());
+                callError(status.getCode().value(), status.getDescription());
             }
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void onCompleted() {
             if (mResponse == null) {
                 Logger.e(TAG, "GrpcResp == null");
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                callError(ResponseCode.INTERNAL_UNKNOWN);
                 return;
             }
 
             if (ResponseCode.isErrorCode(mResponse.getCode())) {
-                callError(mCallback, mResponse.getCode(), mResponse.getMessage());
+                callError(mResponse.getCode(), mResponse.getMessage());
                 return;
             }
 
             Any anyData = mResponse.getData();
             if (anyData == null) {
                 Logger.e(TAG, "anyData == null");
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
+                callError(ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
                 return;
             }
 
             byte[] protoData = anyData.toByteArray();
             if (protoData == null) {
                 Logger.e(TAG, "protoData == null");
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
+                callError(ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
                 return;
             }
 
@@ -103,58 +112,97 @@ class BasicService {
                 return;
             }
 
-            ParameterizedType pType = null;
             try {
-                Type[] types = mCallback.getClass().getGenericInterfaces();
-                for (Type t : types) {
-                    if (t instanceof ParameterizedType && ((ParameterizedType) t).getRawType() == RequestCallback.class) {
-                        pType = (ParameterizedType) t;
-                        break;
-                    }
-                }
-                if (pType == null) {
-                    Logger.e(TAG, "pType == null");
-                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
-                    return;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
-                return;
-            }
-
-            try {
-                Class type = (Class) pType.getActualTypeArguments()[0];
-                Method method = type.getMethod("parseFrom", byte[].class);
-                T resultMessage = (T) method.invoke(null, (Object) protoData);
+                T resultMessage = mProtoParser.parseFrom(protoData);
                 if (resultMessage == null) {
                     Logger.e(TAG, "resultMessage == null");
-                    callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                    callError(ResponseCode.INTERNAL_UNKNOWN);
                 } else {
-                    callComplete(mCallback, resultMessage);
+                    callComplete(resultMessage);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                callError(mCallback, ResponseCode.INTERNAL_UNKNOWN);
+                callError(ResponseCode.INTERNAL_UNKNOWN);
+            }
+        }
+
+        private void callError(ResponseCode responseCode) {
+            callError(responseCode.getCode(), responseCode.getMsg());
+        }
+
+        private void callError(int code, String error) {
+            printErrorResponse(mResponse, code, error);
+            if (mCallback != null) {
+                mCallback.onFailure(code, error);
+            }
+        }
+
+        private void callComplete(T response) {
+            printResponse(mResponse, response);
+            if (mCallback != null) {
+                mCallback.onCompleted(response);
             }
         }
     }
 
-    private static void callError(RequestCallback<?> callback, ResponseCode responseCode) {
-        callError(callback, responseCode.getCode(), responseCode.getMsg());
+
+    private static void printRequest(GrpcReq req, MessageLite data) {
+        printGrpcData("发起请求", req.toString(), data);
     }
 
-    private static void callError(RequestCallback<?> callback, int code, String error) {
-        if (callback != null) {
-            callback.onFailure(code, error);
-        }
+    private static void printResponse(GrpcResp resp, MessageLite data) {
+        printGrpcData("收到响应", resp.toString(), data);
     }
 
-    private static <T> void callComplete(RequestCallback<T> callback, T response) {
-        if (callback != null) {
-            callback.onCompleted(response);
+    private static void printGrpcData(String title, String grpcStr, MessageLite data) {
+        Pattern firstLinePattern = Pattern.compile("#.*?\\n");
+        String respStr = firstLinePattern.matcher(grpcStr).replaceAll("");
+        String dataStr = data.toString();
+        String responseData;
+        if (dataStr.startsWith("#") && dataStr.indexOf("\n") > 0) {
+            dataStr = firstLinePattern.matcher(dataStr).replaceAll("");
+            dataStr = "  " + dataStr;
+            dataStr = dataStr.replace("\n", "\n  ");
+
+            Pattern dataRegionPattern = Pattern.compile("\\{[\\s\\S]*?\\}");
+            Matcher dataRegionMatcher = dataRegionPattern.matcher(respStr);
+
+            responseData = dataRegionMatcher.replaceAll("{\n" + dataStr + "\n}");
+        } else {
+            responseData = respStr;
         }
+
+        responseData = "  "+responseData;
+        responseData = responseData.replace("\n", "\n  ");
+
+        Logger.e(TAG, String.format(Locale.getDefault(),
+                "\n%s：Method = %s\n{\n%s\n}",
+                title,
+                getRequestName(data),
+                responseData
+        ));
+    }
+
+    private static void printErrorResponse(MessageLite data, int code, String error) {
+        Logger.e(TAG, String.format(Locale.getDefault(),
+                "\n收到响应：Method = %s\n{\n  code：%d\n  error：%s\n}",
+                getRequestName(data),
+                code,
+                error
+        ));
+    }
+
+    private static String getRequestName(MessageLite message) {
+        String className = message.getClass().getSimpleName();
+        int endIndex = className.indexOf("Req");
+        if (endIndex < 0) {
+            endIndex = className.indexOf("Resp");
+        }
+        if (endIndex < 0) {
+            return "unknown";
+        }
+        return className.substring(0, endIndex);
     }
 }
 

@@ -17,7 +17,6 @@ import java.util.Random;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.tool.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +28,7 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class IMCoreTest {
 
     private static final String TAG = "ExampleInstrumentedTest";
 
@@ -118,7 +117,7 @@ public class ExampleInstrumentedTest {
 
     private static abstract class LockRequestCallback<T extends MessageLite> implements RequestCallback<T> {
 
-        public abstract void onSuccessful(T resp);
+        abstract void onSuccessful(T resp);
 
         LockRequestCallback() {
             while (isLock) {
@@ -136,7 +135,6 @@ public class ExampleInstrumentedTest {
 
         @Override
         public void onCompleted(T response) {
-            Logger.e(TAG, response.toString());
             onSuccessful(response);
             synchronized (sLock) {
                 isLock = false;
@@ -146,7 +144,6 @@ public class ExampleInstrumentedTest {
 
         @Override
         public void onFailure(int code, String error) {
-            Logger.e(TAG, "code = " + code + "， error = " + error);
             isContinue = false;
             synchronized (sLock) {
                 isLock = false;

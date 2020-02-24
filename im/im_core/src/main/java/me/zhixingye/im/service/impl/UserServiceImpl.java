@@ -39,7 +39,7 @@ public class UserServiceImpl extends BasicService implements UserService {
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(callback));
+        mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UserServiceImpl extends BasicService implements UserService {
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(callback));
+        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
     public void destroy() {

@@ -33,7 +33,17 @@ public class UserManager implements UserService {
 
     @Override
     public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        mUserService.loginByTelephone(telephone, password, verificationCode, callback);
+        mUserService.loginByTelephone(telephone, password, verificationCode, new RequestCallback<LoginResp>() {
+            @Override
+            public void onCompleted(LoginResp response) {
+
+            }
+
+            @Override
+            public void onFailure(int code, String error) {
+
+            }
+        });
     }
 
     @Override

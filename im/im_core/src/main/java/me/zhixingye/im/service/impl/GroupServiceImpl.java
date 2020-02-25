@@ -106,8 +106,4 @@ public class GroupServiceImpl extends BasicService implements GroupService {
                 .build();
         mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateMemberNicknameResp.getDefaultInstance(), callback));
     }
-
-    public void destroy() {
-
-    }
 }

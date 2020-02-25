@@ -1,9 +1,17 @@
 package me.zhixingye.im.service.impl;
 
+import com.salty.protos.GetUserInfoReq;
+import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.LoginReq;
 import com.salty.protos.LoginResp;
+import com.salty.protos.QueryUserInfoReq;
+import com.salty.protos.QueryUserInfoResp;
 import com.salty.protos.RegisterReq;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordReq;
+import com.salty.protos.ResetPasswordResp;
+import com.salty.protos.UpdateUserInfoReq;
+import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 import com.salty.protos.UserServiceGrpc;
 
@@ -53,7 +61,69 @@ public class UserServiceImpl extends BasicService implements UserService {
         mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
-    public void destroy() {
+    @Override
+    public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ResetPasswordReq req = ResetPasswordReq.newBuilder()
+                .setTelephone(telephone)
+                .setVerificationCode(verificationCode)
+                .setNewPassword(newPassword)
+                .build();
 
+        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+    }
+
+    @Override
+    public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ResetPasswordReq req = ResetPasswordReq.newBuilder()
+                .setTelephone(telephone)
+                .setOldPassword(oldPassword)
+                .setNewPassword(newPassword)
+                .build();
+
+        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+    }
+
+    @Override
+    public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
+        UserProfile profile = UserProfile.newBuilder()
+                .setNickname(nickname)
+                .setDescription(description)
+                .setSex(sex)
+                .setBirthday(birthday)
+                .setLocation(location)
+                .build();
+
+        UpdateUserInfoReq req = UpdateUserInfoReq.newBuilder()
+                .setProfile(profile)
+                .build();
+
+        mUserServiceStub.updateUserInfo(createReq(req), new DefaultStreamObserver<>(UpdateUserInfoResp.getDefaultInstance(), callback));
+    }
+
+    @Override
+    public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
+        GetUserInfoReq req = GetUserInfoReq.newBuilder()
+                .setUserId(userId)
+                .build();
+
+        mUserServiceStub.getUserInfo(createReq(req), new DefaultStreamObserver<>(GetUserInfoResp.getDefaultInstance(), callback));
+    }
+
+    @Override
+    public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
+        QueryUserInfoReq req = QueryUserInfoReq.newBuilder()
+                .setTelephone(telephone)
+                .build();
+
+        mUserServiceStub.queryUserInfo(createReq(req), new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
+    }
+
+    @Override
+    public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
+        QueryUserInfoReq req = QueryUserInfoReq.newBuilder()
+                .setEmail(email)
+                .build();
+
+        mUserServiceStub.queryUserInfo(createReq(req), new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
     }
 }

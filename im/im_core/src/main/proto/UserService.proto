@@ -60,9 +60,11 @@ message LoginResp {
 }
 
 message ResetPasswordReq {
-    string oldPassword = 1;
-    string newPassword = 2;
-    string verificationCode = 3;
+    string newPassword = 1;
+    oneof resetCertificate {//重置凭据，要么用旧密码，要么用验证码
+        string oldPassword = 2;
+        string verificationCode = 3;
+    }
     oneof targetAccount {
         string telephone = 4;
         string email = 5;

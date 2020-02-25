@@ -1,6 +1,7 @@
 package me.zhixingye.im.service.impl;
 
 import com.google.protobuf.Any;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLite;
 import com.salty.protos.GrpcReq;
@@ -100,7 +101,7 @@ class BasicService {
                 return;
             }
 
-            byte[] protoData = anyData.toByteArray();
+            ByteString protoData = anyData.getValue();
             if (protoData == null) {
                 Logger.e(TAG, "protoData == null");
                 callError(ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
@@ -172,7 +173,7 @@ class BasicService {
             responseData = respStr;
         }
 
-        responseData = "  "+responseData;
+        responseData = "  " + responseData;
         responseData = responseData.replace("\n", "\n  ");
 
         Logger.e(TAG, String.format(Locale.getDefault(),

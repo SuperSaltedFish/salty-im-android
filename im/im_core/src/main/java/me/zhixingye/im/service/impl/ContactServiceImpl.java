@@ -58,8 +58,4 @@ public class ContactServiceImpl extends BasicService implements ContactService {
                 .build();
         mContactServiceStub.deleteContact(createReq(req), new DefaultStreamObserver<>(DeleteContactResp.getDefaultInstance(), callback));
     }
-
-    public void destroy() {
-
-    }
 }

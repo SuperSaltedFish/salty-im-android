@@ -8,6 +8,7 @@ import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,11 +46,14 @@ public class IMCoreTest {
         Log.e(TAG, "测试结束");
     }
 
+    private String mAccount;
+    private String mPassword;
 
     private void startTest() {
 
-        testSMSReq();
         testRegisterReq();
+        testResetLoginPasswordByVerificationCode();
+        testResetLoginPasswordByOldPassword();
         testLoginReq();
 
         while (isLock) {
@@ -63,15 +67,49 @@ public class IMCoreTest {
         }
     }
 
-    private static String mAccount;
 
-    private void testSMSReq() {
+    private void testRegisterReq() {
         Random random = new Random(System.currentTimeMillis());
         StringBuilder builder = new StringBuilder("1");
         for (int i = 0; i < 10; i++) {
             builder.append(random.nextInt(10));
         }
         mAccount = builder.toString();
+        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
+                mAccount,
+                ObtainSMSCodeReq.CodeType.REGISTER,
+                new LockRequestCallback<ObtainSMSCodeResp>() {
+                    @Override
+                    public void onSuccessful(ObtainSMSCodeResp resp) {
+
+
+                    }
+                });
+
+        mPassword = "123";
+        IMCore.get().getUserService().registerByTelephone(
+                mAccount,
+                mPassword,
+                "123456",
+                new LockRequestCallback<RegisterResp>() {
+                    @Override
+                    public void onSuccessful(RegisterResp resp) {
+
+                    }
+                });
+    }
+
+    private void testResetLoginPasswordByOldPassword() {
+        String newPassword = "141";
+        IMCore.get().getUserService().resetLoginPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
+            @Override
+            void onSuccessful(ResetPasswordResp resp) {
+                mPassword = newPassword;
+            }
+        });
+    }
+
+    private void testResetLoginPasswordByVerificationCode() {
         IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
@@ -82,19 +120,15 @@ public class IMCoreTest {
 
                     }
                 });
-    }
 
-    private String mPassword;
-
-    private void testRegisterReq() {
-        mPassword = "123";
-        IMCore.get().getUserService().registerByTelephone(
+        mPassword = "yezhixing";
+        IMCore.get().getUserService().resetLoginPasswordByTelephone(
                 mAccount,
-                mPassword,
                 "123456",
-                new LockRequestCallback<RegisterResp>() {
+                mPassword,
+                new LockRequestCallback<ResetPasswordResp>() {
                     @Override
-                    public void onSuccessful(RegisterResp resp) {
+                    void onSuccessful(ResetPasswordResp resp) {
 
                     }
                 });

@@ -14,14 +14,14 @@ import me.zhixingye.im.service.MessageService;
 import me.zhixingye.im.service.SMSService;
 import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.service.UserService;
-import me.zhixingye.im.service.impl.ContactServiceImpl;
-import me.zhixingye.im.service.impl.ConversationServiceImpl;
-import me.zhixingye.im.service.impl.GroupServiceImpl;
-import me.zhixingye.im.service.impl.MessageServiceImpl;
 import me.zhixingye.im.service.impl.NetworkServiceImpl;
-import me.zhixingye.im.service.impl.SMSServiceImpl;
-import me.zhixingye.im.service.impl.StorageServiceImpl;
-import me.zhixingye.im.service.impl.UserServiceImpl;
+import me.zhixingye.im.service.manager.ContactManager;
+import me.zhixingye.im.service.manager.ConversationManager;
+import me.zhixingye.im.service.manager.GroupManager;
+import me.zhixingye.im.service.manager.MessageManager;
+import me.zhixingye.im.service.manager.SMSManager;
+import me.zhixingye.im.service.manager.StorageManager;
+import me.zhixingye.im.service.manager.UserManager;
 import me.zhixingye.im.tool.Logger;
 
 /**
@@ -67,13 +67,13 @@ public class IMCore {
     private String mAppVersion;
     private Locale mLanguage;
 
-    private ContactServiceImpl mContactService;
-    private ConversationServiceImpl mConversationService;
-    private GroupServiceImpl mGroupService;
-    private MessageServiceImpl mMessageService;
-    private StorageServiceImpl mStorageService;
-    private SMSServiceImpl mSMSService;
-    private UserServiceImpl mUserService;
+    private ContactManager mContactService;
+    private ConversationManager mConversationService;
+    private GroupManager mGroupService;
+    private MessageManager mMessageService;
+    private StorageManager mStorageService;
+    private SMSManager mSMSService;
+    private UserManager mUserService;
 
     private IMCore(Context context, String serverIP, int serverPort, String version) {
         mAppContext = context.getApplicationContext();
@@ -82,13 +82,13 @@ public class IMCore {
 
         NetworkServiceImpl.init(serverIP, serverPort,mAppContext);
 
-        mContactService = new ContactServiceImpl();
-        mConversationService = new ConversationServiceImpl();
-        mGroupService = new GroupServiceImpl();
-        mMessageService = new MessageServiceImpl();
-        mStorageService = new StorageServiceImpl(mAppContext);
-        mSMSService = new SMSServiceImpl();
-        mUserService = new UserServiceImpl();
+        mContactService = new ContactManager();
+        mConversationService = new ConversationManager();
+        mGroupService = new GroupManager();
+        mMessageService = new MessageManager();
+        mStorageService = new StorageManager(mAppContext);
+        mSMSService = new SMSManager();
+        mUserService = new UserManager();
     }
 
     public ContactService getContactService() {

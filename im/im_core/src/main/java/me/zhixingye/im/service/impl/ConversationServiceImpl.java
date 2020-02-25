@@ -95,8 +95,4 @@ public class ConversationServiceImpl extends BasicService implements Conversatio
                 .build();
         mConversationServiceStub.getConversationDetail(createReq(req), new DefaultStreamObserver<>(UpdateNotificationStatusResp.getDefaultInstance(), callback));
     }
-
-    public void destroy() {
-
-    }
 }

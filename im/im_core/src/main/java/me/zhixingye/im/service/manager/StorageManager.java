@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.impl;
+package me.zhixingye.im.service.manager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,7 +17,7 @@ import me.zhixingye.im.util.AESUtil;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageServiceImpl implements StorageService {
+public class StorageManager implements StorageService {
 
     private static final String TAG = "StorageService";
 
@@ -30,12 +30,12 @@ public class StorageServiceImpl implements StorageService {
     private Key mAESKey;
 
     //初始化过程中传入了storageName
-    public StorageServiceImpl(Context appContent) {
+    public StorageManager(Context appContent) {
         this(appContent, DEFAULT_STORAGE_NAME);
     }
 
     //初始化过程中传入了storageName
-    public StorageServiceImpl(Context appContent, String storageName) {
+    public StorageManager(Context appContent, String storageName) {
         mConfigurationPreferences = appContent.getSharedPreferences(storageName, Context.MODE_PRIVATE);
 //        mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         mAESKey = AESUtil.generateAESKey(192);
@@ -107,5 +107,9 @@ public class StorageServiceImpl implements StorageService {
 //            }
 //        }
         return value;
+    }
+
+    public void destroy() {
+
     }
 }

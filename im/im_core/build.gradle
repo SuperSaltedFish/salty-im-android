@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion rootProject.ext.buildVersions.compileSdkVersion
@@ -24,6 +25,14 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    sourceSets {
+        main {
+            proto {
+                srcDir '../salty-im-proto'
+            }
+        }
+    }
 }
 
 buildscript {
@@ -37,7 +46,6 @@ buildscript {
 }
 
 
-apply plugin: 'com.google.protobuf'
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:$depVersions.protobuf"

@@ -1,0 +1,6 @@
+[submodule "im/im_core/src/main/proto/salty-im-proto"]
+	path = im/im_core/src/main/proto/salty-im-proto
+	url = git@github.com:SuperSaltedFish/salty-im-proto.git
+[submodule "im/salty-im-proto"]
+	path = im/salty-im-proto
+	url = git@github.com:SuperSaltedFish/salty-im-proto.git

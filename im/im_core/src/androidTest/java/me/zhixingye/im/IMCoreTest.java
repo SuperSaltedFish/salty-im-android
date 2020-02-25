@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class IMCoreTest {
 
-    private static final String TAG = "ExampleInstrumentedTest";
+    private static final String TAG = "IMCoreTest";
 
     private static boolean isContinue = true;
     private volatile static boolean isLock = false;
@@ -74,7 +74,7 @@ public class IMCoreTest {
         mAccount = builder.toString();
         IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
-                ObtainSMSCodeReq.CodeType.REGISTER,
+                ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
                 new LockRequestCallback<ObtainSMSCodeResp>() {
                     @Override
                     public void onSuccessful(ObtainSMSCodeResp resp) {

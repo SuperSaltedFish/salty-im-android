@@ -3,8 +3,8 @@ package me.zhixingye.im.sdk.proxy;
 import android.annotation.SuppressLint;
 import android.os.RemoteException;
 
-import me.zhixingye.im.sdk.IStorageServiceHandle;
 import me.zhixingye.im.manager.StorageManager;
+import me.zhixingye.im.sdk.IStorageManagerHandle;
 
 
 /**
@@ -15,27 +15,27 @@ import me.zhixingye.im.manager.StorageManager;
 @SuppressLint("ApplySharedPref")
 public class StorageManagerProxy extends BasicProxy implements StorageManager {
 
-    private IStorageServiceHandle mServiceHandle;
+    private IStorageManagerHandle mManagerHandle;
 
     public StorageManagerProxy() {
 
     }
 
-    public void bindHandle(IStorageServiceHandle handle) {
-        mServiceHandle = handle;
+    public void bindHandle(IStorageManagerHandle handle) {
+        mManagerHandle = handle;
     }
 
     public void unbindHandle() {
-        mServiceHandle = null;
+        mManagerHandle = null;
     }
 
     @Override
     public boolean putToConfigurationPreferences(String key, String value) {
-        if (isServiceUnavailable(mServiceHandle, null)) {
+        if (isServiceUnavailable(mManagerHandle, null)) {
             return false;
         }
         try {
-            return mServiceHandle.putToConfigurationPreferences(key, value);
+            return mManagerHandle.putToConfigurationPreferences(key, value);
         } catch (RemoteException e) {
             e.printStackTrace();
             return false;
@@ -44,11 +44,11 @@ public class StorageManagerProxy extends BasicProxy implements StorageManager {
 
     @Override
     public String getFromConfigurationPreferences(String key) {
-        if (isServiceUnavailable(mServiceHandle, null)) {
+        if (isServiceUnavailable(mManagerHandle, null)) {
             return "";
         }
         try {
-            return mServiceHandle.getFromConfigurationPreferences(key);
+            return mManagerHandle.getFromConfigurationPreferences(key);
         } catch (RemoteException e) {
             e.printStackTrace();
             return "";
@@ -57,11 +57,11 @@ public class StorageManagerProxy extends BasicProxy implements StorageManager {
 
     @Override
     public boolean putToUserPreferences(String key, String value) {
-        if (isServiceUnavailable(mServiceHandle, null)) {
+        if (isServiceUnavailable(mManagerHandle, null)) {
             return false;
         }
         try {
-            return mServiceHandle.putToUserPreferences(key, value);
+            return mManagerHandle.putToUserPreferences(key, value);
         } catch (RemoteException e) {
             e.printStackTrace();
             return false;
@@ -70,11 +70,11 @@ public class StorageManagerProxy extends BasicProxy implements StorageManager {
 
     @Override
     public String getFromUserPreferences(String key) {
-        if (isServiceUnavailable(mServiceHandle, null)) {
+        if (isServiceUnavailable(mManagerHandle, null)) {
             return "";
         }
         try {
-            return mServiceHandle.getFromUserPreferences(key);
+            return mManagerHandle.getFromUserPreferences(key);
         } catch (RemoteException e) {
             e.printStackTrace();
             return "";

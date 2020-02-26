@@ -5,16 +5,16 @@ import com.salty.protos.ObtainSMSCodeResp;
 
 import me.zhixingye.im.IMCore;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IResultCallback;
-import me.zhixingye.im.sdk.ISMSServiceHandle;
-import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.SMSManager;
+import me.zhixingye.im.sdk.IResultCallback;
+import me.zhixingye.im.sdk.ISMSManagerHandle;
+import me.zhixingye.im.sdk.util.CallbackUtil;
 
 /**
  * Created by zhixingye on 2020年01月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class SMSServiceHandle extends ISMSServiceHandle.Stub {
+public class SMSManagerHandle extends ISMSManagerHandle.Stub {
 
     private SMSManager mSMSService = IMCore.get().getSMSManager();
 

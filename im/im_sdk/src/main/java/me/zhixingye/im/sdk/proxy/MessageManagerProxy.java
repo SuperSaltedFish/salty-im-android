@@ -1,7 +1,7 @@
 package me.zhixingye.im.sdk.proxy;
 
-import me.zhixingye.im.sdk.IMessageServiceHandle;
 import me.zhixingye.im.manager.MessageManager;
+import me.zhixingye.im.sdk.IMessageManagerHandle;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -9,14 +9,14 @@ import me.zhixingye.im.manager.MessageManager;
  */
 public class MessageManagerProxy extends BasicProxy implements MessageManager {
 
-    private IMessageServiceHandle mServiceHandle;
+    private IMessageManagerHandle mManagerHandle;
 
 
-    public void bindHandle(IMessageServiceHandle handle) {
-        mServiceHandle = handle;
+    public void bindHandle(IMessageManagerHandle handle) {
+        mManagerHandle = handle;
     }
 
     public void unbindHandle() {
-        mServiceHandle = null;
+        mManagerHandle = null;
     }
 }

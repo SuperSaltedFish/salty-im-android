@@ -3,18 +3,15 @@ package me.zhixingye.im.sdk.proxy;
 import android.os.RemoteException;
 
 import com.salty.protos.GetUserInfoResp;
-import com.salty.protos.LoginResp;
 import com.salty.protos.QueryUserInfoResp;
-import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 
-import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IUserServiceHandle;
-import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.sdk.IUserManagerHandle;
+import me.zhixingye.im.sdk.util.CallbackUtil;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -22,65 +19,27 @@ import me.zhixingye.im.manager.UserManager;
  */
 public class UserManagerProxy extends BasicProxy implements UserManager {
 
-    private IUserServiceHandle mServiceHandle;
+    private IUserManagerHandle mManagerHandle;
 
     public UserManagerProxy() {
     }
 
-    public void bindHandle(IUserServiceHandle handle) {
-        mServiceHandle = handle;
+    public void bindHandle(IUserManagerHandle handle) {
+        mManagerHandle = handle;
     }
 
     public void unbindHandle() {
-        mServiceHandle = null;
+        mManagerHandle = null;
     }
 
-    @Override
-    public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
-            return;
-        }
-        try {
-            mServiceHandle.registerByTelephone(telephone, password, verificationCode, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CallbackUtil.callRemoteError(callback);
-        }
-    }
-
-    @Override
-    public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
-            return;
-        }
-        try {
-            mServiceHandle.loginByTelephone(telephone, password, verificationCode, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CallbackUtil.callRemoteError(callback);
-        }
-    }
-
-    @Override
-    public void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
-            return;
-        }
-        try {
-            mServiceHandle.loginByEmail(email, password, verificationCode, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CallbackUtil.callRemoteError(callback);
-        }
-    }
 
     @Override
     public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.resetLoginPasswordByTelephone(telephone, verificationCode, newPassword, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.resetLoginPasswordByTelephone(telephone, verificationCode, newPassword, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -89,11 +48,11 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.resetLoginPassword(telephone, oldPassword, newPassword, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.resetLoginPassword(telephone, oldPassword, newPassword, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -102,11 +61,11 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -115,11 +74,11 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -128,11 +87,11 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -141,11 +100,11 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

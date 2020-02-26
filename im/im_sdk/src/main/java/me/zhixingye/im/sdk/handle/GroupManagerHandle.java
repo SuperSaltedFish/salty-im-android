@@ -4,14 +4,14 @@ import android.os.RemoteException;
 
 import java.util.List;
 
-import me.zhixingye.im.sdk.IGroupServiceHandle;
+import me.zhixingye.im.sdk.IGroupManagerHandle;
 import me.zhixingye.im.sdk.IResultCallback;
 
 /**
  * Created by zhixingye on 2020年02月02日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupServiceHandle extends IGroupServiceHandle.Stub {
+public class GroupManagerHandle extends IGroupManagerHandle.Stub {
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, IResultCallback callback) throws RemoteException {
 

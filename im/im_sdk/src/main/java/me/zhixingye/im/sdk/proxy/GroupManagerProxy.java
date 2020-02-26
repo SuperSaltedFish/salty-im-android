@@ -14,7 +14,7 @@ import com.salty.protos.UpdateMemberNicknameResp;
 import java.util.List;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IGroupServiceHandle;
+import me.zhixingye.im.sdk.IGroupManagerHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.GroupManager;
 
@@ -24,26 +24,26 @@ import me.zhixingye.im.manager.GroupManager;
  */
 public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
-    private IGroupServiceHandle mServiceHandle;
+    private IGroupManagerHandle mManagerHandle;
 
     public GroupManagerProxy() {
     }
 
-    public void bindHandle(IGroupServiceHandle handle) {
-        mServiceHandle = handle;
+    public void bindHandle(IGroupManagerHandle handle) {
+        mManagerHandle = handle;
     }
 
     public void unbindHandle() {
-        mServiceHandle = null;
+        mManagerHandle = null;
     }
 
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.createGroup(groupName, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.createGroup(groupName, memberUserIdArr, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -53,7 +53,7 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
     @Override
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
         try {
-            mServiceHandle.joinGroup(groupId, reason, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.joinGroup(groupId, reason, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -62,11 +62,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.quitGroup(groupId, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.quitGroup(groupId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -75,11 +75,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.addGroupMember(groupId, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.addGroupMember(groupId, memberUserIdArr, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -88,11 +88,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.kickGroupMember(groupId, memberUserId, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.kickGroupMember(groupId, memberUserId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -101,11 +101,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.updateGroupName(groupId, groupName, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.updateGroupName(groupId, groupName, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -114,11 +114,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.updateGroupNotice(groupId, notice, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.updateGroupNotice(groupId, notice, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -127,11 +127,11 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.updateMemberNickname(groupId, memberNickname, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.updateMemberNickname(groupId, memberNickname, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

@@ -2,26 +2,26 @@
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
-import me.zhixingye.im.sdk.IContactServiceHandle;
-import me.zhixingye.im.sdk.IConversationServiceHandle;
-import me.zhixingye.im.sdk.IGroupServiceHandle;
-import me.zhixingye.im.sdk.IMessageServiceHandle;
-import me.zhixingye.im.sdk.ISMSServiceHandle;
-import me.zhixingye.im.sdk.IStorageServiceHandle;
-import me.zhixingye.im.sdk.IUserServiceHandle;
+import me.zhixingye.im.sdk.IContactManagerHandle;
+import me.zhixingye.im.sdk.IConversationManagerHandle;
+import me.zhixingye.im.sdk.IGroupManagerHandle;
+import me.zhixingye.im.sdk.IMessageManagerHandle;
+import me.zhixingye.im.sdk.ISMSManagerHandle;
+import me.zhixingye.im.sdk.IStorageManagerHandle;
+import me.zhixingye.im.sdk.IUserManagerHandle;
 
 interface IRemoteService {
-    IContactServiceHandle getContactServiceHandle();
+    IContactManagerHandle getContactManagerHandle();
 
-    IConversationServiceHandle getConversationServiceHandle();
+    IConversationManagerHandle getConversationManagerHandle();
 
-    IGroupServiceHandle getGroupServiceHandle();
+    IGroupManagerHandle getGroupManagerHandle();
 
-    IMessageServiceHandle getMessageServiceHandle();
+    IMessageManagerHandle getMessageManagerHandle();
 
-    ISMSServiceHandle getSMSServiceHandle();
+    ISMSManagerHandle getSMSManagerHandle();
 
-    IStorageServiceHandle getStorageServiceHandle();
+    IStorageManagerHandle getStorageManagerHandle();
 
-    IUserServiceHandle getUserServiceHandle();
+    IUserManagerHandle getUserManagerHandle();
 }

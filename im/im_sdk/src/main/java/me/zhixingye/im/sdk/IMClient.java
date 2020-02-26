@@ -85,13 +85,13 @@ public class IMClient {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 IRemoteService remoteService = IRemoteService.Stub.asInterface(service);
                 try {
-                    mContactService.bindHandle(remoteService.getContactServiceHandle());
-                    mConversationService.bindHandle(remoteService.getConversationServiceHandle());
-                    mGroupService.bindHandle(remoteService.getGroupServiceHandle());
-                    mMessageService.bindHandle(remoteService.getMessageServiceHandle());
-                    mSMSService.bindHandle(remoteService.getSMSServiceHandle());
-                    mStorageService.bindHandle(remoteService.getStorageServiceHandle());
-                    mUserService.bindHandle(remoteService.getUserServiceHandle());
+                    mContactService.bindHandle(remoteService.getContactManagerHandle());
+                    mConversationService.bindHandle(remoteService.getConversationManagerHandle());
+                    mGroupService.bindHandle(remoteService.getGroupManagerHandle());
+                    mMessageService.bindHandle(remoteService.getMessageManagerHandle());
+                    mSMSService.bindHandle(remoteService.getSMSManagerHandle());
+                    mStorageService.bindHandle(remoteService.getStorageManagerHandle());
+                    mUserService.bindHandle(remoteService.getUserManagerHandle());
                     if (isFirstBind) {
                         if (callback != null) {
                             callback.onCompleted();

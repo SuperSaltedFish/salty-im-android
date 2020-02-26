@@ -3,15 +3,16 @@ package me.zhixingye.im.sdk;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 import me.zhixingye.im.IMCore;
-import me.zhixingye.im.sdk.handle.ContactServiceHandle;
-import me.zhixingye.im.sdk.handle.ConversationServiceHandle;
-import me.zhixingye.im.sdk.handle.GroupServiceHandle;
-import me.zhixingye.im.sdk.handle.MessageServiceHandle;
-import me.zhixingye.im.sdk.handle.SMSServiceHandle;
-import me.zhixingye.im.sdk.handle.StorageServiceHandle;
-import me.zhixingye.im.sdk.handle.UserServiceHandle;
+import me.zhixingye.im.sdk.handle.ContactManagerHandle;
+import me.zhixingye.im.sdk.handle.ConversationManagerHandle;
+import me.zhixingye.im.sdk.handle.GroupManagerHandle;
+import me.zhixingye.im.sdk.handle.MessageManagerHandle;
+import me.zhixingye.im.sdk.handle.SMSManagerHandle;
+import me.zhixingye.im.sdk.handle.StorageManagerHandle;
+import me.zhixingye.im.sdk.handle.UserManagerHandle;
 
 public class IMRemoteService extends Service {
 
@@ -28,7 +29,6 @@ public class IMRemoteService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        IMCore.release();
     }
 
     @Override
@@ -39,38 +39,38 @@ public class IMRemoteService extends Service {
     private final IBinder mIMServiceBinder = new IRemoteService.Stub() {
 
         @Override
-        public IUserServiceHandle getUserServiceHandle() {
-            return new UserServiceHandle();
+        public IContactManagerHandle getContactManagerHandle() throws RemoteException {
+            return new ContactManagerHandle();
         }
 
         @Override
-        public IContactServiceHandle getContactServiceHandle() {
-            return new ContactServiceHandle();
+        public IConversationManagerHandle getConversationManagerHandle() throws RemoteException {
+            return new ConversationManagerHandle();
         }
 
         @Override
-        public IConversationServiceHandle getConversationServiceHandle() {
-            return new ConversationServiceHandle();
+        public IGroupManagerHandle getGroupManagerHandle() throws RemoteException {
+            return new GroupManagerHandle();
         }
 
         @Override
-        public IGroupServiceHandle getGroupServiceHandle() {
-            return new GroupServiceHandle();
+        public IMessageManagerHandle getMessageManagerHandle() throws RemoteException {
+            return new MessageManagerHandle();
         }
 
         @Override
-        public IMessageServiceHandle getMessageServiceHandle() {
-            return new MessageServiceHandle();
+        public ISMSManagerHandle getSMSManagerHandle() throws RemoteException {
+            return new SMSManagerHandle();
         }
 
         @Override
-        public ISMSServiceHandle getSMSServiceHandle() {
-            return new SMSServiceHandle();
+        public IStorageManagerHandle getStorageManagerHandle() throws RemoteException {
+            return new StorageManagerHandle();
         }
 
         @Override
-        public IStorageServiceHandle getStorageServiceHandle() {
-            return new StorageServiceHandle();
+        public IUserManagerHandle getUserManagerHandle() throws RemoteException {
+            return new UserManagerHandle();
         }
     };
 }

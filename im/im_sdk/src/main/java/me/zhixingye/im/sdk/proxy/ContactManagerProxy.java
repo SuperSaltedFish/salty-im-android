@@ -8,7 +8,7 @@ import com.salty.protos.RefusedContactResp;
 import com.salty.protos.RequestContactResp;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IContactServiceHandle;
+import me.zhixingye.im.sdk.IContactManagerHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.ContactManager;
 
@@ -18,26 +18,26 @@ import me.zhixingye.im.manager.ContactManager;
  */
 public class ContactManagerProxy extends BasicProxy implements ContactManager {
 
-    private IContactServiceHandle mServiceHandle;
+    private IContactManagerHandle mManagerHandle;
 
     public ContactManagerProxy() {
     }
 
-    public void bindHandle(IContactServiceHandle handle) {
-        mServiceHandle = handle;
+    public void bindHandle(IContactManagerHandle handle) {
+        mManagerHandle = handle;
     }
 
     public void unbindHandle() {
-        mServiceHandle = null;
+        mManagerHandle = null;
     }
 
     @Override
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.requestContact(userId, reason, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.requestContact(userId, reason, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -46,11 +46,11 @@ public class ContactManagerProxy extends BasicProxy implements ContactManager {
 
     @Override
     public void refusedContact(String userId, String reason, RequestCallback<RefusedContactResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.refusedContact(userId, reason, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.refusedContact(userId, reason, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -59,11 +59,11 @@ public class ContactManagerProxy extends BasicProxy implements ContactManager {
 
     @Override
     public void acceptContact(String userId, RequestCallback<AcceptContactResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.acceptContact(userId, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.acceptContact(userId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -72,11 +72,11 @@ public class ContactManagerProxy extends BasicProxy implements ContactManager {
 
     @Override
     public void deleteContact(String userId, RequestCallback<DeleteContactResp> callback) {
-        if (isServiceUnavailable(mServiceHandle, callback)) {
+        if (isServiceUnavailable(mManagerHandle, callback)) {
             return;
         }
         try {
-            mServiceHandle.deleteContact(userId, new ResultCallbackWrapper<>(callback));
+            mManagerHandle.deleteContact(userId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

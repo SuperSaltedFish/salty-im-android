@@ -87,7 +87,7 @@ public class IMCoreTest {
                 });
 
         mPassword = "123";
-        IMCore.get().getUserManager().registerByTelephone(
+        IMCore.get().registerByTelephone(
                 mAccount,
                 mPassword,
                 "123456",
@@ -136,7 +136,7 @@ public class IMCoreTest {
     }
 
     private void testLoginReq() {
-        IMCore.get().getUserManager().loginByTelephone(
+        IMCore.get().loginByTelephone(
                 mAccount,
                 mPassword,
                 "",

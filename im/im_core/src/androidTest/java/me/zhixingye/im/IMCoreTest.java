@@ -107,6 +107,7 @@ public class IMCoreTest {
                 mPassword = newPassword;
             }
         });
+        mPassword = newPassword;
     }
 
     private void testResetLoginPasswordByVerificationCode() {
@@ -124,7 +125,7 @@ public class IMCoreTest {
         mPassword = "yezhixing";
         IMCore.get().getUserService().resetLoginPasswordByTelephone(
                 mAccount,
-                "123456",
+                "112233",
                 mPassword,
                 new LockRequestCallback<ResetPasswordResp>() {
                     @Override

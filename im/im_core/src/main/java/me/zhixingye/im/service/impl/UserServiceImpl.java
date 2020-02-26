@@ -66,7 +66,7 @@ public class UserServiceImpl extends BasicService implements UserService {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
                 .setVerificationCode(verificationCode)
-                .setNewPassword(newPassword)
+                .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
         mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
@@ -76,8 +76,8 @@ public class UserServiceImpl extends BasicService implements UserService {
     public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
-                .setOldPassword(oldPassword)
-                .setNewPassword(newPassword)
+                .setOldPassword(Sha256Util.sha256WithSalt(oldPassword, PASSWORD_SALTY))
+                .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
         mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));

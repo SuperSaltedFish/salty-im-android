@@ -1,8 +1,25 @@
 package me.zhixingye.im.service;
 
 /**
- * Created by zhixingye on 2020年02月02日.
+ * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public interface MessageService {
+public class MessageService {
+
+    private static volatile MessageService sMessageService;
+
+    public static MessageService get() {
+        if (sMessageService == null) {
+            synchronized (MessageService.class) {
+                if (sMessageService == null) {
+                    sMessageService = new MessageService();
+                }
+            }
+        }
+        return sMessageService;
+    }
+
+    private MessageService() {
+        super();
+    }
 }

@@ -14,16 +14,17 @@ import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IUserServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
+import me.zhixingye.im.manager.UserManager;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class UserServiceProxy extends BasicProxy implements me.zhixingye.im.service.UserService {
+public class UserManagerProxy extends BasicProxy implements UserManager {
 
     private IUserServiceHandle mServiceHandle;
 
-    public UserServiceProxy() {
+    public UserManagerProxy() {
     }
 
     public void bindHandle(IUserServiceHandle handle) {
@@ -54,6 +55,19 @@ public class UserServiceProxy extends BasicProxy implements me.zhixingye.im.serv
         }
         try {
             mServiceHandle.loginByTelephone(telephone, password, verificationCode, new ResultCallbackWrapper<>(callback));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            CallbackUtil.callRemoteError(callback);
+        }
+    }
+
+    @Override
+    public void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+        if (isServiceUnavailable(mServiceHandle, callback)) {
+            return;
+        }
+        try {
+            mServiceHandle.loginByEmail(email, password, verificationCode, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

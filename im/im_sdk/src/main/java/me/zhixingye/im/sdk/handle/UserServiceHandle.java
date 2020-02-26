@@ -22,6 +22,11 @@ public class UserServiceHandle extends IUserServiceHandle.Stub {
     }
 
     @Override
+    public void loginByEmail(String email, String password, String verificationCode, IResultCallback callback) throws RemoteException {
+
+    }
+
+    @Override
     public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback) throws RemoteException {
 
     }

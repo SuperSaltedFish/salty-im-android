@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.manager;
+package me.zhixingye.im.manager.impl;
 
 import com.salty.protos.AddGroupMemberResp;
 import com.salty.protos.CreateGroupResp;
@@ -12,20 +12,20 @@ import com.salty.protos.UpdateMemberNicknameResp;
 import java.util.List;
 
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.manager.GroupManager;
 import me.zhixingye.im.service.GroupService;
-import me.zhixingye.im.service.impl.GroupServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupManager implements GroupService {
+public class GroupManagerImpl implements GroupManager {
 
     private GroupService mGroupService;
 
-    public GroupManager() {
+    public GroupManagerImpl() {
         super();
-        mGroupService = new GroupServiceImpl();
+        mGroupService = GroupService.get();
     }
 
     @Override

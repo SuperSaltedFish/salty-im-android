@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.RemoteException;
 
 import me.zhixingye.im.sdk.IStorageServiceHandle;
+import me.zhixingye.im.manager.StorageManager;
 
 
 /**
@@ -12,11 +13,11 @@ import me.zhixingye.im.sdk.IStorageServiceHandle;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageServiceProxy extends BasicProxy implements me.zhixingye.im.service.StorageService {
+public class StorageManagerProxy extends BasicProxy implements StorageManager {
 
     private IStorageServiceHandle mServiceHandle;
 
-    public StorageServiceProxy() {
+    public StorageManagerProxy() {
 
     }
 

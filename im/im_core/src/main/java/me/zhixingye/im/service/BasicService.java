@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.impl;
+package me.zhixingye.im.service;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import me.zhixingye.im.IMCore;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
@@ -27,28 +26,15 @@ class BasicService {
 
     private static final String TAG = "BasicService";
 
-    private NetworkServiceImpl mNetworkService = NetworkServiceImpl.get();
+    private NetworkService mNetworkService = NetworkService.get();
 
     protected ManagedChannel getChannel() {
         return mNetworkService.getChannel();
     }
 
-    static GrpcReq createReq(MessageLite message) {
-        Any data = Any.newBuilder()
-                .setTypeUrl("salty/" + message.getClass().getCanonicalName())
-                .setValue(message.toByteString())
-                .build();
-
-        GrpcReq req = GrpcReq.newBuilder()
-                .setDeviceId(IMCore.get().getDeviceID())
-                .setOs(GrpcReq.OS.ANDROID)
-                .setLanguage(GrpcReq.Language.CHINESE)
-                .setVersion(IMCore.get().getAppVersion())
-                .setData(data)
-                .build();
-
+    protected static GrpcReq createReq(MessageLite message) {
+        GrpcReq req = NetworkService.createReq(message);
         printRequest(req, message);
-
         return req;
     }
 
@@ -120,7 +106,6 @@ class BasicService {
                 } else {
                     callComplete(resultMessage);
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
                 callError(ResponseCode.INTERNAL_UNKNOWN);

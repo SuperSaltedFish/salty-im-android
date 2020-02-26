@@ -14,16 +14,17 @@ import com.salty.protos.UpdateNotificationStatusResp;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IConversationServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
+import me.zhixingye.im.manager.ConversationManager;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ConversationServiceProxy extends BasicProxy implements me.zhixingye.im.service.ConversationService {
+public class ConversationManagerProxy extends BasicProxy implements ConversationManager {
 
     private IConversationServiceHandle mServiceHandle;
 
-    public ConversationServiceProxy() {
+    public ConversationManagerProxy() {
     }
 
     public void bindHandle(IConversationServiceHandle handle) {

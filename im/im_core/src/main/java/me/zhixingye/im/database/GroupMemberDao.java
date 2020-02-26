@@ -12,7 +12,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import me.zhixingye.im.service.impl.SQLiteServiceImpl;
+import me.zhixingye.im.service.SQLiteService;
 
 /**
  * Created by YZX on 2018年03月08日.
@@ -46,7 +46,7 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
 
     private UserDao mUserDao;
 
-    public GroupMemberDao(SQLiteServiceImpl.ReadWriteHelper readWriteHelper) {
+    public GroupMemberDao(SQLiteService.ReadWriteHelper readWriteHelper) {
         super(readWriteHelper);
         mUserDao = new UserDao(readWriteHelper);
     }
@@ -54,7 +54,7 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
     @NonNull
     public List<GroupMemberProfile> loadAllByGroupId(String groupId) {
         if (!TextUtils.isEmpty(groupId)) {
-            try (SQLiteServiceImpl.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
+            try (SQLiteService.ReadableDatabase database = mReadWriteHelper.openReadableDatabase()) {
                 Cursor cursor = database.query(getViewTableNameIfHas(), null, COLUMN_NAME_GroupId + " = ?", new String[]{groupId}, null, null, null, null);
                 List<GroupMemberProfile> list = new ArrayList<>(cursor.getCount());
                 while (cursor.moveToNext()) {
@@ -70,7 +70,7 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
     }
 
     @Override
-    protected boolean insertToDatabase(GroupMemberProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
+    protected boolean insertToDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();
@@ -85,7 +85,7 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
     }
 
     @Override
-    protected boolean replaceFromDatabase(GroupMemberProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
+    protected boolean replaceFromDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();
@@ -100,7 +100,7 @@ public class GroupMemberDao extends AbstractDao<GroupMemberProfile> {
     }
 
     @Override
-    protected boolean updateFromDatabase(GroupMemberProfile entity, SQLiteServiceImpl.WritableDatabase database, ContentValues values) {
+    protected boolean updateFromDatabase(GroupMemberProfile entity, SQLiteService.WritableDatabase database, ContentValues values) {
         database.beginTransactionNonExclusive();
         try {
             UserProfile profile = entity.getUserProfile();

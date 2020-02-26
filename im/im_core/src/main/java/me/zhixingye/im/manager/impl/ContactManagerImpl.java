@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.manager;
+package me.zhixingye.im.manager.impl;
 
 import com.salty.protos.AcceptContactResp;
 import com.salty.protos.DeleteContactResp;
@@ -6,20 +6,20 @@ import com.salty.protos.RefusedContactResp;
 import com.salty.protos.RequestContactResp;
 
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.manager.ContactManager;
 import me.zhixingye.im.service.ContactService;
-import me.zhixingye.im.service.impl.ContactServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ContactManager implements ContactService {
+public class ContactManagerImpl implements ContactManager {
 
     private ContactService mService;
 
-    public ContactManager() {
+    public ContactManagerImpl() {
         super();
-        mService = new ContactServiceImpl();
+        mService = ContactService.get();
     }
 
     @Override

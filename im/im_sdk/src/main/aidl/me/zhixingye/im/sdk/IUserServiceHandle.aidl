@@ -9,6 +9,8 @@ interface IUserServiceHandle {
 
     void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback);
 
+    void loginByEmail(String email, String password, String verificationCode, IResultCallback callback);
+
     void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback);
 
     void resetLoginPassword(String telephone, String oldPassword, String newPassword, IResultCallback callback);

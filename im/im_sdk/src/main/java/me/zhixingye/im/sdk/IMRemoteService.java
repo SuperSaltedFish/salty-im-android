@@ -22,7 +22,7 @@ public class IMRemoteService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        IMCore.init(this, "111.231.238.209", 9090, "1.0.0");
+        IMCore.tryInit(this, "111.231.238.209", 9090, "1.0.0");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.impl;
+package me.zhixingye.im.manager.impl;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import java.security.Key;
 
-import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.manager.StorageManager;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.AESUtil;
 
@@ -17,7 +17,7 @@ import me.zhixingye.im.util.AESUtil;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageServiceImpl implements StorageService {
+public class StorageManagerImpl implements StorageManager {
 
     private static final String TAG = "StorageService";
 
@@ -30,24 +30,15 @@ public class StorageServiceImpl implements StorageService {
     private Key mAESKey;
 
     //初始化过程中传入了storageName
-    public StorageServiceImpl(Context appContent) {
-        this(appContent, DEFAULT_STORAGE_NAME);
-    }
-
-    //初始化过程中传入了storageName
-    public StorageServiceImpl(Context appContent, String storageName) {
+    public StorageManagerImpl(Context appContent, String storageName, String userId) {
         mConfigurationPreferences = appContent.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+        mUserPreferences = appContent.getSharedPreferences(userId, Context.MODE_PRIVATE);
 //        mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         mAESKey = AESUtil.generateAESKey(192);
         if (mAESKey == null) {
             Logger.w(TAG, "generateAESKeyInAndroidKeyStore fail");
             mAESKey = AESUtil.generateAESKey(192);
         }
-    }
-
-    //初始化用户的Preferences，也就是说每个用户有自己的Preferences
-    void initUserPreferences(Context context, String userID) {
-        mUserPreferences = context.getSharedPreferences(userID, Context.MODE_PRIVATE);
     }
 
     //put一个数据到ConfigurationPreferences
@@ -107,5 +98,9 @@ public class StorageServiceImpl implements StorageService {
 //            }
 //        }
         return value;
+    }
+
+    public void destroy() {
+
     }
 }

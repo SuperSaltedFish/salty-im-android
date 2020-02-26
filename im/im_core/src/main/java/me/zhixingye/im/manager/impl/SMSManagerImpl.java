@@ -1,23 +1,23 @@
-package me.zhixingye.im.service.manager;
+package me.zhixingye.im.manager.impl;
 
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.manager.SMSManager;
 import me.zhixingye.im.service.SMSService;
-import me.zhixingye.im.service.impl.SMSServiceImpl;
 
 /**
  * Created by zhixingye on 2020年01月10日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class SMSManager implements SMSService {
+public class SMSManagerImpl implements SMSManager {
 
     private SMSService mSMSService;
 
-    public SMSManager() {
+    public SMSManagerImpl() {
         super();
-        mSMSService = new SMSServiceImpl();
+        mSMSService =SMSService.get();
     }
 
     @Override

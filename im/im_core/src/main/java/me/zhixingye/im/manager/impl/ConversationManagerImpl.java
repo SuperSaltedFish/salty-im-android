@@ -1,4 +1,4 @@
-package me.zhixingye.im.service.manager;
+package me.zhixingye.im.manager.impl;
 
 import com.salty.protos.ClearConversationMessageResp;
 import com.salty.protos.Conversation;
@@ -10,19 +10,19 @@ import com.salty.protos.UpdateConversationTopResp;
 import com.salty.protos.UpdateNotificationStatusResp;
 
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.manager.ConversationManager;
 import me.zhixingye.im.service.ConversationService;
-import me.zhixingye.im.service.impl.ConversationServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ConversationManager implements ConversationService {
+public class ConversationManagerImpl implements ConversationManager {
 
     private ConversationService mService;
 
-    public ConversationManager() {
-        mService = new ConversationServiceImpl();
+    public ConversationManagerImpl() {
+        mService = ConversationService.get();
     }
 
     @Override

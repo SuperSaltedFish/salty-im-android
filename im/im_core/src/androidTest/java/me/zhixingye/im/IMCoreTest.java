@@ -40,7 +40,7 @@ public class IMCoreTest {
     @Test
     public void useAppContext() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        IMCore.init(appContext, "111.231.238.209", 9090, "1.0");
+        IMCore.tryInit(appContext, "111.231.238.209", 9090, "1.0");
 
         startTest();
         Log.e(TAG, "测试结束");
@@ -75,7 +75,7 @@ public class IMCoreTest {
             builder.append(random.nextInt(10));
         }
         mAccount = builder.toString();
-        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
+        IMCore.get().getSMSManager().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.REGISTER,
                 new LockRequestCallback<ObtainSMSCodeResp>() {
@@ -87,7 +87,7 @@ public class IMCoreTest {
                 });
 
         mPassword = "123";
-        IMCore.get().getUserService().registerByTelephone(
+        IMCore.get().getUserManager().registerByTelephone(
                 mAccount,
                 mPassword,
                 "123456",
@@ -101,7 +101,7 @@ public class IMCoreTest {
 
     private void testResetLoginPasswordByOldPassword() {
         String newPassword = "141";
-        IMCore.get().getUserService().resetLoginPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
+        IMCore.get().getUserManager().resetLoginPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
             @Override
             void onSuccessful(ResetPasswordResp resp) {
                 mPassword = newPassword;
@@ -111,7 +111,7 @@ public class IMCoreTest {
     }
 
     private void testResetLoginPasswordByVerificationCode() {
-        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
+        IMCore.get().getSMSManager().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
                 new LockRequestCallback<ObtainSMSCodeResp>() {
@@ -123,7 +123,7 @@ public class IMCoreTest {
                 });
 
         mPassword = "yezhixing";
-        IMCore.get().getUserService().resetLoginPasswordByTelephone(
+        IMCore.get().getUserManager().resetLoginPasswordByTelephone(
                 mAccount,
                 "112233",
                 mPassword,
@@ -136,7 +136,7 @@ public class IMCoreTest {
     }
 
     private void testLoginReq() {
-        IMCore.get().getUserService().loginByTelephone(
+        IMCore.get().getUserManager().loginByTelephone(
                 mAccount,
                 mPassword,
                 "",
@@ -148,6 +148,10 @@ public class IMCoreTest {
                         assertEquals(resp.getProfile().getTelephone(), mAccount);
                     }
                 });
+    }
+
+    private void testUpdateUserInfoReq(){
+
     }
 
     private static abstract class LockRequestCallback<T extends MessageLite> implements RequestCallback<T> {

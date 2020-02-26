@@ -16,16 +16,17 @@ import java.util.List;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IGroupServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
+import me.zhixingye.im.manager.GroupManager;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupServiceProxy extends BasicProxy implements me.zhixingye.im.service.GroupService {
+public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     private IGroupServiceHandle mServiceHandle;
 
-    public GroupServiceProxy() {
+    public GroupManagerProxy() {
     }
 
     public void bindHandle(IGroupServiceHandle handle) {

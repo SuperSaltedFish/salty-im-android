@@ -8,7 +8,7 @@ import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IResultCallback;
 import me.zhixingye.im.sdk.ISMSServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
-import me.zhixingye.im.service.SMSService;
+import me.zhixingye.im.manager.SMSManager;
 
 /**
  * Created by zhixingye on 2020年01月31日.
@@ -16,7 +16,7 @@ import me.zhixingye.im.service.SMSService;
  */
 public class SMSServiceHandle extends ISMSServiceHandle.Stub {
 
-    private SMSService mSMSService = IMCore.get().getSMSService();
+    private SMSManager mSMSService = IMCore.get().getSMSManager();
 
     @Override
     public void obtainVerificationCodeForTelephoneType(String telephone, int type, final IResultCallback callback) {

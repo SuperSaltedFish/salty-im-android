@@ -8,21 +8,21 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
-import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
-import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
-import me.zhixingye.im.sdk.proxy.GroupServiceProxy;
-import me.zhixingye.im.sdk.proxy.MessageServiceProxy;
-import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
-import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
-import me.zhixingye.im.sdk.proxy.UserServiceProxy;
+import me.zhixingye.im.sdk.proxy.ContactManagerProxy;
+import me.zhixingye.im.sdk.proxy.ConversationManagerProxy;
+import me.zhixingye.im.sdk.proxy.GroupManagerProxy;
+import me.zhixingye.im.sdk.proxy.MessageManagerProxy;
+import me.zhixingye.im.sdk.proxy.SMSManagerProxy;
+import me.zhixingye.im.sdk.proxy.StorageManagerProxy;
+import me.zhixingye.im.sdk.proxy.UserManagerProxy;
 import me.zhixingye.im.sdk.util.SystemUtils;
-import me.zhixingye.im.service.ContactService;
-import me.zhixingye.im.service.ConversationService;
-import me.zhixingye.im.service.GroupService;
-import me.zhixingye.im.service.MessageService;
-import me.zhixingye.im.service.SMSService;
-import me.zhixingye.im.service.StorageService;
-import me.zhixingye.im.service.UserService;
+import me.zhixingye.im.manager.ContactManager;
+import me.zhixingye.im.manager.ConversationManager;
+import me.zhixingye.im.manager.GroupManager;
+import me.zhixingye.im.manager.MessageManager;
+import me.zhixingye.im.manager.SMSManager;
+import me.zhixingye.im.manager.StorageManager;
+import me.zhixingye.im.manager.UserManager;
 
 /**
  * Created by zhixingye on 2020年02月01日.
@@ -53,13 +53,13 @@ public class IMClient {
 
     private Context mAppContext;
 
-    private ContactServiceProxy mContactService;
-    private ConversationServiceProxy mConversationService;
-    private GroupServiceProxy mGroupService;
-    private MessageServiceProxy mMessageService;
-    private SMSServiceProxy mSMSService;
-    private StorageServiceProxy mStorageService;
-    private UserServiceProxy mUserService;
+    private ContactManagerProxy mContactService;
+    private ConversationManagerProxy mConversationService;
+    private GroupManagerProxy mGroupService;
+    private MessageManagerProxy mMessageService;
+    private SMSManagerProxy mSMSService;
+    private StorageManagerProxy mStorageService;
+    private UserManagerProxy mUserService;
 
     private IMClient(Context context, InitCallback callback) {
         mAppContext = context;
@@ -68,13 +68,13 @@ public class IMClient {
     }
 
     private void initProxyService() {
-        mContactService = new ContactServiceProxy();
-        mConversationService = new ConversationServiceProxy();
-        mGroupService = new GroupServiceProxy();
-        mMessageService = new MessageServiceProxy();
-        mSMSService = new SMSServiceProxy();
-        mStorageService = new StorageServiceProxy();
-        mUserService = new UserServiceProxy();
+        mContactService = new ContactManagerProxy();
+        mConversationService = new ConversationManagerProxy();
+        mGroupService = new GroupManagerProxy();
+        mMessageService = new MessageManagerProxy();
+        mSMSService = new SMSManagerProxy();
+        mStorageService = new StorageManagerProxy();
+        mUserService = new UserManagerProxy();
     }
 
     private void initRemoteIMService(final InitCallback callback) {
@@ -124,31 +124,31 @@ public class IMClient {
         }, Context.BIND_AUTO_CREATE);
     }
 
-    public ContactService getContactService() {
+    public ContactManager getContactService() {
         return mContactService;
     }
 
-    public ConversationService getConversationService() {
+    public ConversationManager getConversationService() {
         return mConversationService;
     }
 
-    public GroupService getGroupService() {
+    public GroupManager getGroupService() {
         return mGroupService;
     }
 
-    public MessageService getMessageService() {
+    public MessageManager getMessageService() {
         return mMessageService;
     }
 
-    public SMSService getSMSService() {
+    public SMSManager getSMSService() {
         return mSMSService;
     }
 
-    public StorageService getStorageService() {
+    public StorageManager getStorageService() {
         return mStorageService;
     }
 
-    public UserService getUserService() {
+    public UserManager getUserService() {
         return mUserService;
     }
 

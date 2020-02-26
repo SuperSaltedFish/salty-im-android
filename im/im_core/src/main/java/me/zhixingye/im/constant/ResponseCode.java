@@ -7,8 +7,9 @@ package me.zhixingye.im.constant;
 public enum ResponseCode {
 
     INTERNAL_UNKNOWN(-1, "未知的错误"),
-    INTERNAL_UNKNOWN_RESP_DATA(-2, "未知的响应数据"),
-    INTERNAL_IPC_EXCEPTION(-3, "客户端繁忙，请稍后再试：-3");
+    INTERNAL_UNKNOWN_RESP_DATA(-2, "无法解析响应数据"),
+    INTERNAL_ILLICIT_RESP_DATA(-3, "非法的响应数据"),
+    INTERNAL_IPC_EXCEPTION(-4, "客户端繁忙，请稍后再试：-3");
 
     public static boolean isErrorCode(int errorCode) {
         return errorCode != 200;

@@ -1,27 +1,36 @@
 package me.zhixingye.im;
 
 import android.content.Context;
-import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 
-import java.util.Locale;
-import java.util.UUID;
+import com.salty.protos.LoginResp;
+import com.salty.protos.RegisterResp;
+import com.salty.protos.UserProfile;
 
-import me.zhixingye.im.service.ContactService;
-import me.zhixingye.im.service.ConversationService;
-import me.zhixingye.im.service.GroupService;
-import me.zhixingye.im.service.MessageService;
-import me.zhixingye.im.service.SMSService;
-import me.zhixingye.im.service.StorageService;
+import java.util.Locale;
+import java.util.concurrent.Semaphore;
+
+import androidx.annotation.Nullable;
+import me.zhixingye.im.constant.ResponseCode;
+import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.manager.ContactManager;
+import me.zhixingye.im.manager.ConversationManager;
+import me.zhixingye.im.manager.GroupManager;
+import me.zhixingye.im.manager.MessageManager;
+import me.zhixingye.im.manager.SMSManager;
+import me.zhixingye.im.manager.StorageManager;
+import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.manager.impl.ContactManagerImpl;
+import me.zhixingye.im.manager.impl.ConversationManagerImpl;
+import me.zhixingye.im.manager.impl.GroupManagerImpl;
+import me.zhixingye.im.manager.impl.MessageManagerImpl;
+import me.zhixingye.im.manager.impl.SMSManagerImpl;
+import me.zhixingye.im.manager.impl.StorageManagerImpl;
+import me.zhixingye.im.manager.impl.UserManagerImpl;
+import me.zhixingye.im.service.NetworkService;
 import me.zhixingye.im.service.UserService;
-import me.zhixingye.im.service.impl.NetworkServiceImpl;
-import me.zhixingye.im.service.manager.ContactManager;
-import me.zhixingye.im.service.manager.ConversationManager;
-import me.zhixingye.im.service.manager.GroupManager;
-import me.zhixingye.im.service.manager.MessageManager;
-import me.zhixingye.im.service.manager.SMSManager;
-import me.zhixingye.im.service.manager.StorageManager;
-import me.zhixingye.im.service.manager.UserManager;
+import me.zhixingye.im.tool.CallbackHelper;
 import me.zhixingye.im.tool.Logger;
 
 /**
@@ -34,7 +43,7 @@ public class IMCore {
 
     private volatile static IMCore sClient;
 
-    public synchronized static void init(Context context, String serverIP, int serverPort, String appVersion) {
+    public synchronized static void tryInit(Context context, String serverIP, int serverPort, String appVersion) {
         if (sClient != null) {
             throw new RuntimeException("IMCore 已经初始化");
         }
@@ -43,14 +52,6 @@ public class IMCore {
         }
         sClient = new IMCore(context, serverIP, serverPort, appVersion);
     }
-
-    public synchronized static void release() {
-        if (sClient != null) {
-            sClient.destroy();
-            sClient = null;
-        }
-    }
-
 
     public static IMCore get() {
         if (sClient == null) {
@@ -63,118 +64,202 @@ public class IMCore {
 
     private Context mAppContext;
 
+    private Locale mLanguage;
+    private String mToken;
     private String mDeviceID;
     private String mAppVersion;
-    private Locale mLanguage;
 
-    private ContactManager mContactService;
-    private ConversationManager mConversationService;
-    private GroupManager mGroupService;
-    private MessageManager mMessageService;
-    private StorageManager mStorageService;
-    private SMSManager mSMSService;
-    private UserManager mUserService;
+    private ContactManagerImpl mContactManager;
+    private ConversationManagerImpl mConversationManager;
+    private GroupManagerImpl mGroupManager;
+    private MessageManagerImpl mMessageManager;
+    private StorageManagerImpl mStorageManager;
+    private SMSManagerImpl mSMSManager;
+    private UserManagerImpl mUserManager;
+
+    private Semaphore mLoginLock;
+    private volatile boolean isLogged;
 
     private IMCore(Context context, String serverIP, int serverPort, String version) {
         mAppContext = context.getApplicationContext();
         mAppVersion = version;
         mLanguage = Locale.CHINESE;
 
-        NetworkServiceImpl.init(serverIP, serverPort,mAppContext);
+        NetworkService.init(mAppContext, serverIP, serverPort, new NetworkService.Adapter() {
+            @Override
+            public String getDeviceId() {
+                return getDeviceID();
+            }
 
-        mContactService = new ContactManager();
-        mConversationService = new ConversationManager();
-        mGroupService = new GroupManager();
-        mMessageService = new MessageManager();
-        mStorageService = new StorageManager(mAppContext);
-        mSMSService = new SMSManager();
-        mUserService = new UserManager();
+            @Override
+            public String getToken() {
+                return mToken;
+            }
+
+            @Override
+            public String getAppVersion() {
+                return mAppVersion;
+            }
+
+            @Override
+            public Locale getLanguage() {
+                return mLanguage;
+            }
+        });
     }
 
-    public ContactService getContactService() {
-        return mContactService;
+    public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+        UserService.get().registerByTelephone(telephone, password, verificationCode, callback);
     }
 
-    public ConversationService getConversationService() {
-        return mConversationService;
+    public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+        login(telephone, null, password, verificationCode, callback);
     }
 
-    public GroupService getGroupService() {
-        return mGroupService;
+    public void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+        login(null, email, password, verificationCode, callback);
     }
 
-    public MessageService getMessageService() {
-        return mMessageService;
-    }
-
-    public StorageService getStorageService() {
-        return mStorageService;
-    }
-
-    public SMSService getSMSService() {
-        return mSMSService;
-    }
-
-    public UserService getUserService() {
-        return mUserService;
-    }
-
-    public String getAppVersion() {
-        return mAppVersion;
-    }
-
-    public Locale getLanguage() {
-        return mLanguage;
-    }
-
-    public String getDeviceID() {
-        //先从本地拿
-        if (TextUtils.isEmpty(mDeviceID)) {
-            mDeviceID = mStorageService.getFromConfigurationPreferences(STORAGE_KEY_DEVICE_ID);
+    private void login(String telephone, String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+        try {
+            mLoginLock.acquire();
+        } catch (InterruptedException e) {
+            return;
         }
-        //如果本地没有就初始化一个，目前设备ID的格式是我自己定的，uuid加上一些手机型号版本组成字符串
+        if (isLogged) {
+            mLoginLock.release();
+            throw new RuntimeException("The user has already logged in, please do not log in again！");
+        }
+
+        RequestCallback<LoginResp> callbackWrapper = new RequestCallback<LoginResp>() {
+            @Override
+            public void onCompleted(LoginResp loginResp) {
+                tryInit(loginResp, new RequestCallback() {
+                    @Override
+                    public void onCompleted(Object response) {
+                        CallbackHelper.callCompleted(loginResp, callback);
+                    }
+
+                    @Override
+                    public void onFailure(int code, String error) {
+                        callFailure(code, error);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFailure(int code, String error) {
+                callFailure(code, error);
+            }
+
+            private void callFailure(int code, String error) {
+                reset();
+                mLoginLock.release();
+                CallbackHelper.callFailure(code, error, callback);
+            }
+        };
+
+        if (TextUtils.isEmpty(telephone)) {
+            UserService.get().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
+        } else {
+            UserService.get().loginByEmail(email, password, verificationCode, callbackWrapper);
+        }
+    }
+
+    private void tryInit(LoginResp response, RequestCallback<?> callback) {
+        String token = response.getToken();
+        UserProfile userProfile = response.getProfile();
+        if (TextUtils.isEmpty(token) || userProfile == null || TextUtils.isEmpty(userProfile.getUserId())) {
+            Logger.e(TAG, "tryInit fail");
+            CallbackHelper.callFailure(ResponseCode.INTERNAL_ILLICIT_RESP_DATA, callback);
+            return;
+        }
+
+        mToken = token;
+        mStorageManager = new StorageManagerImpl(mAppContext, TAG, userProfile.getUserId());
+        mUserManager = new UserManagerImpl(userProfile);
+        mContactManager = new ContactManagerImpl();
+        mConversationManager = new ConversationManagerImpl();
+        mGroupManager = new GroupManagerImpl();
+        mMessageManager = new MessageManagerImpl();
+        mSMSManager = new SMSManagerImpl();
+
+        CallbackHelper.callCompleted(null, callback);
+    }
+
+    private void reset() {
+        NetworkService.destroy();
+        if (mContactManager != null) {
+            mContactManager.destroy();
+            mContactManager = null;
+        }
+        if (mConversationManager != null) {
+            mConversationManager.destroy();
+            mConversationManager = null;
+        }
+        if (mGroupManager != null) {
+            mGroupManager.destroy();
+            mGroupManager = null;
+        }
+        if (mMessageManager != null) {
+            mMessageManager.destroy();
+            mMessageManager = null;
+        }
+        if (mStorageManager != null) {
+            mStorageManager.destroy();
+            mStorageManager = null;
+        }
+        if (mSMSManager != null) {
+            mSMSManager.destroy();
+            mSMSManager = null;
+        }
+        if (mUserManager != null) {
+            mUserManager.destroy();
+            mUserManager = null;
+        }
+    }
+
+    public ContactManager getContactManager() {
+        return mContactManager;
+    }
+
+    public ConversationManager getConversationManager() {
+        return mConversationManager;
+    }
+
+    public GroupManager getGroupManager() {
+        return mGroupManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return mMessageManager;
+    }
+
+    public StorageManager getStorageManager() {
+        return mStorageManager;
+    }
+
+    public SMSManager getSMSManager() {
+        return mSMSManager;
+    }
+
+    public UserManager getUserManager() {
+        return mUserManager;
+    }
+
+    private String getDeviceID() {
         if (TextUtils.isEmpty(mDeviceID)) {
-//            mDeviceID = Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-            mDeviceID = String.format(Locale.getDefault(), "%s(%s).%s", Build.BRAND, Build.MODEL, UUID.randomUUID().toString());
-            //设备ID如果出现空格就替换成_,一些手机型号信息可能带空格
-            mDeviceID = mDeviceID.replaceAll(" ", "_");
-            //保存ID到本地
-            if (!mStorageService.putToConfigurationPreferences(STORAGE_KEY_DEVICE_ID, mDeviceID)) {
+            mDeviceID = mStorageManager.getFromConfigurationPreferences(STORAGE_KEY_DEVICE_ID);
+        }
+        if (TextUtils.isEmpty(mDeviceID)) {
+            mDeviceID = Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (!mStorageManager.putToConfigurationPreferences(STORAGE_KEY_DEVICE_ID, mDeviceID)) {
                 Logger.w(TAG, "saveDeviceIDToLocal fail");
             }
         }
         return mDeviceID;
     }
 
-    private void destroy() {
-        NetworkServiceImpl.destroy();
-        if (mContactService != null) {
-            mContactService.destroy();
-            mContactService = null;
-        }
-        if (mConversationService != null) {
-            mConversationService.destroy();
-            mConversationService = null;
-        }
-        if (mGroupService != null) {
-            mGroupService.destroy();
-            mGroupService = null;
-        }
-        if (mMessageService != null) {
-            mMessageService.destroy();
-            mMessageService = null;
-        }
-        if (mStorageService != null) {
-            mStorageService.destroy();
-            mStorageService = null;
-        }
-        if (mSMSService != null) {
-            mSMSService.destroy();
-            mSMSService = null;
-        }
-        if (mUserService != null) {
-            mUserService.destroy();
-            mUserService = null;
-        }
-    }
+
 }

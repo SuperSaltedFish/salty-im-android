@@ -1,7 +1,6 @@
 package me.zhixingye.im.manager.impl;
 
 import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.SMSManager;
@@ -21,7 +20,7 @@ public class SMSManagerImpl implements SMSManager {
     }
 
     @Override
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
+    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
         mSMSService.obtainVerificationCodeForTelephoneType(telephone, type, callback);
     }
 

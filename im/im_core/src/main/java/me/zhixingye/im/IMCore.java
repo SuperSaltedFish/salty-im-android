@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.salty.protos.LoginResp;
+import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.UserProfile;
 
@@ -18,7 +19,6 @@ import me.zhixingye.im.manager.ContactManager;
 import me.zhixingye.im.manager.ConversationManager;
 import me.zhixingye.im.manager.GroupManager;
 import me.zhixingye.im.manager.MessageManager;
-import me.zhixingye.im.manager.SMSManager;
 import me.zhixingye.im.manager.StorageManager;
 import me.zhixingye.im.manager.UserManager;
 import me.zhixingye.im.manager.impl.ContactManagerImpl;
@@ -29,6 +29,7 @@ import me.zhixingye.im.manager.impl.SMSManagerImpl;
 import me.zhixingye.im.manager.impl.StorageManagerImpl;
 import me.zhixingye.im.manager.impl.UserManagerImpl;
 import me.zhixingye.im.service.NetworkService;
+import me.zhixingye.im.service.SMSService;
 import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.tool.CallbackHelper;
 import me.zhixingye.im.tool.Logger;
@@ -69,13 +70,13 @@ public class IMCore {
     private String mDeviceID;
     private String mAppVersion;
 
+    private UserManagerImpl mUserManager;
     private ContactManagerImpl mContactManager;
     private ConversationManagerImpl mConversationManager;
     private GroupManagerImpl mGroupManager;
     private MessageManagerImpl mMessageManager;
     private StorageManagerImpl mStorageManager;
     private SMSManagerImpl mSMSManager;
-    private UserManagerImpl mUserManager;
 
     private Semaphore mLoginLock;
     private volatile boolean isLogged;
@@ -85,10 +86,12 @@ public class IMCore {
         mAppVersion = version;
         mLanguage = Locale.CHINESE;
 
+        mLoginLock = new Semaphore(1);
+
         NetworkService.init(mAppContext, serverIP, serverPort, new NetworkService.Adapter() {
             @Override
             public String getDeviceId() {
-                return getDeviceID();
+                return Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
             }
 
             @Override
@@ -106,6 +109,17 @@ public class IMCore {
                 return mLanguage;
             }
         });
+
+        mStorageManager = new StorageManagerImpl(mAppContext, TAG);
+        mUserManager = new UserManagerImpl();
+        mContactManager = new ContactManagerImpl();
+        mConversationManager = new ConversationManagerImpl();
+        mGroupManager = new GroupManagerImpl();
+        mMessageManager = new MessageManagerImpl();
+    }
+
+    public void obtainTelephoneSMSCode(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
+        SMSService.get().obtainVerificationCodeForTelephoneType(telephone, type, callback);
     }
 
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
@@ -137,6 +151,8 @@ public class IMCore {
                 tryInit(loginResp, new RequestCallback() {
                     @Override
                     public void onCompleted(Object response) {
+                        isLogged = true;
+                        mLoginLock.release();
                         CallbackHelper.callCompleted(loginResp, callback);
                     }
 
@@ -160,7 +176,7 @@ public class IMCore {
             }
         };
 
-        if (TextUtils.isEmpty(telephone)) {
+        if (!TextUtils.isEmpty(telephone)) {
             UserService.get().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
         } else {
             UserService.get().loginByEmail(email, password, verificationCode, callbackWrapper);
@@ -176,14 +192,15 @@ public class IMCore {
             return;
         }
 
+        String userId = userProfile.getUserId();
         mToken = token;
-        mStorageManager = new StorageManagerImpl(mAppContext, TAG, userProfile.getUserId());
-        mUserManager = new UserManagerImpl(userProfile);
-        mContactManager = new ContactManagerImpl();
-        mConversationManager = new ConversationManagerImpl();
-        mGroupManager = new GroupManagerImpl();
-        mMessageManager = new MessageManagerImpl();
-        mSMSManager = new SMSManagerImpl();
+
+        mStorageManager.initUserPreferences(mAppContext, userId);
+        mUserManager.init(userProfile);
+        mContactManager.init(userId);
+        mConversationManager.init(userId);
+        mGroupManager.init(userId);
+        mMessageManager.init(userId);
 
         CallbackHelper.callCompleted(null, callback);
     }
@@ -210,13 +227,12 @@ public class IMCore {
             mStorageManager.destroy();
             mStorageManager = null;
         }
-        if (mSMSManager != null) {
-            mSMSManager.destroy();
-            mSMSManager = null;
-        }
         if (mUserManager != null) {
             mUserManager.destroy();
             mUserManager = null;
+        }
+        if (mSMSManager != null) {
+            mSMSManager.destroy();
         }
     }
 
@@ -240,26 +256,7 @@ public class IMCore {
         return mStorageManager;
     }
 
-    public SMSManager getSMSManager() {
-        return mSMSManager;
-    }
-
     public UserManager getUserManager() {
         return mUserManager;
     }
-
-    private String getDeviceID() {
-        if (TextUtils.isEmpty(mDeviceID)) {
-            mDeviceID = mStorageManager.getFromConfigurationPreferences(STORAGE_KEY_DEVICE_ID);
-        }
-        if (TextUtils.isEmpty(mDeviceID)) {
-            mDeviceID = Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-            if (!mStorageManager.putToConfigurationPreferences(STORAGE_KEY_DEVICE_ID, mDeviceID)) {
-                Logger.w(TAG, "saveDeviceIDToLocal fail");
-            }
-        }
-        return mDeviceID;
-    }
-
-
 }

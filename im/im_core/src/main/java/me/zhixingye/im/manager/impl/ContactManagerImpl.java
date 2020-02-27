@@ -22,6 +22,13 @@ public class ContactManagerImpl implements ContactManager {
         mService = ContactService.get();
     }
 
+    public void init(String userId) {
+    }
+
+    public void destroy() {
+
+    }
+
     @Override
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {
         mService.requestContact(userId, reason, callback);
@@ -42,7 +49,5 @@ public class ContactManagerImpl implements ContactManager {
         mService.deleteContact(userId, callback);
     }
 
-    public void destroy() {
 
-    }
 }

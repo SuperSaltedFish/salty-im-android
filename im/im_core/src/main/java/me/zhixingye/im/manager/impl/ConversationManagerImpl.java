@@ -25,6 +25,14 @@ public class ConversationManagerImpl implements ConversationManager {
         mService = ConversationService.get();
     }
 
+    public void destroy() {
+
+    }
+
+    public void init(String userId) {
+
+    }
+
     @Override
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
         mService.getAllConversations(callback);
@@ -60,7 +68,4 @@ public class ConversationManagerImpl implements ConversationManager {
         mService.updateNotificationStatus(conversationId, type, status, callback);
     }
 
-    public void destroy() {
-
-    }
 }

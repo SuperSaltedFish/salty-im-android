@@ -16,8 +16,11 @@ public class MessageManagerImpl implements MessageManager {
         mService = MessageService.get();
     }
 
-
     public void destroy() {
+
+    }
+
+    public void init(String userId) {
 
     }
 }

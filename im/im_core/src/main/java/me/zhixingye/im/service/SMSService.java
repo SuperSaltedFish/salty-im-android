@@ -5,6 +5,7 @@ import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.SMSServiceGrpc;
 
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.tool.CallbackHelper;
 
 /**
  * Created by zhixingye on 2020年01月10日.
@@ -32,12 +33,22 @@ public class SMSService extends BasicService {
         mSMSServiceStub = SMSServiceGrpc.newStub(getChannel());
     }
 
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
+    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
         ObtainSMSCodeReq smsReq = ObtainSMSCodeReq.newBuilder()
                 .setTelephone(telephone)
                 .setCodeType(type)
                 .build();
 
-        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), callback));
+        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), new RequestCallback<ObtainSMSCodeResp>() {
+            @Override
+            public void onCompleted(ObtainSMSCodeResp response) {
+                CallbackHelper.callCompleted(null, callback);
+            }
+
+            @Override
+            public void onFailure(int code, String error) {
+                CallbackHelper.callFailure(code, error, callback);
+            }
+        }));
     }
 }

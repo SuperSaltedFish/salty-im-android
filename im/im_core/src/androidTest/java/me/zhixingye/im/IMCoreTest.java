@@ -3,10 +3,8 @@ package me.zhixingye.im;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.protobuf.MessageLite;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
 
@@ -75,12 +73,12 @@ public class IMCoreTest {
             builder.append(random.nextInt(10));
         }
         mAccount = builder.toString();
-        IMCore.get().getSMSManager().obtainVerificationCodeForTelephoneType(
+        IMCore.get().obtainTelephoneSMSCode(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.REGISTER,
-                new LockRequestCallback<ObtainSMSCodeResp>() {
+                new LockRequestCallback<Void>() {
                     @Override
-                    public void onSuccessful(ObtainSMSCodeResp resp) {
+                    public void onSuccessful(Void resp) {
 
 
                     }
@@ -111,12 +109,12 @@ public class IMCoreTest {
     }
 
     private void testResetLoginPasswordByVerificationCode() {
-        IMCore.get().getSMSManager().obtainVerificationCodeForTelephoneType(
+        IMCore.get().obtainTelephoneSMSCode(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
-                new LockRequestCallback<ObtainSMSCodeResp>() {
+                new LockRequestCallback<Void>() {
                     @Override
-                    public void onSuccessful(ObtainSMSCodeResp resp) {
+                    public void onSuccessful(Void resp) {
 
 
                     }
@@ -150,11 +148,11 @@ public class IMCoreTest {
                 });
     }
 
-    private void testUpdateUserInfoReq(){
+    private void testUpdateUserInfoReq() {
 
     }
 
-    private static abstract class LockRequestCallback<T extends MessageLite> implements RequestCallback<T> {
+    private static abstract class LockRequestCallback<T> implements RequestCallback<T> {
 
         abstract void onSuccessful(T resp);
 

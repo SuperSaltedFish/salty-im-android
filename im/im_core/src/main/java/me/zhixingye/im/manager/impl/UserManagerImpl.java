@@ -18,9 +18,17 @@ public class UserManagerImpl implements UserManager {
 
     private UserService mUserService;
 
-    public UserManagerImpl(UserProfile profile) {
+    public UserManagerImpl() {
         super();
         mUserService = UserService.get();
+    }
+
+    public void init(UserProfile profile) {
+
+    }
+
+    public void destroy() {
+
     }
 
     @Override
@@ -53,7 +61,4 @@ public class UserManagerImpl implements UserManager {
         mUserService.queryUserInfoByEmail(email, callback);
     }
 
-    public void destroy() {
-
-    }
 }

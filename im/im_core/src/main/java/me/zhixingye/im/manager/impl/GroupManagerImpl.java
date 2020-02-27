@@ -28,6 +28,14 @@ public class GroupManagerImpl implements GroupManager {
         mGroupService = GroupService.get();
     }
 
+    public void destroy() {
+
+    }
+
+    public void init(String userId) {
+
+    }
+
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
         mGroupService.createGroup(groupName, memberUserIdArr, callback);
@@ -66,9 +74,5 @@ public class GroupManagerImpl implements GroupManager {
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
         mGroupService.updateMemberNickname(groupId, memberNickname, callback);
-    }
-
-    public void destroy() {
-
     }
 }

@@ -30,9 +30,13 @@ public class StorageManagerImpl implements StorageManager {
     private Key mAESKey;
 
     //初始化过程中传入了storageName
-    public StorageManagerImpl(Context appContent, String storageName, String userId) {
+    public StorageManagerImpl(Context appContent) {
+        this(appContent, DEFAULT_STORAGE_NAME);
+    }
+
+    //初始化过程中传入了storageName
+    public StorageManagerImpl(Context appContent, String storageName) {
         mConfigurationPreferences = appContent.getSharedPreferences(storageName, Context.MODE_PRIVATE);
-        mUserPreferences = appContent.getSharedPreferences(userId, Context.MODE_PRIVATE);
 //        mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         mAESKey = AESUtil.generateAESKey(192);
         if (mAESKey == null) {
@@ -41,8 +45,12 @@ public class StorageManagerImpl implements StorageManager {
         }
     }
 
+    //初始化用户的Preferences，也就是说每个用户有自己的Preferences
+    public void initUserPreferences(Context appContent, String userID) {
+        mUserPreferences = appContent.getSharedPreferences(userID, Context.MODE_PRIVATE);
+    }
+
     //put一个数据到ConfigurationPreferences
-    @Override
     public boolean putToConfigurationPreferences(String key, String value) {
 //        if (!TextUtils.isEmpty(value) && mAESKey != null) {
 //            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
@@ -57,7 +65,6 @@ public class StorageManagerImpl implements StorageManager {
     }
 
     //get一个数据，从ConfigurationPreferences
-    @Override
     public String getFromConfigurationPreferences(String key) {
         String value = mConfigurationPreferences.getString(key, null);
 //        if (!TextUtils.isEmpty(value) && mAESKey != null) {
@@ -70,7 +77,6 @@ public class StorageManagerImpl implements StorageManager {
     }
 
     //put一个数据到UserPreferences
-    @Override
     public boolean putToUserPreferences(String key, String value) {
 //        if (!TextUtils.isEmpty(value) && mAESKey != null) {
 //            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
@@ -85,7 +91,6 @@ public class StorageManagerImpl implements StorageManager {
     }
 
     //get一个数据，从UserPreferences
-    @Override
     public String getFromUserPreferences(String key) {
         if (mUserPreferences == null) {
             return null;

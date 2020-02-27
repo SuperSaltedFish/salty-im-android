@@ -6,9 +6,9 @@ import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 
+import me.zhixingye.im.api.UserApi;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.UserManager;
-import me.zhixingye.im.service.UserService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -16,49 +16,38 @@ import me.zhixingye.im.service.UserService;
  */
 public class UserManagerImpl implements UserManager {
 
-    private UserService mUserService;
+    private UserApi mUserApi;
 
-    public UserManagerImpl() {
-        super();
-        mUserService = UserService.get();
-    }
+    private UserProfile mUserProfile;
 
-    public void init(UserProfile profile) {
-
-    }
-
-    public void destroy() {
-
+    public UserManagerImpl(UserProfile profile, UserApi userApi) {
+        mUserProfile = UserProfile.newBuilder(profile).build();
+        mUserApi  = userApi;
     }
 
     @Override
-    public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mUserService.resetLoginPasswordByTelephone(telephone, verificationCode, newPassword, callback);
-    }
-
-    @Override
-    public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mUserService.resetLoginPassword(telephone, oldPassword, newPassword, callback);
+    public UserProfile getUserProfile() {
+        return mUserProfile;
     }
 
     @Override
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
-        mUserService.updateUserInfo(nickname, description, sex, birthday, location, callback);
+        mUserApi.updateUserInfo(nickname, description, sex, birthday, location, callback);
     }
 
     @Override
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
-        mUserService.getUserInfoByUserId(userId, callback);
+        mUserApi.getUserInfoByUserId(userId, callback);
     }
 
     @Override
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
-        mUserService.queryUserInfoByTelephone(telephone, callback);
+        mUserApi.queryUserInfoByTelephone(telephone, callback);
     }
 
     @Override
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
-        mUserService.queryUserInfoByEmail(email, callback);
+        mUserApi.queryUserInfoByEmail(email, callback);
     }
 
 }

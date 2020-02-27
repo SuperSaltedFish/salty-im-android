@@ -11,9 +11,9 @@ import com.salty.protos.UpdateMemberNicknameResp;
 
 import java.util.List;
 
+import me.zhixingye.im.api.GroupApi;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.GroupManager;
-import me.zhixingye.im.service.GroupService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -21,58 +21,50 @@ import me.zhixingye.im.service.GroupService;
  */
 public class GroupManagerImpl implements GroupManager {
 
-    private GroupService mGroupService;
+    private GroupApi mGroupApi;
 
-    public GroupManagerImpl() {
+    public GroupManagerImpl(String userId, GroupApi groupApi) {
         super();
-        mGroupService = GroupService.get();
-    }
-
-    public void destroy() {
-
-    }
-
-    public void init(String userId) {
-
+        mGroupApi =groupApi;
     }
 
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
-        mGroupService.createGroup(groupName, memberUserIdArr, callback);
+        mGroupApi.createGroup(groupName, memberUserIdArr, callback);
     }
 
     @Override
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
-        mGroupService.joinGroup(groupId, reason, callback);
+        mGroupApi.joinGroup(groupId, reason, callback);
     }
 
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
-        mGroupService.quitGroup(groupId, callback);
+        mGroupApi.quitGroup(groupId, callback);
     }
 
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
-        mGroupService.addGroupMember(groupId, memberUserIdArr, callback);
+        mGroupApi.addGroupMember(groupId, memberUserIdArr, callback);
     }
 
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
-        mGroupService.kickGroupMember(groupId, memberUserId, callback);
+        mGroupApi.kickGroupMember(groupId, memberUserId, callback);
     }
 
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
-        mGroupService.updateGroupName(groupId, groupName, callback);
+        mGroupApi.updateGroupName(groupId, groupName, callback);
     }
 
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
-        mGroupService.updateGroupNotice(groupId, notice, callback);
+        mGroupApi.updateGroupNotice(groupId, notice, callback);
     }
 
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
-        mGroupService.updateMemberNickname(groupId, memberNickname, callback);
+        mGroupApi.updateMemberNickname(groupId, memberNickname, callback);
     }
 }

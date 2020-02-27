@@ -4,7 +4,6 @@ import android.os.RemoteException;
 
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.QueryUserInfoResp;
-import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 
@@ -34,29 +33,8 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
 
     @Override
-    public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
-        try {
-            mManagerHandle.resetLoginPasswordByTelephone(telephone, verificationCode, newPassword, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CallbackUtil.callRemoteError(callback);
-        }
-    }
-
-    @Override
-    public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
-        try {
-            mManagerHandle.resetLoginPassword(telephone, oldPassword, newPassword, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            CallbackUtil.callRemoteError(callback);
-        }
+    public UserProfile getUserProfile() {
+        return null;
     }
 
     @Override

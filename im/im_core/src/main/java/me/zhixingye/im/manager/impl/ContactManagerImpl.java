@@ -5,9 +5,9 @@ import com.salty.protos.DeleteContactResp;
 import com.salty.protos.RefusedContactResp;
 import com.salty.protos.RequestContactResp;
 
+import me.zhixingye.im.api.ContactApi;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.ContactManager;
-import me.zhixingye.im.service.ContactService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -15,38 +15,31 @@ import me.zhixingye.im.service.ContactService;
  */
 public class ContactManagerImpl implements ContactManager {
 
-    private ContactService mService;
+    private ContactApi mContactApi;
 
-    public ContactManagerImpl() {
+    public ContactManagerImpl(String userId, ContactApi contactApi) {
         super();
-        mService = ContactService.get();
-    }
-
-    public void init(String userId) {
-    }
-
-    public void destroy() {
-
+        mContactApi =contactApi;
     }
 
     @Override
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {
-        mService.requestContact(userId, reason, callback);
+        mContactApi.requestContact(userId, reason, callback);
     }
 
     @Override
     public void refusedContact(String userId, String reason, RequestCallback<RefusedContactResp> callback) {
-        mService.refusedContact(userId, reason, callback);
+        mContactApi.refusedContact(userId, reason, callback);
     }
 
     @Override
     public void acceptContact(String userId, RequestCallback<AcceptContactResp> callback) {
-        mService.acceptContact(userId, callback);
+        mContactApi.acceptContact(userId, callback);
     }
 
     @Override
     public void deleteContact(String userId, RequestCallback<DeleteContactResp> callback) {
-        mService.deleteContact(userId, callback);
+        mContactApi.deleteContact(userId, callback);
     }
 
 

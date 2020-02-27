@@ -10,7 +10,6 @@ import me.zhixingye.im.sdk.handle.ContactManagerHandle;
 import me.zhixingye.im.sdk.handle.ConversationManagerHandle;
 import me.zhixingye.im.sdk.handle.GroupManagerHandle;
 import me.zhixingye.im.sdk.handle.MessageManagerHandle;
-import me.zhixingye.im.sdk.handle.SMSManagerHandle;
 import me.zhixingye.im.sdk.handle.StorageManagerHandle;
 import me.zhixingye.im.sdk.handle.UserManagerHandle;
 
@@ -56,11 +55,6 @@ public class IMRemoteService extends Service {
         @Override
         public IMessageManagerHandle getMessageManagerHandle() throws RemoteException {
             return new MessageManagerHandle();
-        }
-
-        @Override
-        public ISMSManagerHandle getSMSManagerHandle() throws RemoteException {
-            return new SMSManagerHandle();
         }
 
         @Override

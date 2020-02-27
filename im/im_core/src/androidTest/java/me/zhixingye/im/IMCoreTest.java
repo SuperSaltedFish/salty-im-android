@@ -1,12 +1,16 @@
 package me.zhixingye.im;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
+import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
+import com.salty.protos.UpdateUserInfoResp;
+import com.salty.protos.UserProfile;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +58,10 @@ public class IMCoreTest {
         testResetLoginPasswordByOldPassword();
         testLoginReq();
 
+        SystemClock.sleep(1000);
+
+        testUpdateUserInfoReq();
+
         while (isLock) {
             synchronized (sLock) {
                 try {
@@ -99,7 +107,7 @@ public class IMCoreTest {
 
     private void testResetLoginPasswordByOldPassword() {
         String newPassword = "141";
-        IMCore.get().getUserManager().resetLoginPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
+        IMCore.get().resetLoginPasswordByTelephonePassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
             @Override
             void onSuccessful(ResetPasswordResp resp) {
                 mPassword = newPassword;
@@ -121,7 +129,7 @@ public class IMCoreTest {
                 });
 
         mPassword = "yezhixing";
-        IMCore.get().getUserManager().resetLoginPasswordByTelephone(
+        IMCore.get().resetLoginPasswordByTelephoneSMS(
                 mAccount,
                 "112233",
                 mPassword,
@@ -149,7 +157,30 @@ public class IMCoreTest {
     }
 
     private void testUpdateUserInfoReq() {
+        String nickname = "zhixingye";
+        String description = "天才星";
+        UserProfile.Sex sex = UserProfile.Sex.FEMALE;
+        long birthday = 10086;
+        String location = "地球";
+        IMCore.get().getUserManager().updateUserInfo(nickname, description, sex, birthday, location, new LockRequestCallback<UpdateUserInfoResp>() {
+            @Override
+            void onSuccessful(UpdateUserInfoResp resp) {
 
+            }
+        });
+
+        UserProfile profile = IMCore.get().getUserManager().getUserProfile();
+        IMCore.get().getUserManager().getUserInfoByUserId(profile.getUserId(), new LockRequestCallback<GetUserInfoResp>() {
+            @Override
+            void onSuccessful(GetUserInfoResp resp) {
+                UserProfile profile = resp.getProfile();
+                assertEquals(profile.getNickname(), nickname);
+                assertEquals(profile.getDescription(), nickname);
+                assertEquals(profile.getSexValue(), sex.getNumber());
+                assertEquals(profile.getBirthday(), birthday);
+                assertEquals(profile.getLocation(), location);
+            }
+        });
     }
 
     private static abstract class LockRequestCallback<T> implements RequestCallback<T> {

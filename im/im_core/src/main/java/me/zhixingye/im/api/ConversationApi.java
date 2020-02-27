@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.api;
 
 import com.salty.protos.ClearConversationMessageReq;
 import com.salty.protos.ClearConversationMessageResp;
@@ -17,31 +17,20 @@ import com.salty.protos.UpdateConversationTopResp;
 import com.salty.protos.UpdateNotificationStatusReq;
 import com.salty.protos.UpdateNotificationStatusResp;
 
+import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ConversationService extends BasicService {
-
-    private static volatile ConversationService sConversationService;
-
-    public static ConversationService get() {
-        if (sConversationService == null) {
-            synchronized (ConversationService.class) {
-                if (sConversationService == null) {
-                    sConversationService = new ConversationService();
-                }
-            }
-        }
-        return sConversationService;
-    }
+public class ConversationApi extends BasicApi {
 
     private ConversationServiceGrpc.ConversationServiceStub mConversationServiceStub;
 
-    private ConversationService() {
-        mConversationServiceStub = ConversationServiceGrpc.newStub(getChannel());
+    public ConversationApi(ManagedChannel channel, ApiService.Adapter adapter) {
+        super(adapter);
+        mConversationServiceStub = ConversationServiceGrpc.newStub(channel);
     }
 
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {

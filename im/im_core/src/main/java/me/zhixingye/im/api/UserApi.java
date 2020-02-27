@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.api;
 
 import com.salty.protos.GetUserInfoReq;
 import com.salty.protos.GetUserInfoResp;
@@ -16,6 +16,7 @@ import com.salty.protos.UserProfile;
 import com.salty.protos.UserServiceGrpc;
 
 import androidx.annotation.Nullable;
+import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.util.Sha256Util;
 
@@ -23,28 +24,15 @@ import me.zhixingye.im.util.Sha256Util;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class UserService extends BasicService {
+public class UserApi extends BasicApi {
 
     private static final String PASSWORD_SALTY = "salty";
 
-    private static volatile UserService sUserService;
-
-    public static UserService get() {
-        if (sUserService == null) {
-            synchronized (UserService.class) {
-                if (sUserService == null) {
-                    sUserService = new UserService();
-                }
-            }
-        }
-        return sUserService;
-    }
-
     private UserServiceGrpc.UserServiceStub mUserServiceStub;
 
-    private UserService() {
-        super();
-        mUserServiceStub = UserServiceGrpc.newStub(getChannel());
+    public UserApi(ManagedChannel channel, ApiService.Adapter adapter) {
+        super(adapter);
+        mUserServiceStub = UserServiceGrpc.newStub(channel);
     }
 
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
@@ -81,7 +69,7 @@ public class UserService extends BasicService {
         mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
                 .setVerificationCode(verificationCode)
@@ -91,9 +79,29 @@ public class UserService extends BasicService {
         mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByEmailSMS(String email, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ResetPasswordReq req = ResetPasswordReq.newBuilder()
+                .setEmail(email)
+                .setVerificationCode(verificationCode)
+                .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
+                .build();
+
+        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+    }
+
+    public void resetLoginPasswordByTelephonePassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
+                .setOldPassword(Sha256Util.sha256WithSalt(oldPassword, PASSWORD_SALTY))
+                .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
+                .build();
+
+        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+    }
+
+    public void resetLoginPasswordByEmailPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ResetPasswordReq req = ResetPasswordReq.newBuilder()
+                .setEmail(email)
                 .setOldPassword(Sha256Util.sha256WithSalt(oldPassword, PASSWORD_SALTY))
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();

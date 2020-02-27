@@ -7,12 +7,14 @@ import android.text.TextUtils;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UserProfile;
 
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 import androidx.annotation.Nullable;
+import me.zhixingye.im.api.ApiService;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.ContactManager;
@@ -25,12 +27,8 @@ import me.zhixingye.im.manager.impl.ContactManagerImpl;
 import me.zhixingye.im.manager.impl.ConversationManagerImpl;
 import me.zhixingye.im.manager.impl.GroupManagerImpl;
 import me.zhixingye.im.manager.impl.MessageManagerImpl;
-import me.zhixingye.im.manager.impl.SMSManagerImpl;
 import me.zhixingye.im.manager.impl.StorageManagerImpl;
 import me.zhixingye.im.manager.impl.UserManagerImpl;
-import me.zhixingye.im.service.NetworkService;
-import me.zhixingye.im.service.SMSService;
-import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.tool.CallbackHelper;
 import me.zhixingye.im.tool.Logger;
 
@@ -61,14 +59,13 @@ public class IMCore {
         return sClient;
     }
 
-    private static final String STORAGE_KEY_DEVICE_ID = "DeviceID";
-
     private Context mAppContext;
 
     private Locale mLanguage;
     private String mToken;
-    private String mDeviceID;
     private String mAppVersion;
+
+    private ApiService mApiService;
 
     private UserManagerImpl mUserManager;
     private ContactManagerImpl mContactManager;
@@ -76,7 +73,6 @@ public class IMCore {
     private GroupManagerImpl mGroupManager;
     private MessageManagerImpl mMessageManager;
     private StorageManagerImpl mStorageManager;
-    private SMSManagerImpl mSMSManager;
 
     private Semaphore mLoginLock;
     private volatile boolean isLogged;
@@ -88,7 +84,7 @@ public class IMCore {
 
         mLoginLock = new Semaphore(1);
 
-        NetworkService.init(mAppContext, serverIP, serverPort, new NetworkService.Adapter() {
+        mApiService = new ApiService(mAppContext, serverIP, serverPort, new ApiService.Adapter() {
             @Override
             public String getDeviceId() {
                 return Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -110,20 +106,106 @@ public class IMCore {
             }
         });
 
-        mStorageManager = new StorageManagerImpl(mAppContext, TAG);
-        mUserManager = new UserManagerImpl();
-        mContactManager = new ContactManagerImpl();
-        mConversationManager = new ConversationManagerImpl();
-        mGroupManager = new GroupManagerImpl();
-        mMessageManager = new MessageManagerImpl();
     }
 
+    private void tryInit(LoginResp response, RequestCallback<?> callback) {
+        String token = response.getToken();
+        UserProfile userProfile = response.getProfile();
+        if (TextUtils.isEmpty(token) || userProfile == null || TextUtils.isEmpty(userProfile.getUserId())) {
+            Logger.e(TAG, "tryInit fail");
+            CallbackHelper.callFailure(ResponseCode.INTERNAL_ILLICIT_RESP_DATA, callback);
+            return;
+        }
+
+        String userId = userProfile.getUserId();
+        mToken = token;
+
+        mStorageManager = new StorageManagerImpl(mAppContext, TAG, userId);
+        mUserManager = new UserManagerImpl(userProfile, mApiService.getUserApi());
+        mContactManager = new ContactManagerImpl(userId, mApiService.getContactApi());
+        mConversationManager = new ConversationManagerImpl(userId, mApiService.getConversationApi());
+        mGroupManager = new GroupManagerImpl(userId, mApiService.getGroupApi());
+        mMessageManager = new MessageManagerImpl(userId, mApiService.getMessageApi());
+
+        CallbackHelper.callCompleted(null, callback);
+    }
+
+    private void reset() {
+        if (mApiService != null) {
+            mApiService.release();
+            mApiService = null;
+        }
+        mContactManager = null;
+        mConversationManager = null;
+        mGroupManager = null;
+        mMessageManager = null;
+        mStorageManager = null;
+        mUserManager = null;
+    }
+
+    public ContactManager getContactManager() {
+        return mContactManager;
+    }
+
+    public ConversationManager getConversationManager() {
+        return mConversationManager;
+    }
+
+    public GroupManager getGroupManager() {
+        return mGroupManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return mMessageManager;
+    }
+
+    public StorageManager getStorageManager() {
+        return mStorageManager;
+    }
+
+    public UserManager getUserManager() {
+        return mUserManager;
+    }
+
+    private Locale getLanguage() {
+        return mLanguage;
+    }
+
+    private String getToken() {
+        return mToken;
+    }
+
+    private String getDeviceID() {
+        return Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    private String getAppVersion() {
+        return mAppVersion;
+    }
+
+
     public void obtainTelephoneSMSCode(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
-        SMSService.get().obtainVerificationCodeForTelephoneType(telephone, type, callback);
+        mApiService.getSMSApi().obtainVerificationCodeForTelephoneType(telephone, type, callback);
+    }
+
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        mApiService.getUserApi().resetLoginPasswordByTelephoneSMS(telephone, verificationCode, newPassword, callback);
+    }
+
+    public void resetLoginPasswordByEmailSMS(String email, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        mApiService.getUserApi().resetLoginPasswordByEmailSMS(email, verificationCode, newPassword, callback);
+    }
+
+    public void resetLoginPasswordByTelephonePassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        mApiService.getUserApi().resetLoginPasswordByTelephonePassword(telephone, oldPassword, newPassword, callback);
+    }
+
+    public void resetLoginPasswordByEmailPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        mApiService.getUserApi().resetLoginPasswordByEmailPassword(email, oldPassword, newPassword, callback);
     }
 
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
-        UserService.get().registerByTelephone(telephone, password, verificationCode, callback);
+        mApiService.getUserApi().registerByTelephone(telephone, password, verificationCode, callback);
     }
 
     public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
@@ -177,86 +259,9 @@ public class IMCore {
         };
 
         if (!TextUtils.isEmpty(telephone)) {
-            UserService.get().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
+            mApiService.getUserApi().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
         } else {
-            UserService.get().loginByEmail(email, password, verificationCode, callbackWrapper);
+            mApiService.getUserApi().loginByEmail(email, password, verificationCode, callbackWrapper);
         }
-    }
-
-    private void tryInit(LoginResp response, RequestCallback<?> callback) {
-        String token = response.getToken();
-        UserProfile userProfile = response.getProfile();
-        if (TextUtils.isEmpty(token) || userProfile == null || TextUtils.isEmpty(userProfile.getUserId())) {
-            Logger.e(TAG, "tryInit fail");
-            CallbackHelper.callFailure(ResponseCode.INTERNAL_ILLICIT_RESP_DATA, callback);
-            return;
-        }
-
-        String userId = userProfile.getUserId();
-        mToken = token;
-
-        mStorageManager.initUserPreferences(mAppContext, userId);
-        mUserManager.init(userProfile);
-        mContactManager.init(userId);
-        mConversationManager.init(userId);
-        mGroupManager.init(userId);
-        mMessageManager.init(userId);
-
-        CallbackHelper.callCompleted(null, callback);
-    }
-
-    private void reset() {
-        NetworkService.destroy();
-        if (mContactManager != null) {
-            mContactManager.destroy();
-            mContactManager = null;
-        }
-        if (mConversationManager != null) {
-            mConversationManager.destroy();
-            mConversationManager = null;
-        }
-        if (mGroupManager != null) {
-            mGroupManager.destroy();
-            mGroupManager = null;
-        }
-        if (mMessageManager != null) {
-            mMessageManager.destroy();
-            mMessageManager = null;
-        }
-        if (mStorageManager != null) {
-            mStorageManager.destroy();
-            mStorageManager = null;
-        }
-        if (mUserManager != null) {
-            mUserManager.destroy();
-            mUserManager = null;
-        }
-        if (mSMSManager != null) {
-            mSMSManager.destroy();
-        }
-    }
-
-    public ContactManager getContactManager() {
-        return mContactManager;
-    }
-
-    public ConversationManager getConversationManager() {
-        return mConversationManager;
-    }
-
-    public GroupManager getGroupManager() {
-        return mGroupManager;
-    }
-
-    public MessageManager getMessageManager() {
-        return mMessageManager;
-    }
-
-    public StorageManager getStorageManager() {
-        return mStorageManager;
-    }
-
-    public UserManager getUserManager() {
-        return mUserManager;
     }
 }

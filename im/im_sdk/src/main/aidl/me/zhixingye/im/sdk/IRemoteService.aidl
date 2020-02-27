@@ -6,7 +6,6 @@ import me.zhixingye.im.sdk.IContactManagerHandle;
 import me.zhixingye.im.sdk.IConversationManagerHandle;
 import me.zhixingye.im.sdk.IGroupManagerHandle;
 import me.zhixingye.im.sdk.IMessageManagerHandle;
-import me.zhixingye.im.sdk.ISMSManagerHandle;
 import me.zhixingye.im.sdk.IStorageManagerHandle;
 import me.zhixingye.im.sdk.IUserManagerHandle;
 
@@ -18,8 +17,6 @@ interface IRemoteService {
     IGroupManagerHandle getGroupManagerHandle();
 
     IMessageManagerHandle getMessageManagerHandle();
-
-    ISMSManagerHandle getSMSManagerHandle();
 
     IStorageManagerHandle getStorageManagerHandle();
 

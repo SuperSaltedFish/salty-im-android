@@ -8,7 +8,6 @@ import com.salty.protos.UserProfile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import me.zhixingye.im.service.SQLiteService;
 
 /**
  * Created by YZX on 2017年11月17日.

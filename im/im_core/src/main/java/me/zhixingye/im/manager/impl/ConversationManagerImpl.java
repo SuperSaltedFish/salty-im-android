@@ -9,9 +9,9 @@ import com.salty.protos.UpdateConversationTitleResp;
 import com.salty.protos.UpdateConversationTopResp;
 import com.salty.protos.UpdateNotificationStatusResp;
 
+import me.zhixingye.im.api.ConversationApi;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.ConversationManager;
-import me.zhixingye.im.service.ConversationService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -19,53 +19,45 @@ import me.zhixingye.im.service.ConversationService;
  */
 public class ConversationManagerImpl implements ConversationManager {
 
-    private ConversationService mService;
+    private ConversationApi mConversationApi;
 
-    public ConversationManagerImpl() {
-        mService = ConversationService.get();
-    }
-
-    public void destroy() {
-
-    }
-
-    public void init(String userId) {
-
+    public ConversationManagerImpl(String userId, ConversationApi conversationApi) {
+        mConversationApi = conversationApi;
     }
 
     @Override
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
-        mService.getAllConversations(callback);
+        mConversationApi.getAllConversations(callback);
     }
 
     @Override
     public void getConversationDetail(String conversationId, Conversation.ConversationType type, RequestCallback<GetConversationDetailResp> callback) {
-        mService.getConversationDetail(conversationId, type, callback);
+        mConversationApi.getConversationDetail(conversationId, type, callback);
     }
 
     @Override
     public void removeConversation(String conversationId, Conversation.ConversationType type, RequestCallback<RemoveConversationResp> callback) {
-        mService.removeConversation(conversationId, type, callback);
+        mConversationApi.removeConversation(conversationId, type, callback);
     }
 
     @Override
     public void clearConversationMessage(String conversationId, Conversation.ConversationType type, RequestCallback<ClearConversationMessageResp> callback) {
-        mService.clearConversationMessage(conversationId, type, callback);
+        mConversationApi.clearConversationMessage(conversationId, type, callback);
     }
 
     @Override
     public void updateConversationTitle(String conversationId, Conversation.ConversationType type, String title, RequestCallback<UpdateConversationTitleResp> callback) {
-        mService.updateConversationTitle(conversationId, type, title, callback);
+        mConversationApi.updateConversationTitle(conversationId, type, title, callback);
     }
 
     @Override
     public void updateConversationTop(String conversationId, Conversation.ConversationType type, boolean isTop, RequestCallback<UpdateConversationTopResp> callback) {
-        mService.updateConversationTop(conversationId, type, isTop, callback);
+        mConversationApi.updateConversationTop(conversationId, type, isTop, callback);
     }
 
     @Override
     public void updateNotificationStatus(String conversationId, Conversation.ConversationType type, Conversation.NotificationStatus status, RequestCallback<UpdateNotificationStatusResp> callback) {
-        mService.updateNotificationStatus(conversationId, type, status, callback);
+        mConversationApi.updateNotificationStatus(conversationId, type, status, callback);
     }
 
 }

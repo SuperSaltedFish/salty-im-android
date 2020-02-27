@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,14 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import me.zhixingye.im.database.SQLiteOpenHelperImpl;
-
 
 /**
  * Created by zhixingye on 2020年01月28日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class SQLiteService extends BasicService {
+public class SQLiteService {
 
 
     private ReadWriteHelper mReadWriteHelper;

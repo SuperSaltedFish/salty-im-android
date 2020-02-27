@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.api;
 
 import com.salty.protos.AddGroupMemberReq;
 import com.salty.protos.AddGroupMemberResp;
@@ -20,32 +20,20 @@ import com.salty.protos.UpdateMemberNicknameResp;
 
 import java.util.List;
 
+import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupService extends BasicService {
-
-    private static volatile GroupService sGroupService;
-
-    public static GroupService get() {
-        if (sGroupService == null) {
-            synchronized (GroupService.class) {
-                if (sGroupService == null) {
-                    sGroupService = new GroupService();
-                }
-            }
-        }
-        return sGroupService;
-    }
+public class GroupApi extends BasicApi {
 
     private GroupServiceGrpc.GroupServiceStub mGroupServiceStub;
 
-    private GroupService() {
-        super();
-        mGroupServiceStub = GroupServiceGrpc.newStub(getChannel());
+    public GroupApi(ManagedChannel channel, ApiService.Adapter adapter) {
+        super(adapter);
+        mGroupServiceStub = GroupServiceGrpc.newStub(channel);
     }
 
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {

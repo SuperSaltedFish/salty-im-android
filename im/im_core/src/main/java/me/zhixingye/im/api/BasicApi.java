@@ -1,4 +1,4 @@
-package me.zhixingye.im.service;
+package me.zhixingye.im.api;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
@@ -11,29 +11,43 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.tool.Logger;
+import me.zhixingye.im.util.StringUtil;
 
 /**
  * Created by zhixingye on 2020年01月10日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-class BasicService {
+class BasicApi {
 
-    private static final String TAG = "BasicService";
+    private static final String TAG = "BasicApi";
 
-    private NetworkService mNetworkService = NetworkService.get();
+    private ApiService.Adapter mAdapter;
 
-    protected ManagedChannel getChannel() {
-        return mNetworkService.getChannel();
+    BasicApi(ApiService.Adapter adapter) {
+        mAdapter = adapter;
     }
 
-    protected static GrpcReq createReq(MessageLite message) {
-        GrpcReq req = NetworkService.createReq(message);
+
+    GrpcReq createReq(MessageLite message) {
+        Any data = Any.newBuilder()
+                .setTypeUrl("salty/" + message.getClass().getCanonicalName())
+                .setValue(message.toByteString())
+                .build();
+
+        GrpcReq req = GrpcReq.newBuilder()
+                .setDeviceId(StringUtil.checkNull(mAdapter.getDeviceId()))
+                .setOs(GrpcReq.OS.ANDROID)
+                .setLanguage(GrpcReq.Language.CHINESE)
+                .setVersion(StringUtil.checkNull(mAdapter.getAppVersion()))
+                .setToken(StringUtil.checkNull(mAdapter.getToken()))
+                .setData(data)
+                .build();
+
         printRequest(req, message);
         return req;
     }

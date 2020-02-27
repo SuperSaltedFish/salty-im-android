@@ -1,7 +1,7 @@
 package me.zhixingye.im.manager.impl;
 
 import me.zhixingye.im.manager.MessageManager;
-import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.api.MessageApi;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -9,18 +9,11 @@ import me.zhixingye.im.service.MessageService;
  */
 public class MessageManagerImpl implements MessageManager {
 
-    private MessageService mService;
+    private MessageApi mMessageApi;
 
-    public MessageManagerImpl() {
+    public MessageManagerImpl(String userId, MessageApi messageApi) {
         super();
-        mService = MessageService.get();
+        mMessageApi = messageApi;
     }
 
-    public void destroy() {
-
-    }
-
-    public void init(String userId) {
-
-    }
 }

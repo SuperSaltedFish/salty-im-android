@@ -8,21 +8,19 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
-import me.zhixingye.im.sdk.proxy.ContactManagerProxy;
-import me.zhixingye.im.sdk.proxy.ConversationManagerProxy;
-import me.zhixingye.im.sdk.proxy.GroupManagerProxy;
-import me.zhixingye.im.sdk.proxy.MessageManagerProxy;
-import me.zhixingye.im.sdk.proxy.SMSManagerProxy;
-import me.zhixingye.im.sdk.proxy.StorageManagerProxy;
-import me.zhixingye.im.sdk.proxy.UserManagerProxy;
-import me.zhixingye.im.sdk.util.SystemUtils;
 import me.zhixingye.im.manager.ContactManager;
 import me.zhixingye.im.manager.ConversationManager;
 import me.zhixingye.im.manager.GroupManager;
 import me.zhixingye.im.manager.MessageManager;
-import me.zhixingye.im.manager.SMSManager;
 import me.zhixingye.im.manager.StorageManager;
 import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.sdk.proxy.ContactManagerProxy;
+import me.zhixingye.im.sdk.proxy.ConversationManagerProxy;
+import me.zhixingye.im.sdk.proxy.GroupManagerProxy;
+import me.zhixingye.im.sdk.proxy.MessageManagerProxy;
+import me.zhixingye.im.sdk.proxy.StorageManagerProxy;
+import me.zhixingye.im.sdk.proxy.UserManagerProxy;
+import me.zhixingye.im.sdk.util.SystemUtils;
 
 /**
  * Created by zhixingye on 2020年02月01日.
@@ -57,7 +55,6 @@ public class IMClient {
     private ConversationManagerProxy mConversationService;
     private GroupManagerProxy mGroupService;
     private MessageManagerProxy mMessageService;
-    private SMSManagerProxy mSMSService;
     private StorageManagerProxy mStorageService;
     private UserManagerProxy mUserService;
 
@@ -72,7 +69,6 @@ public class IMClient {
         mConversationService = new ConversationManagerProxy();
         mGroupService = new GroupManagerProxy();
         mMessageService = new MessageManagerProxy();
-        mSMSService = new SMSManagerProxy();
         mStorageService = new StorageManagerProxy();
         mUserService = new UserManagerProxy();
     }
@@ -89,7 +85,6 @@ public class IMClient {
                     mConversationService.bindHandle(remoteService.getConversationManagerHandle());
                     mGroupService.bindHandle(remoteService.getGroupManagerHandle());
                     mMessageService.bindHandle(remoteService.getMessageManagerHandle());
-                    mSMSService.bindHandle(remoteService.getSMSManagerHandle());
                     mStorageService.bindHandle(remoteService.getStorageManagerHandle());
                     mUserService.bindHandle(remoteService.getUserManagerHandle());
                     if (isFirstBind) {
@@ -111,7 +106,6 @@ public class IMClient {
                 mConversationService.unbindHandle();
                 mGroupService.unbindHandle();
                 mMessageService.unbindHandle();
-                mSMSService.unbindHandle();
                 mStorageService.unbindHandle();
                 mUserService.unbindHandle();
             }
@@ -138,10 +132,6 @@ public class IMClient {
 
     public MessageManager getMessageService() {
         return mMessageService;
-    }
-
-    public SMSManager getSMSService() {
-        return mSMSService;
     }
 
     public StorageManager getStorageService() {

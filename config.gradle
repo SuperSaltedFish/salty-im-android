@@ -30,7 +30,7 @@ ext {
             protobuf_gradle_plugin: "0.8.11",
             protoc_gen_javalite   : "3.0.0",
             protobuf              : "3.11.1",
-            grpc                  : "1.26.0"
+            grpc                  : "1.27.1"
     ]
 
 }

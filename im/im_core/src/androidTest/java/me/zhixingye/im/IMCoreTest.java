@@ -7,6 +7,7 @@ import android.util.Log;
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
+import com.salty.protos.QueryUserInfoResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UpdateUserInfoResp;
@@ -175,7 +176,19 @@ public class IMCoreTest {
             void onSuccessful(GetUserInfoResp resp) {
                 UserProfile profile = resp.getProfile();
                 assertEquals(profile.getNickname(), nickname);
-                assertEquals(profile.getDescription(), nickname);
+                assertEquals(profile.getDescription(), description);
+                assertEquals(profile.getSexValue(), sex.getNumber());
+                assertEquals(profile.getBirthday(), birthday);
+                assertEquals(profile.getLocation(), location);
+            }
+        });
+
+        IMCore.get().getUserManager().queryUserInfoByTelephone(profile.getTelephone(), new LockRequestCallback<QueryUserInfoResp>() {
+            @Override
+            void onSuccessful(QueryUserInfoResp resp) {
+                UserProfile profile = resp.getProfile();
+                assertEquals(profile.getNickname(), nickname);
+                assertEquals(profile.getDescription(), description);
                 assertEquals(profile.getSexValue(), sex.getNumber());
                 assertEquals(profile.getBirthday(), birthday);
                 assertEquals(profile.getLocation(), location);

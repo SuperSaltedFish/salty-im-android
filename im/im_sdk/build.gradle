@@ -27,10 +27,6 @@ android {
 }
 
 dependencies {
-    testImplementation "junit:junit:${depVersions.junit}"
-    androidTestImplementation "androidx.test.ext:junit:${depVersions.android_junit}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${depVersions.android_junit_espresso}"
-
     implementation "androidx.appcompat:appcompat:${depVersions.appcompat}"
 
     api project(path: ':im_core')

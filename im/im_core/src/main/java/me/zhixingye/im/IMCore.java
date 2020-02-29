@@ -87,22 +87,22 @@ public class IMCore {
         mApiService = new ApiService(mAppContext, serverIP, serverPort, new ApiService.Adapter() {
             @Override
             public String getDeviceId() {
-                return Settings.System.getString(mAppContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+                return getDeviceID();
             }
 
             @Override
             public String getToken() {
-                return mToken;
+                return IMCore.this.getToken();
             }
 
             @Override
             public String getAppVersion() {
-                return mAppVersion;
+                return IMCore.this.getAppVersion();
             }
 
             @Override
             public Locale getLanguage() {
-                return mLanguage;
+                return IMCore.this.getLanguage();
             }
         });
 

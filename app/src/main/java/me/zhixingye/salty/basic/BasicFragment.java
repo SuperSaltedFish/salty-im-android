@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +16,11 @@ import android.widget.Toast;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.AlertDialog;
@@ -116,78 +109,6 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
             isOnceVisible = true;
             onFirstVisible();
         }
-    }
-
-    //请求权限,BaseCompatActivity做了默认的权限封装
-    public final void requestPermissionsInCompatMode(@NonNull String[] permissions, int requestCode) {
-        List<String> permissionList = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(mContext, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(permission);
-            }
-        }
-
-        int size = permissionList.size();
-        if (size != 0) {
-            mCurrentPermissionsRequestCode = requestCode;
-            requestPermissions(permissionList.toArray(new String[size]), requestCode);
-        } else {
-            onRequestPermissionsResult(requestCode, true, null);
-        }
-    }
-
-    //请求权限之后的回调，主要判断用户是否授予的权限，根据情况回调onRequestPermissionsResult()，子类可以在onRequestPermissionsResult（）中获取权限申请结果。
-    @Override
-    public final void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != mCurrentPermissionsRequestCode) {
-            return;
-        }
-        mCurrentPermissionsRequestCode = -1;
-        boolean isNeedShowMissingPermissionDialog = false;
-        boolean result = true;
-        //判断那些权限被拒绝了
-        ArrayList<String> deniedPermissions = new ArrayList<>();
-        for (int i = 0, length = permissions.length; i < length; i++) {
-            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                result = false;
-                //判断权限申请是否已经不再提示了
-                if (!shouldShowRequestPermissionRationale(permissions[i])) {
-                    isNeedShowMissingPermissionDialog = true;
-                }
-                deniedPermissions.add(permissions[i]);
-            }
-        }
-        final String[] deniedArr = deniedPermissions.toArray(new String[0]);
-        if (result) {
-            onRequestPermissionsResult(requestCode, true, null);
-        } else if (isNeedShowMissingPermissionDialog) {
-            //提示用户权限被禁用，需要去设置中开始
-            new AlertDialog(mContext)
-                    .setTitle(getString(R.string.PermissionDialog_Help))
-                    .setMessage(getString(R.string.PermissionDialog_MissPermissionHint))
-                    .setNegativeButton(getString(R.string.PermissionDialog_Cancel), null)
-                    .setPositiveButton(getString(R.string.PermissionDialog_Cancel), (dialog, which) -> {
-                        startAppSettings();//调整到APP权限设置
-                    })
-                    .setOnDismissListener(dialog -> {
-                        onRequestPermissionsResult(requestCode, false, deniedArr);
-                    })
-                    .show();
-        } else {
-            onRequestPermissionsResult(requestCode, false, deniedArr);
-        }
-    }
-
-    //子类重写这个方法获取权限申请结果
-    protected void onRequestPermissionsResult(int requestCode, boolean isSuccess, String[] deniedPermissions) {
-    }
-
-    // 启动应用的设置界面
-    private void startAppSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.setData(Uri.parse("package:" + mContext.getPackageName()));
-        startActivity(intent);
     }
 
     //显示软键盘

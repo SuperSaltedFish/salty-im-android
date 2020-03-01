@@ -66,5 +66,30 @@ public class IMRemoteService extends Service {
         public IUserManagerHandle getUserManagerHandle() throws RemoteException {
             return new UserManagerHandle();
         }
+
+        @Override
+        public void registerByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
+
+        }
+
+        @Override
+        public void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
+
+        }
+
+        @Override
+        public void loginByEmail(String email, String password, String verificationCode, IResultCallback callback) throws RemoteException {
+
+        }
+
+        @Override
+        public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback) throws RemoteException {
+
+        }
+
+        @Override
+        public void resetLoginPassword(String telephone, String oldPassword, String newPassword, IResultCallback callback) throws RemoteException {
+
+        }
     };
 }

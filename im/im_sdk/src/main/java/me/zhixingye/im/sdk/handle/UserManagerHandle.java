@@ -12,31 +12,6 @@ import me.zhixingye.im.sdk.IUserManagerHandle;
  */
 public class UserManagerHandle extends IUserManagerHandle.Stub {
     @Override
-    public void registerByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
-    }
-
-    @Override
-    public void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
-    }
-
-    @Override
-    public void loginByEmail(String email, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
-    }
-
-    @Override
-    public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback) throws RemoteException {
-
-    }
-
-    @Override
-    public void resetLoginPassword(String telephone, String oldPassword, String newPassword, IResultCallback callback) throws RemoteException {
-
-    }
-
-    @Override
     public void updateUserInfo(String nickname, String description, int sex, long birthday, String location, IResultCallback callback) throws RemoteException {
 
     }

@@ -1,14 +1,13 @@
 package me.zhixingye.salty.module.splash.view;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.view.LoginActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
 import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
+import me.zhixingye.salty.util.PermissionHelper;
 
 public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter> implements SplashContract.View {
 
@@ -33,19 +32,21 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
             }
         }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION);
-        new Handler().postDelayed(() -> requestPermissionsInCompatMode(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        }, 0), 2000);
-    }
 
-    @Override
-    protected void onRequestPermissionsResult(int requestCode, boolean isSuccess, String[] deniedPermissions) {
-        if (isSuccess) {
-            mPresenter.checkLoginState(this.getApplicationContext());
-        } else {
-            finish();
-        }
+        PermissionHelper.requestExternalStoragePermissions(
+                getSupportFragmentManager(),
+                new PermissionHelper.OnPermissionsResult() {
+                    @Override
+                    public void onGranted() {
+                        mPresenter.checkLoginState(getApplicationContext());
+                    }
+
+                    @Override
+                    public void onDenied(String[] deniedPermissions) {
+                        finish();
+                    }
+                },
+                true);
     }
 
     @Override

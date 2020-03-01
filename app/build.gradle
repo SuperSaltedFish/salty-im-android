@@ -17,7 +17,6 @@ android {
         }
     }
 
-
     signingConfigs {
         config {
             keyAlias 'zhixingye'

@@ -3,10 +3,7 @@ package me.zhixingye.salty.basic;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -26,15 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
@@ -137,64 +131,6 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(enable);
         }
-    }
-
-    //请求权限,BaseCompatActivity做了默认的权限封装
-    public final void requestPermissionsInCompatMode(@NonNull String[] permissions, int requestCode) {
-        ActivityCompat.requestPermissions(this, permissions, requestCode);
-    }
-
-    //请求权限之后的回调，主要判断用户是否授予的权限，根据情况回调onRequestPermissionsResult()，子类可以在onRequestPermissionsResult（）中获取权限申请结果。
-    @Override
-    public final void onRequestPermissionsResult(final int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        boolean isNeedShowMissingPermissionDialog = false;
-        boolean result = true;
-        ArrayList<String> deniedPermissions = new ArrayList<>();
-        //判断那些权限被拒绝了
-        for (int i = 0, length = permissions.length; i < length; i++) {
-            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                result = false;
-                //判断权限申请是否已经不再提示了
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i])) {
-                    isNeedShowMissingPermissionDialog = true;
-                }
-                deniedPermissions.add(permissions[i]);
-            }
-        }
-        final String[] deniedArr = deniedPermissions.toArray(new String[0]);
-        if (result) {
-            //申请成功回调结果
-            onRequestPermissionsResult(requestCode, true, null);
-        } else if (isNeedShowMissingPermissionDialog) {
-            //提示用户权限被禁用，需要去设置中开始
-            new AlertDialog(this)
-                    .setTitle(getString(R.string.PermissionDialog_Help))
-                    .setMessage(getString(R.string.PermissionDialog_MissPermissionHint))
-                    .setNegativeButton(getString(R.string.PermissionDialog_Cancel), null)
-                    .setPositiveButton(getString(R.string.PermissionDialog_Setting), (dialog, which) -> {
-                        startAppSettings();//调整到APP权限设置
-                    })
-                    .setOnDismissListener(dialog -> {
-                        onRequestPermissionsResult(requestCode, false, deniedArr);
-                    })
-                    .show();
-        } else {
-            //回调失败
-            onRequestPermissionsResult(requestCode, false, deniedArr);
-        }
-    }
-
-    //子类重写这个方法获取权限申请结果
-    protected void onRequestPermissionsResult(int requestCode, boolean isSuccess, String[] deniedPermissions) {
-
-    }
-
-    // 启动应用的设置界面
-    private void startAppSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.setData(Uri.parse("package:" + getPackageName()));
-        startActivity(intent);
     }
 
     //初始化Presenter，这里用到了反射，这段不是很好理解，可以断点Debug一行行看代码执行情况以及对应的一些class变量

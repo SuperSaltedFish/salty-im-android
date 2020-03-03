@@ -10,6 +10,7 @@ import java.util.List;
 import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
 import me.jessyan.autosize.AutoSizeConfig;
+import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.tool.ActivityHelper;
 import me.zhixingye.salty.util.AndroidHelper;
 
@@ -24,6 +25,7 @@ public class SaltyApp extends Application {
         super.onCreate();
 
         if (TextUtils.equals(getProcessName(this), getPackageName())) {
+            AppConfig.init(this);
             AndroidHelper.init(this);
             ActivityHelper.init(this);
 

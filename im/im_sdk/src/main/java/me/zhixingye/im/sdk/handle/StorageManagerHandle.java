@@ -2,6 +2,7 @@ package me.zhixingye.im.sdk.handle;
 
 import android.os.RemoteException;
 
+import me.zhixingye.im.IMCore;
 import me.zhixingye.im.sdk.IStorageManagerHandle;
 
 /**
@@ -11,21 +12,21 @@ import me.zhixingye.im.sdk.IStorageManagerHandle;
 public class StorageManagerHandle extends IStorageManagerHandle.Stub {
     @Override
     public boolean putToConfigurationPreferences(String key, String value) throws RemoteException {
-        return false;
+        return IMCore.get().getStorageManager().putToConfigurationPreferences(key,value);
     }
 
     @Override
     public String getFromConfigurationPreferences(String key) throws RemoteException {
-        return null;
+        return IMCore.get().getStorageManager().getFromConfigurationPreferences(key);
     }
 
     @Override
     public boolean putToUserPreferences(String key, String value) throws RemoteException {
-        return false;
+        return IMCore.get().getStorageManager().putToUserPreferences(key,value);
     }
 
     @Override
     public String getFromUserPreferences(String key) throws RemoteException {
-        return null;
+        return IMCore.get().getStorageManager().getFromUserPreferences(key);
     }
 }

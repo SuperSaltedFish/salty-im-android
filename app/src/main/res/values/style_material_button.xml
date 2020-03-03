@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/btn_text_color</item>
+        <item name="backgroundTint">@color/btn_background_tint</item>
+    </style>
+
+    <!--    全局的按钮样式，没有背景只有文字的那种-->
+    <style name="TextButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+
+    </style>
+</resources>

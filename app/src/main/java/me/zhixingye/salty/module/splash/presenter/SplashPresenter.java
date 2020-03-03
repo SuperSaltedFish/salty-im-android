@@ -37,5 +37,4 @@ public class SplashPresenter implements SplashContract.Presenter {
         });
     }
 
-
 }

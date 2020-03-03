@@ -27,6 +27,5 @@ public class SplashContract {
     public interface Presenter extends BasicPresenter<View> {
 
         void checkLoginState(Context context);
-
     }
 }

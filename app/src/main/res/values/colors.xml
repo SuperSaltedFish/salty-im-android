@@ -4,12 +4,13 @@
     <color name="colorPrimaryDark">#3f90fe</color>
     <color name="colorAccent">#3f90fe</color>
     <color name="colorAccentLight">#79A9FE</color>
-    <color name="colorAccentDisabled">#a83f90fe</color>
+    <color name="colorAccentDisabled">#5C3F90FE</color>
 
     <color name="textColorPrimary">#353535</color>
     <color name="textColorSecondaryWhite">#c4ffffff</color>
     <color name="textColorSecondaryBlack">#888888</color>
     <color name="textColorSecondaryBlackLight">#B9B9B9</color>
+    <color name="textColorTertiary">#8F353535</color>
 
     <color name="backgroundColorWhiteLight">#f7f8fe</color>
     <color name="backgroundColorGrey">#f5f8f9</color>

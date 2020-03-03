@@ -1,6 +1,7 @@
 package me.zhixingye.salty.configure;
 
-import me.zhixingye.im.sdk.IMClient;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 /**
  * Created by zhixingye on 2020年02月04日.
@@ -8,11 +9,20 @@ import me.zhixingye.im.sdk.IMClient;
  */
 public class AppConfig {
 
+    private static final String TAG = "AppConfig";
+
+    private static SharedPreferences sConfigPreferences;
+
+    public static void init(Context context) {
+        context = context.getApplicationContext();
+        sConfigPreferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+    }
+
     public static void setEverStartedGuide(boolean isStart) {
-        IMClient.get().getStorageService().putToConfigurationPreferences("isEverStartedGuide", String.valueOf(isStart));
+        sConfigPreferences.edit().putBoolean("isEverStartedGuide", isStart).apply();
     }
 
     public static boolean isEverStartedGuide() {
-        return Boolean.getBoolean(IMClient.get().getStorageService().getFromConfigurationPreferences("isEverStartedGuide"));
+        return sConfigPreferences.getBoolean("isEverStartedGuide", false);
     }
 }

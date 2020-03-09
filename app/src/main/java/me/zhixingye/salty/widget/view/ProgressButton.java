@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -209,15 +210,14 @@ public class ProgressButton extends ConstraintLayout {
 
     @Override
     public void setEnabled(boolean enabled) {
+        recursiveSetEnabled(this,enabled);
         super.setEnabled(enabled);
-        mButton.setEnabled(enabled);
-        mProgressBar.setEnabled(enabled);
     }
 
     @Override
     public void setClickable(boolean clickable) {
+        recursiveSetClickable(this,clickable);
         super.setClickable(clickable);
-        mButton.setClickable(clickable);
     }
 
     @Override
@@ -231,6 +231,26 @@ public class ProgressButton extends ConstraintLayout {
 
     public ProgressBar getProgressBar() {
         return mProgressBar;
+    }
+
+    private static void recursiveSetEnabled(@NonNull final ViewGroup vg, final boolean enabled) {
+        for (int i = 0, count = vg.getChildCount(); i < count; i++) {
+            final View child = vg.getChildAt(i);
+            child.setEnabled(enabled);
+            if (child instanceof ViewGroup) {
+                recursiveSetEnabled((ViewGroup) child, enabled);
+            }
+        }
+    }
+
+    private static void recursiveSetClickable(@NonNull final ViewGroup vg, final boolean clickable) {
+        for (int i = 0, count = vg.getChildCount(); i < count; i++) {
+            final View child = vg.getChildAt(i);
+            child.setClickable(clickable);
+            if (child instanceof ViewGroup) {
+                recursiveSetEnabled((ViewGroup) child, clickable);
+            }
+        }
     }
 
     private static Animator circularRevealHideAnim(View view) {

@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="我是测试test" />
+            android:hint="我是提示" />
     </LinearLayout>
 
     <LinearLayout
@@ -60,20 +60,35 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:layout_weight="1"-->
+<!--            app:endIconMode="clear_text"-->
+<!--            app:helperText="我是helper">-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:hint="我就是一个提示hint"/>-->
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
+            android:id="@+id/sss"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            app:endIconMode="clear_text"
             app:helperText="我是helper">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="我就是一个提示hint"
-                android:text="我就是一个文字test" />
+                android:hint="我就是一个提示hint" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,14 +98,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            app:endIconMode="password_toggle"
             app:helperText="我是helper">
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="我就是一个提示hint"
-                android:text="我就是一个文字test" />
+                android:hint="我就是一个提示hint" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

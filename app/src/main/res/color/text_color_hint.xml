@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:alpha="0.18" android:color="?android:attr/colorForeground" android:state_enabled="false" />
+    <item android:alpha="0.10" android:color="?android:attr/colorForeground" android:state_enabled="false" />
     <item android:alpha="0.54" android:color="?android:attr/colorForeground" android:state_enabled="true" android:state_pressed="true" />
-    <item android:alpha="0.35" android:color="?android:attr/colorForeground" android:state_enabled="true" android:state_pressed="false"/>
+    <item android:alpha="0.25" android:color="?android:attr/colorForeground" android:state_enabled="true" android:state_pressed="false"/>
 </selector>

@@ -35,6 +35,7 @@
         layout="@layout/include_password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mPetPhone" />
@@ -91,7 +92,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|bottom"
         android:paddingBottom="8dp"
-        android:text="Copyright © 2017-2020 咸鱼部落 版权所有"
+        android:text="Copyright © 2016-2020 咸鱼部落 版权所有"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

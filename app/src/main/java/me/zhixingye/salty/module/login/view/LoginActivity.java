@@ -43,7 +43,6 @@ public class LoginActivity extends BasicCompatActivity {
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        mEtPassword.setText("dawdawdwad");
-        mEtPassword.setEnabled(false);
+
     }
 }

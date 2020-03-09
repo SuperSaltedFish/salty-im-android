@@ -1,8 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -13,7 +11,7 @@
         <item name="android:textColorTertiary">@color/text_color_tertiary</item>
         <item name="android:textDirection">locale</item>
 
-        <!--        &lt;!&ndash;定义统一样式&ndash;&gt;-->
+
         <item name="materialButtonStyle">@style/ButtonStyle</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="editTextStyle">@style/EditTextStyle</item>
@@ -24,8 +22,8 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowEnableSplitTouch">false</item><!--全用多点触控-->
-        <item name="android:splitMotionEvents">false</item><!--全用多点触控-->
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
@@ -72,3 +70,7 @@
     </style>
 
 </resources>
+
+<!--    textView text-textColorTertiary-secondary_text_material_light-->
+<!--    edittext text-textColorPrimary-colorForeground-text_color_primary，hint-textColorHintInverse-hint_foreground_material_dark-->
+<!--    button text-textColorPrimary-colorForeground-text_color_primary-->

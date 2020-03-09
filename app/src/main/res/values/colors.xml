@@ -7,14 +7,13 @@
     <color name="colorAccentDisabled">#5C3F90FE</color>
 
     <color name="textColorPrimary">#353535</color>
-    <color name="textColorSecondaryWhite">#c4ffffff</color>
-    <color name="textColorSecondaryBlack">#888888</color>
-    <color name="textColorSecondaryBlackLight">#B9B9B9</color>
     <color name="textColorTertiary">#8F353535</color>
+    <color name="textColorHint">#d3d3d3</color>
+    <color name="textColorHintHighLight">#99353535</color>
 
     <color name="backgroundColorWhiteLight">#f7f8fe</color>
     <color name="backgroundColorGrey">#f5f8f9</color>
-    <color name="dividerColor">#EEEEEE</color>
+    <color name="dividerColor">#24353535</color>
 
     <color name="textColorWhite">#ffffff</color>
     <color name="textColorWhiteAlpha">#a8ffffff</color>

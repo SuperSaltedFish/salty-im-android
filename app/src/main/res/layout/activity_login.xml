@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,184 +7,102 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     tools:context="me.zhixingye.salty.module.login.view.LoginActivity">
 
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
     <ImageView
         android:layout_width="280dp"
         android:layout_height="280dp"
-        android:src="@drawable/src_login" />
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="2" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="6dp"
-            android:padding="1dp"
-            android:src="@drawable/ic_telephone2" />
-
-        <EditText
-            android:id="@+id/mEtTelephone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:hint="手机号"
-            android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:paddingStart="48dp"
-            android:paddingEnd="44dp"
-            android:paddingBottom="16dp"
-            android:textSize="14sp" />
+        android:src="@drawable/src_login"
+        app:layout_constraintBottom_toTopOf="@id/mGlCentre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-    </FrameLayout>
-
-    <FrameLayout
+    <me.zhixingye.salty.widget.view.PhoneEditText
+        android:id="@+id/mPetPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mGlCentre" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="start|center_vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="6dp"
-            android:src="@drawable/ic_password" />
-
-        <EditText
-            android:id="@+id/mEtPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:hint="密码"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:maxLength="16"
-            android:paddingStart="48dp"
-            android:paddingEnd="44dp"
-            android:paddingBottom="16dp"
-            android:textSize="14sp" />
-
-        <Button
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:minWidth="0dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="6dp"
-            android:text="忘记?"
-            android:textSize="13sp" />
-
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/mTvErrorHint"
+    <include
+        android:id="@+id/mTilPassword"
+        layout="@layout/include_password_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:gravity="center_vertical"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:textColor="@android:color/holo_red_light"
-        android:textSize="12sp" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mPetPhone" />
+
 
     <me.zhixingye.salty.widget.view.ProgressButton
         android:id="@+id/mPBtnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mTilPassword"
         app:text="登录" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/mBtnRegister"
+        style="@style/TextButtonStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginEnd="20dp"
+        android:text="注册账号"
+        app:layout_constraintBottom_toBottomOf="@id/mIvDivider"
+        app:layout_constraintEnd_toStartOf="@id/mIvDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mIvDivider" />
 
-        <TextView
-            android:id="@+id/mTvInternationalCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/selector_edit_default"
-            android:gravity="center"
-            android:text="+86"
-            android:drawableEnd="@drawable/ic_down_arrow"
-            android:textColor="@color/selector_text_color_primary"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="@id/mEtTelephone"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_marginStart="12dp"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="请输入手机号码" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/mIvDivider"
+        android:layout_width="1dp"
+        android:layout_height="32dp"
+        android:background="@color/dividerColor"
+        app:layout_constraintBottom_toTopOf="@id/mTvCopyright"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mPBtnLogin" />
 
     <Button
+        android:id="@+id/mBtnResetPassword"
+        style="@style/TextButtonStyle"
         android:layout_width="wrap_content"
-        android:enabled="false"
-        android:layout_height="wrap_content"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:gravity="center">
+        android:layout_marginStart="20dp"
+        android:text="找回密码"
+        app:layout_constraintBottom_toBottomOf="@id/mIvDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mIvDivider"
+        app:layout_constraintTop_toTopOf="@id/mIvDivider" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="你还没有一个帐号？"
-            android:textColor="@color/colorAccent"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/mTvJumpToRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注册"
-            android:textColor="@color/colorAccent"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="6" />
 
     <TextView
+        android:id="@+id/mTvCopyright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|bottom"
         android:paddingBottom="8dp"
-        android:text="Copyright © 2017-2020 咸鱼科技 版权所有"
-        android:textSize="12sp" />
+        android:text="Copyright © 2017-2020 咸鱼部落 版权所有"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mGlCentre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

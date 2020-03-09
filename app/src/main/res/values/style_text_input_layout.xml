@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TextInputLayoutStyle" parent="Widget.Design.TextInputLayout">
+        <item name="android:textColorHint">@color/text_color_hint</item>
+        <item name="errorEnabled">true</item>
+        <item name="helperTextEnabled">true</item>
     </style>
+
 </resources>

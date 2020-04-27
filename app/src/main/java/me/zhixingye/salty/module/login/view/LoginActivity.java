@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.login.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,16 +34,35 @@ public class LoginActivity extends BasicCompatActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mPetPhone =  findViewById(R.id.mPetPhone);
-        mTilPassword =  findViewById(R.id.mTilPassword);
-        mEtPassword =  findViewById(R.id.mEtPassword);
-        mPBtnLogin =  findViewById(R.id.mPBtnLogin);
-        mBtnRegister =  findViewById(R.id.mBtnRegister);
-        mBtnResetPassword =  findViewById(R.id.mBtnResetPassword);
+        mPetPhone = findViewById(R.id.mPetPhone);
+        mTilPassword = findViewById(R.id.mTilPassword);
+        mEtPassword = findViewById(R.id.mEtPassword);
+        mPBtnLogin = findViewById(R.id.mPBtnLogin);
+        mBtnRegister = findViewById(R.id.mBtnRegister);
+        mBtnResetPassword = findViewById(R.id.mBtnResetPassword);
     }
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-
+        setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS);
+        mPetPhone.setOnClickListener(mOnClickListener);
+        mBtnRegister.setOnClickListener(mOnClickListener);
+        mBtnResetPassword.setOnClickListener(mOnClickListener);
     }
+
+    private void gotoRegisterActivity() {
+        RegisterActivity.startActivity(this);
+    }
+
+    private final View.OnClickListener mOnClickListener = v -> {
+        switch (v.getId()) {
+            case R.id.mPetPhone:
+                break;
+            case R.id.mBtnRegister:
+                gotoRegisterActivity();
+                break;
+            case R.id.mBtnResetPassword:
+                break;
+        }
+    };
 }

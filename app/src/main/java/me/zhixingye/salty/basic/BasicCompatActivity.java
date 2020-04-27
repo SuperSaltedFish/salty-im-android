@@ -94,6 +94,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             if (mDefaultToolbar != null) {
                 setSupportActionBar(mDefaultToolbar);
                 setTitle("");
+                setDisplayHomeAsUpEnabled(true);
             }
         }
         initPresenter();//MVP模式，这里开始初始化presenter,注意了，这个方法应该在init()方法之前。

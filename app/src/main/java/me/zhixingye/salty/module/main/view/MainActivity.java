@@ -15,12 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        IMClient.init(this, new IMClient.InitCallback() {
-            @Override
-            public void onCompleted() {
-
-            }
-        });
     }
 
     public void onClick(View v) {

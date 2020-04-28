@@ -13,6 +13,7 @@ import com.salty.protos.UpdateNotificationStatusResp;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IConversationManagerHandle;
+import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.ConversationManager;
 
@@ -22,26 +23,26 @@ import me.zhixingye.im.manager.ConversationManager;
  */
 public class ConversationManagerProxy extends BasicProxy implements ConversationManager {
 
-    private IConversationManagerHandle mManagerHandle;
+    private IConversationManagerHandle mConversationHandle;
 
-    public ConversationManagerProxy() {
+    public ConversationManagerProxy(IMServiceConnector proxy) {
+        super(proxy);
     }
 
-    public void bindHandle(IConversationManagerHandle handle) {
-        mManagerHandle = handle;
-    }
-
-    public void unbindHandle() {
-        mManagerHandle = null;
+    @Override
+    protected void onConnectRemoteService(IRemoteService service) {
+        try {
+            mConversationHandle = service.getConversationManagerHandle();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            mConversationHandle = null;
+        }
     }
 
     @Override
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.getAllConversations(new ResultCallbackWrapper<>(callback));
+            mConversationHandle.getAllConversations(new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -50,11 +51,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void getConversationDetail(String conversationId, Conversation.ConversationType type, RequestCallback<GetConversationDetailResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.getConversationDetail(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+            mConversationHandle.getConversationDetail(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -63,11 +61,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void removeConversation(String conversationId, Conversation.ConversationType type, RequestCallback<RemoveConversationResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.removeConversation(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+            mConversationHandle.removeConversation(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -76,11 +71,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void clearConversationMessage(String conversationId, Conversation.ConversationType type, RequestCallback<ClearConversationMessageResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.clearConversationMessage(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
+            mConversationHandle.clearConversationMessage(conversationId, type.getNumber(), new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -89,11 +81,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void updateConversationTitle(String conversationId, Conversation.ConversationType type, String title, RequestCallback<UpdateConversationTitleResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateConversationTitle(conversationId, type.getNumber(), title, new ResultCallbackWrapper<>(callback));
+            mConversationHandle.updateConversationTitle(conversationId, type.getNumber(), title, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -102,11 +91,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void updateConversationTop(String conversationId, Conversation.ConversationType type, boolean isTop, RequestCallback<UpdateConversationTopResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateConversationTop(conversationId, type.getNumber(), isTop, new ResultCallbackWrapper<>(callback));
+            mConversationHandle.updateConversationTop(conversationId, type.getNumber(), isTop, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -115,11 +101,8 @@ public class ConversationManagerProxy extends BasicProxy implements Conversation
 
     @Override
     public void updateNotificationStatus(String conversationId, Conversation.ConversationType type, Conversation.NotificationStatus status, RequestCallback<UpdateNotificationStatusResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateNotificationStatus(conversationId, type.getNumber(), status.getNumber(), new ResultCallbackWrapper<>(callback));
+            mConversationHandle.updateNotificationStatus(conversationId, type.getNumber(), status.getNumber(), new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

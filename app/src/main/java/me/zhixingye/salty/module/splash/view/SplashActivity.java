@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.splash.view;
 import android.content.Intent;
 import android.os.Bundle;
 
+import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.view.LoginActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
@@ -13,7 +14,7 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
 
     @Override
     protected int getLayoutID() {
-        return 0;
+        return R.layout.activity_splash;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
 
     @Override
     public void showLoginError(String error) {
-
+        showDialog(error, dialog -> finish());
     }
 
     @Override

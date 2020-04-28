@@ -26,7 +26,7 @@
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/src_bg_splash</item>
+        <item name="android:windowBackground">@null</item>
     </style>
 
 

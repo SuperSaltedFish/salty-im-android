@@ -15,6 +15,7 @@ import java.util.List;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IGroupManagerHandle;
+import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.manager.GroupManager;
 
@@ -24,26 +25,26 @@ import me.zhixingye.im.manager.GroupManager;
  */
 public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
-    private IGroupManagerHandle mManagerHandle;
+    private IGroupManagerHandle mGroupHandle;
 
-    public GroupManagerProxy() {
+    public GroupManagerProxy(IMServiceConnector proxy) {
+        super(proxy);
     }
 
-    public void bindHandle(IGroupManagerHandle handle) {
-        mManagerHandle = handle;
-    }
-
-    public void unbindHandle() {
-        mManagerHandle = null;
+    @Override
+    protected void onConnectRemoteService(IRemoteService service) {
+        try {
+            mGroupHandle = service.getGroupManagerHandle();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            mGroupHandle = null;
+        }
     }
 
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.createGroup(groupName, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.createGroup(groupName, memberUserIdArr, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -53,7 +54,7 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
     @Override
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
         try {
-            mManagerHandle.joinGroup(groupId, reason, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.joinGroup(groupId, reason, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -62,11 +63,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.quitGroup(groupId, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.quitGroup(groupId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -75,11 +73,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.addGroupMember(groupId, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.addGroupMember(groupId, memberUserIdArr, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -88,11 +83,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.kickGroupMember(groupId, memberUserId, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.kickGroupMember(groupId, memberUserId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -101,11 +93,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateGroupName(groupId, groupName, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateGroupName(groupId, groupName, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -114,11 +103,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateGroupNotice(groupId, notice, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateGroupNotice(groupId, notice, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -127,11 +113,8 @@ public class GroupManagerProxy extends BasicProxy implements GroupManager {
 
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateMemberNickname(groupId, memberNickname, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateMemberNickname(groupId, memberNickname, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

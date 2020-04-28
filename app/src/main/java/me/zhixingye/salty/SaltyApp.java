@@ -1,18 +1,17 @@
 package me.zhixingye.salty;
 
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.text.TextUtils;
 
-import java.util.List;
 
 import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
 import me.jessyan.autosize.AutoSizeConfig;
+import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.tool.ActivityHelper;
 import me.zhixingye.salty.util.AndroidHelper;
+import me.zhixingye.salty.util.AndroidUtil;
 
 /**
  * Created by zhixingye on 2020年02月03日.
@@ -24,12 +23,13 @@ public class SaltyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (TextUtils.equals(getProcessName(this), getPackageName())) {
+        if (TextUtils.equals(AndroidUtil.getProcessName(this), getPackageName())) {
             AppConfig.init(this);
             AndroidHelper.init(this);
             ActivityHelper.init(this);
-
             setupThirdPart();
+
+            IMClient.init(this);
         }
     }
 
@@ -38,21 +38,4 @@ public class SaltyApp extends Application {
         AutoSizeConfig.getInstance().setDesignWidthInDp(420).setBaseOnWidth(true).setExcludeFontScale(true);
     }
 
-    public static String getProcessName(Context cxt) {
-        ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
-        if (am == null) {
-            return null;
-        }
-        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
-        if (runningApps == null) {
-            return null;
-        }
-        int currentProcessPid = android.os.Process.myPid();
-        for (ActivityManager.RunningAppProcessInfo info : runningApps) {
-            if (info.pid == currentProcessPid) {
-                return info.processName;
-            }
-        }
-        return null;
-    }
 }

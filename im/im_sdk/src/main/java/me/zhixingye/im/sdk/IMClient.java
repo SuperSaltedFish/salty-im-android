@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.text.TextUtils;
 
 import me.zhixingye.im.manager.ContactManager;
@@ -14,6 +13,7 @@ import me.zhixingye.im.manager.GroupManager;
 import me.zhixingye.im.manager.MessageManager;
 import me.zhixingye.im.manager.StorageManager;
 import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.sdk.proxy.BasicProxy;
 import me.zhixingye.im.sdk.proxy.ContactManagerProxy;
 import me.zhixingye.im.sdk.proxy.ConversationManagerProxy;
 import me.zhixingye.im.sdk.proxy.GroupManagerProxy;
@@ -30,7 +30,7 @@ public class IMClient {
 
     private static IMClient sIMClient;
 
-    public synchronized static void init(Context context, InitCallback callback) {
+    public synchronized static void init(Context context) {
         String currentProcess = SystemUtils.getCurrentProcessName(context);
         String mainProcess = context.getPackageName();
         if (TextUtils.equals(currentProcess, mainProcess)) {
@@ -38,7 +38,7 @@ public class IMClient {
                 throw new RuntimeException("IMClient 已经初始化");
             }
             context = context.getApplicationContext();
-            sIMClient = new IMClient(context, callback);
+            sIMClient = new IMClient(context);
         }
     }
 
@@ -58,56 +58,41 @@ public class IMClient {
     private StorageManagerProxy mStorageService;
     private UserManagerProxy mUserService;
 
-    private IMClient(Context context, InitCallback callback) {
+    private IRemoteService mIRemoteService;
+
+    private IMClient(Context context) {
         mAppContext = context;
         initProxyService();
-        initRemoteIMService(callback);
     }
 
     private void initProxyService() {
-        mContactService = new ContactManagerProxy();
-        mConversationService = new ConversationManagerProxy();
-        mGroupService = new GroupManagerProxy();
-        mMessageService = new MessageManagerProxy();
-        mStorageService = new StorageManagerProxy();
-        mUserService = new UserManagerProxy();
+        mContactService = BasicProxy.createProxy(new ContactManagerProxy(mIMServiceConnector));
+        mConversationService = BasicProxy.createProxy(new ConversationManagerProxy(mIMServiceConnector));
+        mGroupService = BasicProxy.createProxy(new GroupManagerProxy(mIMServiceConnector));
+        mMessageService = BasicProxy.createProxy(new MessageManagerProxy(mIMServiceConnector));
+        mStorageService = BasicProxy.createProxy(new StorageManagerProxy(mIMServiceConnector));
+        mUserService = BasicProxy.createProxy(new UserManagerProxy(mIMServiceConnector));
     }
 
-    private void initRemoteIMService(final InitCallback callback) {
+    private final BasicProxy.IMServiceConnector mIMServiceConnector = callback -> {
+        if (mIRemoteService != null) {
+            if (callback != null) {
+                callback.onCompleted(mIRemoteService);
+            }
+            return;
+        }
         mAppContext.bindService(new Intent(mAppContext, IMRemoteService.class), new ServiceConnection() {
-            private boolean isFirstBind = true;
-
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                IRemoteService remoteService = IRemoteService.Stub.asInterface(service);
-                try {
-                    mContactService.bindHandle(remoteService.getContactManagerHandle());
-                    mConversationService.bindHandle(remoteService.getConversationManagerHandle());
-                    mGroupService.bindHandle(remoteService.getGroupManagerHandle());
-                    mMessageService.bindHandle(remoteService.getMessageManagerHandle());
-                    mStorageService.bindHandle(remoteService.getStorageManagerHandle());
-                    mUserService.bindHandle(remoteService.getUserManagerHandle());
-                    if (isFirstBind) {
-                        if (callback != null) {
-                            callback.onCompleted();
-                        }
-                        isFirstBind = false;
-                    }
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    onServiceDisconnected(name);
+                mIRemoteService = IRemoteService.Stub.asInterface(service);
+                if (callback != null) {
+                    callback.onCompleted(mIRemoteService);
                 }
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                mAppContext.unbindService(this);
-                mContactService.unbindHandle();
-                mConversationService.unbindHandle();
-                mGroupService.unbindHandle();
-                mMessageService.unbindHandle();
-                mStorageService.unbindHandle();
-                mUserService.unbindHandle();
+                mIRemoteService = null;
             }
 
             @Override
@@ -116,7 +101,8 @@ public class IMClient {
             }
 
         }, Context.BIND_AUTO_CREATE);
-    }
+    };
+
 
     public ContactManager getContactService() {
         return mContactService;
@@ -142,7 +128,4 @@ public class IMClient {
         return mUserService;
     }
 
-    public interface InitCallback {
-        void onCompleted();
-    }
 }

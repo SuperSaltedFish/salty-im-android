@@ -9,6 +9,7 @@ import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.IUserManagerHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 
@@ -18,19 +19,21 @@ import me.zhixingye.im.sdk.util.CallbackUtil;
  */
 public class UserManagerProxy extends BasicProxy implements UserManager {
 
-    private IUserManagerHandle mManagerHandle;
+    private IUserManagerHandle mUserHandle;
 
-    public UserManagerProxy() {
+    public UserManagerProxy(IMServiceConnector proxy) {
+        super(proxy);
     }
 
-    public void bindHandle(IUserManagerHandle handle) {
-        mManagerHandle = handle;
+    @Override
+    protected void onConnectRemoteService(IRemoteService service) {
+        try {
+            mUserHandle = service.getUserManagerHandle();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            mUserHandle = null;
+        }
     }
-
-    public void unbindHandle() {
-        mManagerHandle = null;
-    }
-
 
     @Override
     public UserProfile getUserProfile() {
@@ -39,11 +42,8 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
+            mUserHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -52,11 +52,8 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
+            mUserHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -65,11 +62,8 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
+            mUserHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);
@@ -78,11 +72,8 @@ public class UserManagerProxy extends BasicProxy implements UserManager {
 
     @Override
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
-        if (isServiceUnavailable(mManagerHandle, callback)) {
-            return;
-        }
         try {
-            mManagerHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
+            mUserHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
         } catch (RemoteException e) {
             e.printStackTrace();
             CallbackUtil.callRemoteError(callback);

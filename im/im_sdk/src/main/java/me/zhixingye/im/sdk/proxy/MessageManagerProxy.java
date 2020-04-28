@@ -1,7 +1,10 @@
 package me.zhixingye.im.sdk.proxy;
 
+import android.os.RemoteException;
+
 import me.zhixingye.im.manager.MessageManager;
 import me.zhixingye.im.sdk.IMessageManagerHandle;
+import me.zhixingye.im.sdk.IRemoteService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -9,14 +12,28 @@ import me.zhixingye.im.sdk.IMessageManagerHandle;
  */
 public class MessageManagerProxy extends BasicProxy implements MessageManager {
 
-    private IMessageManagerHandle mManagerHandle;
+    private IMessageManagerHandle mMessageHandle;
+
+    public MessageManagerProxy(IMServiceConnector proxy) {
+        super(proxy);
+    }
+
+    @Override
+    protected void onConnectRemoteService(IRemoteService service) {
+        try {
+            mMessageHandle = service.getMessageManagerHandle();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            mMessageHandle = null;
+        }
+    }
 
 
     public void bindHandle(IMessageManagerHandle handle) {
-        mManagerHandle = handle;
+        mMessageHandle = handle;
     }
 
     public void unbindHandle() {
-        mManagerHandle = null;
+        mMessageHandle = null;
     }
 }

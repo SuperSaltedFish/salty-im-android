@@ -28,13 +28,12 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void checkLoginState(Context context) {
-        IMClient.init(context.getApplicationContext(), () -> {
-            if (AppConfig.isEverStartedGuide()) {
-                mSplashView.startLoginActivity();
-            } else {
-                mSplashView.startGuideActivity();
-            }
-        });
+//        IMClient.init(context.getApplicationContext(), new IMClient.ConnectCallback() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//        });
     }
 
 }

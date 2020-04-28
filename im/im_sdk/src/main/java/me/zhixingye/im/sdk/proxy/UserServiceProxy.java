@@ -8,7 +8,7 @@ import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.IUserManagerHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
@@ -17,11 +17,11 @@ import me.zhixingye.im.sdk.util.CallbackUtil;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class UserManagerProxy extends BasicProxy implements UserManager {
+public class UserServiceProxy extends BasicProxy implements UserService {
 
     private IUserManagerHandle mUserHandle;
 
-    public UserManagerProxy(IMServiceConnector proxy) {
+    public UserServiceProxy(IMServiceConnector proxy) {
         super(proxy);
     }
 

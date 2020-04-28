@@ -15,17 +15,17 @@ import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IConversationManagerHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
-import me.zhixingye.im.manager.ConversationManager;
+import me.zhixingye.im.service.ConversationService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ConversationManagerProxy extends BasicProxy implements ConversationManager {
+public class ConversationServiceProxy extends BasicProxy implements ConversationService {
 
     private IConversationManagerHandle mConversationHandle;
 
-    public ConversationManagerProxy(IMServiceConnector proxy) {
+    public ConversationServiceProxy(IMServiceConnector proxy) {
         super(proxy);
     }
 

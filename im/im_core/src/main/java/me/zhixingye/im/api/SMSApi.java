@@ -6,6 +6,7 @@ import com.salty.protos.SMSServiceGrpc;
 
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 import me.zhixingye.im.tool.CallbackHelper;
 
 /**
@@ -18,7 +19,7 @@ public class SMSApi extends BasicApi {
 
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
-    public SMSApi(ManagedChannel channel, ApiService.Adapter adapter) {
+    public SMSApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
         super(adapter);
         mSMSServiceStub = SMSServiceGrpc.newStub(channel);
     }

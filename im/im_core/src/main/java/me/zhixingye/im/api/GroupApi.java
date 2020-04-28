@@ -22,6 +22,7 @@ import java.util.List;
 
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -31,7 +32,7 @@ public class GroupApi extends BasicApi {
 
     private GroupServiceGrpc.GroupServiceStub mGroupServiceStub;
 
-    public GroupApi(ManagedChannel channel, ApiService.Adapter adapter) {
+    public GroupApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
         super(adapter);
         mGroupServiceStub = GroupServiceGrpc.newStub(channel);
     }

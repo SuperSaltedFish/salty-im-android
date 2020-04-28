@@ -4,6 +4,8 @@ import com.salty.protos.GetUserInfoReq;
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.LoginReq;
 import com.salty.protos.LoginResp;
+import com.salty.protos.LogoutReq;
+import com.salty.protos.LogoutResp;
 import com.salty.protos.QueryUserInfoReq;
 import com.salty.protos.QueryUserInfoResp;
 import com.salty.protos.RegisterReq;
@@ -18,6 +20,7 @@ import com.salty.protos.UserServiceGrpc;
 import androidx.annotation.Nullable;
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 import me.zhixingye.im.util.Sha256Util;
 
 /**
@@ -30,7 +33,7 @@ public class UserApi extends BasicApi {
 
     private UserServiceGrpc.UserServiceStub mUserServiceStub;
 
-    public UserApi(ManagedChannel channel, ApiService.Adapter adapter) {
+    public UserApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
         super(adapter);
         mUserServiceStub = UserServiceGrpc.newStub(channel);
     }
@@ -38,6 +41,20 @@ public class UserApi extends BasicApi {
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
         UserProfile profile = UserProfile.newBuilder()
                 .setTelephone(telephone)
+                .build();
+
+        RegisterReq req = RegisterReq.newBuilder()
+                .setProfile(profile)
+                .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
+                .setVerificationCode(verificationCode)
+                .build();
+
+        mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
+    }
+
+    public void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+        UserProfile profile = UserProfile.newBuilder()
+                .setEmail(email)
                 .build();
 
         RegisterReq req = RegisterReq.newBuilder()
@@ -67,6 +84,12 @@ public class UserApi extends BasicApi {
                 .build();
 
         mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
+    }
+
+    public void logout(RequestCallback<LogoutResp> callback) {
+        LogoutReq req = LogoutReq.newBuilder()
+                .build();
+        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LogoutResp.getDefaultInstance(), callback));
     }
 
     public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {

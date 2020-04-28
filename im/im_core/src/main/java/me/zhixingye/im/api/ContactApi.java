@@ -12,6 +12,7 @@ import com.salty.protos.RequestContactResp;
 
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -21,7 +22,7 @@ public class ContactApi extends BasicApi {
 
     private ContactServiceGrpc.ContactServiceStub mContactServiceStub;
 
-    public ContactApi(ManagedChannel channel, ApiService.Adapter adapter) {
+    public ContactApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
         super(adapter);
         mContactServiceStub = ContactServiceGrpc.newStub(channel);
     }

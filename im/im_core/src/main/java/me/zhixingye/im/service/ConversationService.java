@@ -1,4 +1,4 @@
-package me.zhixingye.im.manager;
+package me.zhixingye.im.service;
 
 import com.salty.protos.ClearConversationMessageResp;
 import com.salty.protos.Conversation;
@@ -15,7 +15,7 @@ import me.zhixingye.im.listener.RequestCallback;
  * Created by zhixingye on 2020年02月02日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public interface ConversationManager {
+public interface ConversationService extends BasicService {
     void getAllConversations(RequestCallback<GetAllConversationResp> callback);
 
     void getConversationDetail(String conversationId, Conversation.ConversationType type, RequestCallback<GetConversationDetailResp> callback);

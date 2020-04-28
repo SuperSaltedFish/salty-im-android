@@ -11,17 +11,17 @@ import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IContactManagerHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
-import me.zhixingye.im.manager.ContactManager;
+import me.zhixingye.im.service.ContactService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ContactManagerProxy extends BasicProxy implements ContactManager {
+public class ContactServiceProxy extends BasicProxy implements ContactService {
 
     private IContactManagerHandle mContactHandle;
 
-    public ContactManagerProxy(IMServiceConnector proxy) {
+    public ContactServiceProxy(IMServiceConnector proxy) {
         super(proxy);
     }
 

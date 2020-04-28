@@ -3,7 +3,7 @@ package me.zhixingye.im.sdk.proxy;
 import android.annotation.SuppressLint;
 import android.os.RemoteException;
 
-import me.zhixingye.im.manager.StorageManager;
+import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.IStorageManagerHandle;
 
@@ -14,11 +14,11 @@ import me.zhixingye.im.sdk.IStorageManagerHandle;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageManagerProxy extends BasicProxy implements StorageManager {
+public class StorageServiceProxy extends BasicProxy implements StorageService {
 
     private IStorageManagerHandle mStorageHandle;
 
-    public StorageManagerProxy(IMServiceConnector proxy) {
+    public StorageServiceProxy(IMServiceConnector proxy) {
         super(proxy);
     }
 

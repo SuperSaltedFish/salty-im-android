@@ -7,19 +7,19 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import me.zhixingye.im.manager.ContactManager;
-import me.zhixingye.im.manager.ConversationManager;
-import me.zhixingye.im.manager.GroupManager;
-import me.zhixingye.im.manager.MessageManager;
-import me.zhixingye.im.manager.StorageManager;
-import me.zhixingye.im.manager.UserManager;
+import me.zhixingye.im.service.ContactService;
+import me.zhixingye.im.service.ConversationService;
+import me.zhixingye.im.service.GroupService;
+import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.sdk.proxy.BasicProxy;
-import me.zhixingye.im.sdk.proxy.ContactManagerProxy;
-import me.zhixingye.im.sdk.proxy.ConversationManagerProxy;
-import me.zhixingye.im.sdk.proxy.GroupManagerProxy;
+import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
+import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
+import me.zhixingye.im.sdk.proxy.GroupServiceProxy;
 import me.zhixingye.im.sdk.proxy.MessageManagerProxy;
-import me.zhixingye.im.sdk.proxy.StorageManagerProxy;
-import me.zhixingye.im.sdk.proxy.UserManagerProxy;
+import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
+import me.zhixingye.im.sdk.proxy.UserServiceProxy;
 import me.zhixingye.im.sdk.util.SystemUtils;
 
 /**
@@ -51,12 +51,12 @@ public class IMClient {
 
     private Context mAppContext;
 
-    private ContactManagerProxy mContactService;
-    private ConversationManagerProxy mConversationService;
-    private GroupManagerProxy mGroupService;
+    private ContactServiceProxy mContactService;
+    private ConversationServiceProxy mConversationService;
+    private GroupServiceProxy mGroupService;
     private MessageManagerProxy mMessageService;
-    private StorageManagerProxy mStorageService;
-    private UserManagerProxy mUserService;
+    private StorageServiceProxy mStorageService;
+    private UserServiceProxy mUserService;
 
     private IRemoteService mIRemoteService;
 
@@ -66,12 +66,12 @@ public class IMClient {
     }
 
     private void initProxyService() {
-        mContactService = BasicProxy.createProxy(new ContactManagerProxy(mIMServiceConnector));
-        mConversationService = BasicProxy.createProxy(new ConversationManagerProxy(mIMServiceConnector));
-        mGroupService = BasicProxy.createProxy(new GroupManagerProxy(mIMServiceConnector));
+        mContactService = BasicProxy.createProxy(new ContactServiceProxy(mIMServiceConnector));
+        mConversationService = BasicProxy.createProxy(new ConversationServiceProxy(mIMServiceConnector));
+        mGroupService = BasicProxy.createProxy(new GroupServiceProxy(mIMServiceConnector));
         mMessageService = BasicProxy.createProxy(new MessageManagerProxy(mIMServiceConnector));
-        mStorageService = BasicProxy.createProxy(new StorageManagerProxy(mIMServiceConnector));
-        mUserService = BasicProxy.createProxy(new UserManagerProxy(mIMServiceConnector));
+        mStorageService = BasicProxy.createProxy(new StorageServiceProxy(mIMServiceConnector));
+        mUserService = BasicProxy.createProxy(new UserServiceProxy(mIMServiceConnector));
     }
 
     private final BasicProxy.IMServiceConnector mIMServiceConnector = callback -> {
@@ -81,7 +81,8 @@ public class IMClient {
             }
             return;
         }
-        mAppContext.bindService(new Intent(mAppContext, IMRemoteService.class), new ServiceConnection() {
+        Intent intent = new Intent(mAppContext, IMRemoteService.class);
+        mAppContext.bindService(intent, new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 mIRemoteService = IRemoteService.Stub.asInterface(service);
@@ -104,27 +105,27 @@ public class IMClient {
     };
 
 
-    public ContactManager getContactService() {
+    public ContactService getContactService() {
         return mContactService;
     }
 
-    public ConversationManager getConversationService() {
+    public ConversationService getConversationService() {
         return mConversationService;
     }
 
-    public GroupManager getGroupService() {
+    public GroupService getGroupService() {
         return mGroupService;
     }
 
-    public MessageManager getMessageService() {
+    public MessageService getMessageService() {
         return mMessageService;
     }
 
-    public StorageManager getStorageService() {
+    public StorageService getStorageService() {
         return mStorageService;
     }
 
-    public UserManager getUserService() {
+    public UserService getUserService() {
         return mUserService;
     }
 

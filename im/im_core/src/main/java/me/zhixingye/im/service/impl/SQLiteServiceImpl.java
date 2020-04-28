@@ -1,4 +1,4 @@
-package me.zhixingye.im.database;
+package me.zhixingye.im.service.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,24 +6,48 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import me.zhixingye.im.database.AbstractDao;
+import me.zhixingye.im.database.SQLiteOpenHelperImpl;
+import me.zhixingye.im.service.SQLiteService;
+
 
 /**
  * Created by zhixingye on 2020年01月28日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class SQLiteService {
+public class SQLiteServiceImpl implements SQLiteService {
 
 
     private ReadWriteHelper mReadWriteHelper;
     private SQLiteOpenHelper mOpenHelper;
 
-    public SQLiteService(Context context, String name, int version) {
+    public SQLiteServiceImpl(Context context, String name, int version) {
         mOpenHelper = new SQLiteOpenHelperImpl(context, name, version);
         mReadWriteHelper = new ReadWriteHelperImpl(mOpenHelper);
     }
 
-    public ReadWriteHelper getReadWriteHelper() {
-        return mReadWriteHelper;
+    public void close() {
+        if (mOpenHelper != null) {
+            mOpenHelper.close();
+            mOpenHelper = null;
+        }
+    }
+
+    @Override
+    public <T extends AbstractDao> T createDao(Class<T> c) {
+        if (mReadWriteHelper == null) {
+            return null;
+        }
+        try {
+            Constructor<T> constructor = c.getConstructor(ReadWriteHelper.class);
+            return constructor.newInstance(mReadWriteHelper);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class ReadWriteHelperImpl implements ReadWriteHelper {
@@ -181,31 +205,4 @@ public class SQLiteService {
         }
     }
 
-    public interface ReadWriteHelper {
-        ReadableDatabase openReadableDatabase();
-
-        WritableDatabase openWritableDatabase();
-    }
-
-    public interface ReadableDatabase extends AutoCloseable {
-        Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit);
-    }
-
-    public interface WritableDatabase extends AutoCloseable {
-        long insert(String table, String nullColumnHack, ContentValues values);
-
-        int delete(String table, String whereClause, String[] whereArgs);
-
-        int update(String table, ContentValues values, String whereClause, String[] whereArgs);
-
-        long replace(String table, String nullColumnHack, ContentValues initialValues);
-
-        void beginTransaction();
-
-        void beginTransactionNonExclusive();
-
-        void setTransactionSuccessful();
-
-        void endTransaction();
-    }
 }

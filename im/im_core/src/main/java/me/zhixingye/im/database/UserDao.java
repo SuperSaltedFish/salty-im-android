@@ -8,6 +8,7 @@ import com.salty.protos.UserProfile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import me.zhixingye.im.service.impl.SQLiteServiceImpl;
 
 /**
  * Created by YZX on 2017年11月17日.
@@ -44,7 +45,7 @@ public class UserDao extends AbstractDao<UserProfile> {
                     + "PRIMARY KEY (" + COLUMN_NAME_UserId + ")"
                     + ")";
 
-    public UserDao(SQLiteService.ReadWriteHelper helper) {
+    public UserDao(SQLiteServiceImpl.ReadWriteHelper helper) {
         super(helper);
     }
 

@@ -19,6 +19,7 @@ import com.salty.protos.UpdateNotificationStatusResp;
 
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -28,7 +29,7 @@ public class ConversationApi extends BasicApi {
 
     private ConversationServiceGrpc.ConversationServiceStub mConversationServiceStub;
 
-    public ConversationApi(ManagedChannel channel, ApiService.Adapter adapter) {
+    public ConversationApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
         super(adapter);
         mConversationServiceStub = ConversationServiceGrpc.newStub(channel);
     }

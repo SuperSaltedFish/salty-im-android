@@ -14,21 +14,21 @@ import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 import androidx.annotation.Nullable;
-import me.zhixingye.im.api.ApiService;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.manager.ContactManager;
-import me.zhixingye.im.manager.ConversationManager;
-import me.zhixingye.im.manager.GroupManager;
-import me.zhixingye.im.manager.MessageManager;
-import me.zhixingye.im.manager.StorageManager;
-import me.zhixingye.im.manager.UserManager;
-import me.zhixingye.im.manager.impl.ContactManagerImpl;
-import me.zhixingye.im.manager.impl.ConversationManagerImpl;
-import me.zhixingye.im.manager.impl.GroupManagerImpl;
-import me.zhixingye.im.manager.impl.MessageManagerImpl;
-import me.zhixingye.im.manager.impl.StorageManagerImpl;
-import me.zhixingye.im.manager.impl.UserManagerImpl;
+import me.zhixingye.im.service.ContactService;
+import me.zhixingye.im.service.ConversationService;
+import me.zhixingye.im.service.GroupService;
+import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.service.UserService;
+import me.zhixingye.im.service.impl.ContactServiceImpl;
+import me.zhixingye.im.service.impl.ConversationServiceImpl;
+import me.zhixingye.im.service.impl.GroupServiceImpl;
+import me.zhixingye.im.service.impl.MessageServiceImpl;
+import me.zhixingye.im.service.impl.StorageServiceImpl;
+import me.zhixingye.im.service.impl.UserServiceImpl;
 import me.zhixingye.im.tool.CallbackHelper;
 import me.zhixingye.im.tool.Logger;
 
@@ -42,14 +42,14 @@ public class IMCore {
 
     private volatile static IMCore sClient;
 
-    public synchronized static void tryInit(Context context, String serverIP, int serverPort, String appVersion) {
+    public synchronized static void tryInit(Context context, String serverAddress, String appVersion) {
         if (sClient != null) {
             throw new RuntimeException("IMCore 已经初始化");
         }
         if (context == null) {
             throw new RuntimeException("context == null");
         }
-        sClient = new IMCore(context, serverIP, serverPort, appVersion);
+        sClient = new IMCore(context, serverAddress, appVersion);
     }
 
     public static IMCore get() {
@@ -65,26 +65,33 @@ public class IMCore {
     private String mToken;
     private String mAppVersion;
 
-    private ApiService mApiService;
+    private ApiServiceImpl mApiServiceImpl;
 
-    private UserManagerImpl mUserManager;
-    private ContactManagerImpl mContactManager;
-    private ConversationManagerImpl mConversationManager;
-    private GroupManagerImpl mGroupManager;
-    private MessageManagerImpl mMessageManager;
-    private StorageManagerImpl mStorageManager;
+    private UserServiceImpl mUserManager;
+    private ContactServiceImpl mContactManager;
+    private ConversationServiceImpl mConversationManager;
+    private GroupServiceImpl mGroupManager;
+    private MessageServiceImpl mMessageManager;
+    private StorageServiceImpl mStorageManager;
 
     private Semaphore mLoginLock;
     private volatile boolean isLogged;
 
-    private IMCore(Context context, String serverIP, int serverPort, String version) {
+    private IMCore(Context context, String serverAddress, String version) {
         mAppContext = context.getApplicationContext();
         mAppVersion = version;
         mLanguage = Locale.CHINESE;
 
         mLoginLock = new Semaphore(1);
 
-        mApiService = new ApiService(mAppContext, serverIP, serverPort, new ApiService.Adapter() {
+        mStorageManager = new StorageServiceImpl(mAppContext, TAG);
+        mUserManager = new UserServiceImpl(mApiServiceImpl.getUserApi());
+        mContactManager = new ContactServiceImpl(mApiServiceImpl.getContactApi());
+        mConversationManager = new ConversationServiceImpl(mApiServiceImpl.getConversationApi());
+        mGroupManager = new GroupServiceImpl(mApiServiceImpl.getGroupApi());
+        mMessageManager = new MessageServiceImpl(mApiServiceImpl.getMessageApi());
+
+        mApiServiceImpl = new ApiServiceImpl(mAppContext, serverAddress, new ApiServiceImpl.Adapter() {
             @Override
             public String getDeviceId() {
                 return getDeviceID();
@@ -120,20 +127,14 @@ public class IMCore {
         String userId = userProfile.getUserId();
         mToken = token;
 
-        mStorageManager = new StorageManagerImpl(mAppContext, TAG, userId);
-        mUserManager = new UserManagerImpl(userProfile, mApiService.getUserApi());
-        mContactManager = new ContactManagerImpl(userId, mApiService.getContactApi());
-        mConversationManager = new ConversationManagerImpl(userId, mApiService.getConversationApi());
-        mGroupManager = new GroupManagerImpl(userId, mApiService.getGroupApi());
-        mMessageManager = new MessageManagerImpl(userId, mApiService.getMessageApi());
 
         CallbackHelper.callCompleted(null, callback);
     }
 
     private void reset() {
-        if (mApiService != null) {
-            mApiService.release();
-            mApiService = null;
+        if (mApiServiceImpl != null) {
+            mApiServiceImpl.release();
+            mApiServiceImpl = null;
         }
         mContactManager = null;
         mConversationManager = null;
@@ -143,27 +144,27 @@ public class IMCore {
         mUserManager = null;
     }
 
-    public ContactManager getContactManager() {
+    public ContactService getContactManager() {
         return mContactManager;
     }
 
-    public ConversationManager getConversationManager() {
+    public ConversationService getConversationManager() {
         return mConversationManager;
     }
 
-    public GroupManager getGroupManager() {
+    public GroupService getGroupManager() {
         return mGroupManager;
     }
 
-    public MessageManager getMessageManager() {
+    public MessageService getMessageManager() {
         return mMessageManager;
     }
 
-    public StorageManager getStorageManager() {
+    public StorageService getStorageManager() {
         return mStorageManager;
     }
 
-    public UserManager getUserManager() {
+    public UserService getUserManager() {
         return mUserManager;
     }
 
@@ -183,29 +184,32 @@ public class IMCore {
         return mAppVersion;
     }
 
+    public Context getAppContext() {
+        return mAppContext;
+    }
 
     public void obtainTelephoneSMSCode(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
-        mApiService.getSMSApi().obtainVerificationCodeForTelephoneType(telephone, type, callback);
+        mApiServiceImpl.getSMSApi().obtainVerificationCodeForTelephoneType(telephone, type, callback);
     }
 
     public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mApiService.getUserApi().resetLoginPasswordByTelephoneSMS(telephone, verificationCode, newPassword, callback);
+        mApiServiceImpl.getUserApi().resetLoginPasswordByTelephoneSMS(telephone, verificationCode, newPassword, callback);
     }
 
     public void resetLoginPasswordByEmailSMS(String email, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mApiService.getUserApi().resetLoginPasswordByEmailSMS(email, verificationCode, newPassword, callback);
+        mApiServiceImpl.getUserApi().resetLoginPasswordByEmailSMS(email, verificationCode, newPassword, callback);
     }
 
     public void resetLoginPasswordByTelephonePassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mApiService.getUserApi().resetLoginPasswordByTelephonePassword(telephone, oldPassword, newPassword, callback);
+        mApiServiceImpl.getUserApi().resetLoginPasswordByTelephonePassword(telephone, oldPassword, newPassword, callback);
     }
 
     public void resetLoginPasswordByEmailPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
-        mApiService.getUserApi().resetLoginPasswordByEmailPassword(email, oldPassword, newPassword, callback);
+        mApiServiceImpl.getUserApi().resetLoginPasswordByEmailPassword(email, oldPassword, newPassword, callback);
     }
 
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
-        mApiService.getUserApi().registerByTelephone(telephone, password, verificationCode, callback);
+        mApiServiceImpl.getUserApi().registerByTelephone(telephone, password, verificationCode, callback);
     }
 
     public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
@@ -259,9 +263,9 @@ public class IMCore {
         };
 
         if (!TextUtils.isEmpty(telephone)) {
-            mApiService.getUserApi().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
+            mApiServiceImpl.getUserApi().loginByTelephone(telephone, password, verificationCode, callbackWrapper);
         } else {
-            mApiService.getUserApi().loginByEmail(email, password, verificationCode, callbackWrapper);
+            mApiServiceImpl.getUserApi().loginByEmail(email, password, verificationCode, callbackWrapper);
         }
     }
 }

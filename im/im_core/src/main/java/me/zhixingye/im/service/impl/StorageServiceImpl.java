@@ -1,4 +1,4 @@
-package me.zhixingye.im.manager.impl;
+package me.zhixingye.im.service.impl;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import java.nio.charset.Charset;
 import java.security.Key;
 
-import me.zhixingye.im.manager.StorageManager;
+import me.zhixingye.im.IMCore;
+import me.zhixingye.im.service.AccountService;
+import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.AESUtil;
 import me.zhixingye.im.util.Base64Util;
@@ -20,20 +22,18 @@ import me.zhixingye.im.util.Base64Util;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageManagerImpl implements StorageManager {
+public class StorageServiceImpl implements StorageService {
 
     private static final String TAG = "StorageService";
 
     private static final String AES_KET_ALIAS = "AES_Salty";
 
     private SharedPreferences mConfigurationPreferences;
-    private SharedPreferences mUserPreferences;
     private Key mAESKey;
 
     //初始化过程中传入了storageName
-    public StorageManagerImpl(Context appContent, String storageName,String userId) {
+    public StorageServiceImpl(Context appContent, String storageName) {
         mConfigurationPreferences = appContent.getSharedPreferences(storageName, Context.MODE_PRIVATE);
-        mUserPreferences = appContent.getSharedPreferences(userId, Context.MODE_PRIVATE);
         mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         if (mAESKey == null) {
             Logger.w(TAG, "generateAESKeyInAndroidKeyStore fail");
@@ -62,7 +62,7 @@ public class StorageManagerImpl implements StorageManager {
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
             byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, null);
             if (data != null && data.length > 0) {
-                value =  new String(data, Charset.defaultCharset());
+                value = new String(data, Charset.defaultCharset());
             }
         }
         return value;
@@ -70,6 +70,11 @@ public class StorageManagerImpl implements StorageManager {
 
     //put一个数据到UserPreferences
     public boolean putToUserPreferences(String key, String value) {
+        String userId = ServiceAccessor.get(AccountService.class).getCurrentUserId();
+        if (TextUtils.isEmpty(userId)) {
+            return false;
+        }
+        SharedPreferences p = IMCore.get().getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
             byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
             if (data != null && data.length > 0) {
@@ -79,15 +84,17 @@ public class StorageManagerImpl implements StorageManager {
                 return false;
             }
         }
-        return mUserPreferences.edit().putString(key, value).commit();
+        return p.edit().putString(key, value).commit();
     }
 
     //get一个数据，从UserPreferences
     public String getFromUserPreferences(String key) {
-        if (mUserPreferences == null) {
-            return null;
+        String userId = ServiceAccessor.get(AccountService.class).getCurrentUserId();
+        if (TextUtils.isEmpty(userId)) {
+            return "";
         }
-        String value = mUserPreferences.getString(key, null);
+        SharedPreferences p = IMCore.get().getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
+        String value = p.getString(key, null);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
             byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, null);
             if (data != null && data.length > 0) {

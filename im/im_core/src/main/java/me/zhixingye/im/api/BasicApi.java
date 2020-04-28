@@ -15,6 +15,7 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.impl.ApiServiceImpl;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.StringUtil;
 
@@ -22,13 +23,13 @@ import me.zhixingye.im.util.StringUtil;
  * Created by zhixingye on 2020年01月10日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-class BasicApi {
+public class BasicApi {
 
     private static final String TAG = "BasicApi";
 
-    private ApiService.Adapter mAdapter;
+    private ApiServiceImpl.Adapter mAdapter;
 
-    BasicApi(ApiService.Adapter adapter) {
+    BasicApi(ApiServiceImpl.Adapter adapter) {
         mAdapter = adapter;
     }
 

@@ -17,17 +17,17 @@ import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IGroupManagerHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
-import me.zhixingye.im.manager.GroupManager;
+import me.zhixingye.im.service.GroupService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupManagerProxy extends BasicProxy implements GroupManager {
+public class GroupServiceProxy extends BasicProxy implements GroupService {
 
     private IGroupManagerHandle mGroupHandle;
 
-    public GroupManagerProxy(IMServiceConnector proxy) {
+    public GroupServiceProxy(IMServiceConnector proxy) {
         super(proxy);
     }
 

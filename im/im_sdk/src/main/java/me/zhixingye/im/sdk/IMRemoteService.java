@@ -3,6 +3,7 @@ package me.zhixingye.im.sdk;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 
 import me.zhixingye.im.IMCore;
@@ -22,12 +23,13 @@ public class IMRemoteService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        IMCore.tryInit(this, "111.231.238.209", 9090, "1.0.0");
+        IMCore.tryInit(this, "https:// www.orline.cn:9090", "1.0.0");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Process.killProcess(Process.myPid());
     }
 
     @Override

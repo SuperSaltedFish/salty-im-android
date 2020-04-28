@@ -1,4 +1,4 @@
-package me.zhixingye.im.manager;
+package me.zhixingye.im.service;
 
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.QueryUserInfoResp;
@@ -11,7 +11,7 @@ import me.zhixingye.im.listener.RequestCallback;
  * Created by zhixingye on 2020年02月02日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public interface UserManager {
+public interface UserService extends BasicService {
     UserProfile getUserProfile();
 
     void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback);

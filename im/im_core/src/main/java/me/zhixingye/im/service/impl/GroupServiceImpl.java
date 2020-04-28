@@ -1,4 +1,4 @@
-package me.zhixingye.im.manager.impl;
+package me.zhixingye.im.service.impl;
 
 import com.salty.protos.AddGroupMemberResp;
 import com.salty.protos.CreateGroupResp;
@@ -13,58 +13,72 @@ import java.util.List;
 
 import me.zhixingye.im.api.GroupApi;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.manager.GroupManager;
+import me.zhixingye.im.service.ApiService;
+import me.zhixingye.im.service.GroupService;
 
 /**
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupManagerImpl implements GroupManager {
+public class GroupServiceImpl implements GroupService {
 
-    private GroupApi mGroupApi;
 
-    public GroupManagerImpl(String userId, GroupApi groupApi) {
-        super();
-        mGroupApi =groupApi;
+    public GroupServiceImpl() {
     }
 
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
-        mGroupApi.createGroup(groupName, memberUserIdArr, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .createGroup(groupName, memberUserIdArr, callback);
     }
 
     @Override
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
-        mGroupApi.joinGroup(groupId, reason, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .joinGroup(groupId, reason, callback);
     }
 
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
-        mGroupApi.quitGroup(groupId, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .quitGroup(groupId, callback);
     }
 
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
-        mGroupApi.addGroupMember(groupId, memberUserIdArr, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .addGroupMember(groupId, memberUserIdArr, callback);
     }
 
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
-        mGroupApi.kickGroupMember(groupId, memberUserId, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .kickGroupMember(groupId, memberUserId, callback);
     }
 
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
-        mGroupApi.updateGroupName(groupId, groupName, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .updateGroupName(groupId, groupName, callback);
     }
 
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
-        mGroupApi.updateGroupNotice(groupId, notice, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .updateGroupNotice(groupId, notice, callback);
     }
 
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
-        mGroupApi.updateMemberNickname(groupId, memberNickname, callback);
+        ServiceAccessor.get(ApiService.class)
+                .createApi(GroupApi.class)
+                .updateMemberNickname(groupId, memberNickname, callback);
     }
 }

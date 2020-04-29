@@ -320,7 +320,12 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             hideSoftKeyboard();
             if (cancelable != null) {
                 mProgressDialog.setCancelable(true);
-                mProgressDialog.setOnCancelListener(dialog -> cancelable.cancel());
+                mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        cancelable.cancel();
+                    }
+                });
             } else {
                 mProgressDialog.setCancelable(false);
                 mProgressDialog.setOnCancelListener(null);

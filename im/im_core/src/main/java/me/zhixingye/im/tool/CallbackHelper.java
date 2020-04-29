@@ -9,21 +9,36 @@ import me.zhixingye.im.listener.RequestCallback;
  */
 public class CallbackHelper {
 
-    public static <T> void callCompleted(T response, RequestCallback<T> callback) {
+    public static <T> void callCompleted(final T response, final RequestCallback<T> callback) {
         if (callback != null) {
-            HandlerHelper.getUIHandler().post(() -> callback.onCompleted(response));
+            HandlerHelper.getUIHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onCompleted(response);
+                }
+            });
         }
     }
 
-    public static void callFailure(int code, String error, RequestCallback<?> callback) {
+    public static void callFailure(final int code, final String error, final RequestCallback<?> callback) {
         if (callback != null) {
-            HandlerHelper.getUIHandler().post(() -> callback.onFailure(code, error));
+            HandlerHelper.getUIHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onFailure(code, error);
+                }
+            });
         }
     }
 
-    public static void callFailure(ResponseCode code, RequestCallback<?> callback) {
+    public static void callFailure(final ResponseCode code, final RequestCallback<?> callback) {
         if (callback != null) {
-            HandlerHelper.getUIHandler().post(() -> callback.onFailure(code.getCode(), code.getMsg()));
+            HandlerHelper.getUIHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    callback.onFailure(code.getCode(), code.getMsg());
+                }
+            });
         }
     }
 }

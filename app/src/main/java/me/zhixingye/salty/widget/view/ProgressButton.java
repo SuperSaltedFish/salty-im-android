@@ -70,12 +70,20 @@ public class ProgressButton extends ConstraintLayout {
             array.recycle();
         }
 
-        mButton.setOnClickListener(v -> {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClick(ProgressButton.this);
+        mButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onClick(ProgressButton.this);
+                }
             }
         });
-        mButton.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> isLayoutCompleted = true);
+        mButton.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                isLayoutCompleted = true;
+            }
+        });
     }
 
     @Override

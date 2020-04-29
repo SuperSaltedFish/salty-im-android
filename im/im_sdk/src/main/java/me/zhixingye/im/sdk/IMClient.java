@@ -7,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import java.util.concurrent.Executors;
+
 import me.zhixingye.im.sdk.proxy.AccountServiceProxy;
 import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
 import me.zhixingye.im.service.AccountService;
@@ -82,34 +84,40 @@ public class IMClient {
         mUserServiceProxy = BasicProxy.createProxy(new UserServiceProxy(mIMServiceConnector));
     }
 
-    private final BasicProxy.IMServiceConnector mIMServiceConnector = callback -> {
-        if (mIRemoteService != null) {
-            if (callback != null) {
-                callback.onCompleted(mIRemoteService);
-            }
-            return;
-        }
-        Intent intent = new Intent(mAppContext, IMRemoteService.class);
-        mAppContext.bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mIRemoteService = IRemoteService.Stub.asInterface(service);
+    private final BasicProxy.IMServiceConnector mIMServiceConnector = new BasicProxy.IMServiceConnector() {
+        @Override
+        public void connectRemoteIMService(final BasicProxy.ConnectCallback callback) {
+            if (mIRemoteService != null) {
                 if (callback != null) {
                     callback.onCompleted(mIRemoteService);
                 }
+                return;
             }
+            mAppContext.bindService(
+                    new Intent(mAppContext, IMRemoteService.class),
+                    Context.BIND_AUTO_CREATE,
+                    Executors.newSingleThreadExecutor(),
+                    new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName name, IBinder service) {
+                            mIRemoteService = IRemoteService.Stub.asInterface(service);
+                            if (callback != null) {
+                                callback.onCompleted(mIRemoteService);
+                            }
+                        }
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mIRemoteService = null;
-            }
+                        @Override
+                        public void onServiceDisconnected(ComponentName name) {
+                            mIRemoteService = null;
+                        }
 
-            @Override
-            public void onBindingDied(ComponentName name) {
-                onServiceDisconnected(name);
-            }
+                        @Override
+                        public void onBindingDied(ComponentName name) {
+                            onServiceDisconnected(name);
+                        }
 
-        }, Context.BIND_AUTO_CREATE);
+                    });
+        }
     };
 
     public AccountService getAccountService() {

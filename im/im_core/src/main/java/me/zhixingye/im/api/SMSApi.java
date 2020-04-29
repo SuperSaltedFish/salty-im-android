@@ -23,7 +23,7 @@ public class SMSApi extends BasicApi {
         mSMSServiceStub = SMSServiceGrpc.newStub(channel);
     }
 
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<Void> callback) {
+    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, final RequestCallback<Void> callback) {
         ObtainSMSCodeReq smsReq = ObtainSMSCodeReq.newBuilder()
                 .setTelephone(telephone)
                 .setCodeType(type)

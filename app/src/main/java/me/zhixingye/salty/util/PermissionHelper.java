@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -294,7 +295,7 @@ public class PermissionHelper {
         }
 
         private void showAgainRequestDialog() {
-            Activity activity = getActivity();
+            final Activity activity = getActivity();
             if (activity == null) {
                 return;
             }
@@ -310,15 +311,23 @@ public class PermissionHelper {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(mAgainRequestDialogInf.title)
                     .setMessage(mAgainRequestDialogInf.message)
-                    .setNegativeButton(mAgainRequestDialogInf.negativeBtnText, (dialog, which) ->
-                            callDenied(getDeniedPermission(activity, mPermissions)))
-                    .setPositiveButton(mAgainRequestDialogInf.positiveBtnText, (dialog, which) ->
-                            requestPermissionsIfNeed())
+                    .setNegativeButton(mAgainRequestDialogInf.negativeBtnText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PermissionFragment.this.callDenied(getDeniedPermission(activity, mPermissions));
+                        }
+                    })
+                    .setPositiveButton(mAgainRequestDialogInf.positiveBtnText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PermissionFragment.this.requestPermissionsIfNeed();
+                        }
+                    })
                     .show();
         }
 
         private void showPermissionsSettingDialog() {
-            Activity activity = getActivity();
+            final Activity activity = getActivity();
             if (activity == null) {
                 return;
             }
@@ -332,10 +341,18 @@ public class PermissionHelper {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(mSettingDialogInfo.title)
                     .setMessage(mSettingDialogInfo.message)
-                    .setNegativeButton(mSettingDialogInfo.negativeBtnText, (dialog, which) ->
-                            callDenied(getDeniedPermission(activity, mPermissions)))
-                    .setPositiveButton(mSettingDialogInfo.positiveBtnText, (dialog, which) ->
-                            startAppSettings(activity))
+                    .setNegativeButton(mSettingDialogInfo.negativeBtnText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PermissionFragment.this.callDenied(getDeniedPermission(activity, mPermissions));
+                        }
+                    })
+                    .setPositiveButton(mSettingDialogInfo.positiveBtnText, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PermissionFragment.this.startAppSettings(activity);
+                        }
+                    })
                     .show();
         }
 

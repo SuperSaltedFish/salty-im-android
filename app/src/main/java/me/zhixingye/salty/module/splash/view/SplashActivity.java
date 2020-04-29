@@ -1,5 +1,6 @@
 package me.zhixingye.salty.module.splash.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -69,7 +70,12 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
 
     @Override
     public void showLoginError(String error) {
-        showDialog(error, dialog -> finish());
+        showDialog(error, new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                SplashActivity.this.finish();
+            }
+        });
     }
 
     @Override

@@ -12,7 +12,8 @@ import me.zhixingye.im.service.BasicService;
  */
 public class ServiceAccessor {
 
-    private static final Map<Class<? extends BasicService>, BasicService> SERVICE_MAP = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<Class<? extends BasicService>, BasicService> SERVICE_MAP =
+            Collections.synchronizedMap(new HashMap<Class<? extends BasicService>, BasicService>());
 
     @SuppressWarnings("unchecked")
     public static <T extends BasicService> T get(Class<T> c) {

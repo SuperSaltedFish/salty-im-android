@@ -54,15 +54,18 @@ public class LoginActivity extends BasicCompatActivity {
         RegisterActivity.startActivity(this);
     }
 
-    private final View.OnClickListener mOnClickListener = v -> {
-        switch (v.getId()) {
-            case R.id.mPetPhone:
-                break;
-            case R.id.mBtnRegister:
-                gotoRegisterActivity();
-                break;
-            case R.id.mBtnResetPassword:
-                break;
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.mPetPhone:
+                    break;
+                case R.id.mBtnRegister:
+                    LoginActivity.this.gotoRegisterActivity();
+                    break;
+                case R.id.mBtnResetPassword:
+                    break;
+            }
         }
     };
 }

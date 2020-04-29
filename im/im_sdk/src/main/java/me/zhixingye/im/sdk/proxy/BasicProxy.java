@@ -1,11 +1,13 @@
 package me.zhixingye.im.sdk.proxy;
 
 
-import com.google.protobuf.GeneratedMessageLite;
-
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
@@ -28,46 +30,64 @@ public abstract class BasicProxy {
         mConnectProxy = proxy;
     }
 
-    void connectIMServiceIfNeed(ConnectCallback callback) {
+    void connectIMServiceIfNeed(Executor executor,ConnectCallback callback) {
         mConnectProxy.connectRemoteIMService(callback);
     }
 
     protected abstract void onConnectRemoteService(IRemoteService service);
 
     @SuppressWarnings("unchecked")
-    public static <T extends BasicProxy> T createProxy(T instance) {
+    public static <T extends BasicProxy> T createProxy(final T instance) {
         return (T) Proxy.newProxyInstance(
                 instance.getClass().getClassLoader(),
                 new Class[]{instance.getClass()},
-                (proxy, method, args) -> {
-                    if (method.getReturnType() != void.class) {
-                        return method.invoke(instance, args);
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+//
+//                    final CountDownLatch latch = new CountDownLatch(1);
+//                    instance.connectIMServiceIfNeed(new ConnectCallback() {
+//                        @Override
+//                        public void onCompleted(IRemoteService remoteService) {
+//                            latch.countDown();
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Throwable t) {
+//                            latch.countDown();
+//                        }
+//                    });
+//                    try {
+//                        latch.await();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+
+//                    instance.connectIMServiceIfNeed(new ConnectCallback() {
+//                        @Override
+//                        public void onCompleted(IRemoteService service) {
+//                            instance.onConnectRemoteService(service);
+//                            try {
+//                                method.invoke(instance, args);
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Throwable t) {
+//                            t.printStackTrace();
+//                            for (int i = args.length - 1; i >= 0; i--) {
+//                                if (args[i] instanceof RequestCallback) {
+//                                    ((RequestCallback) args[i]).onFailure(
+//                                            ResponseCode.INTERNAL_IPC_EXCEPTION.getCode(),
+//                                            ResponseCode.INTERNAL_IPC_EXCEPTION.getMsg());
+//                                }
+//                            }
+//                        }
+//                    });
+                        return null;
                     }
-
-                    instance.connectIMServiceIfNeed(new ConnectCallback() {
-                        @Override
-                        public void onCompleted(IRemoteService service) {
-                            instance.onConnectRemoteService(service);
-                            try {
-                                method.invoke(instance, args);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            t.printStackTrace();
-                            for (int i = args.length - 1; i >= 0; i--) {
-                                if (args[i] instanceof RequestCallback) {
-                                    ((RequestCallback) args[i]).onFailure(
-                                            ResponseCode.INTERNAL_IPC_EXCEPTION.getCode(),
-                                            ResponseCode.INTERNAL_IPC_EXCEPTION.getMsg());
-                                }
-                            }
-                        }
-                    });
-                    return null;
                 });
     }
 

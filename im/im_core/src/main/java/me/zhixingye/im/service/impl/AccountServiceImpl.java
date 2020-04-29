@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
         login(null, email, password, verificationCode, callback);
     }
 
-    private void login(String telephone, String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+    private void login(String telephone, String email, String password, @Nullable String verificationCode, final RequestCallback<LoginResp> callback) {
         try {
             mLoginLock.acquire();
         } catch (InterruptedException e) {

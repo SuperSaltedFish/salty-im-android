@@ -15,7 +15,10 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
+import me.zhixingye.im.service.AccountService;
+import me.zhixingye.im.service.DeviceService;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
+import me.zhixingye.im.service.impl.ServiceAccessor;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.StringUtil;
 
@@ -27,25 +30,21 @@ public class BasicApi {
 
     private static final String TAG = "BasicApi";
 
-    private ApiServiceImpl.Adapter mAdapter;
-
-    BasicApi(ApiServiceImpl.Adapter adapter) {
-        mAdapter = adapter;
-    }
-
-
     GrpcReq createReq(MessageLite message) {
         Any data = Any.newBuilder()
                 .setTypeUrl("salty/" + message.getClass().getCanonicalName())
                 .setValue(message.toByteString())
                 .build();
 
+        DeviceService deviceService = ServiceAccessor.get(DeviceService.class);
+        AccountService accountService = ServiceAccessor.get(AccountService.class);
+
         GrpcReq req = GrpcReq.newBuilder()
-                .setDeviceId(StringUtil.checkNull(mAdapter.getDeviceId()))
+                .setDeviceId(deviceService.getDeviceId())
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
-                .setVersion(StringUtil.checkNull(mAdapter.getAppVersion()))
-                .setToken(StringUtil.checkNull(mAdapter.getToken()))
+                .setVersion(deviceService.getAppVersion())
+                .setToken(accountService.getCurrentUserToken())
                 .setData(data)
                 .build();
 

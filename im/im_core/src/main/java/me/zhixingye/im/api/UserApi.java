@@ -33,8 +33,7 @@ public class UserApi extends BasicApi {
 
     private UserServiceGrpc.UserServiceStub mUserServiceStub;
 
-    public UserApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
-        super(adapter);
+    public UserApi(ManagedChannel channel) {
         mUserServiceStub = UserServiceGrpc.newStub(channel);
     }
 

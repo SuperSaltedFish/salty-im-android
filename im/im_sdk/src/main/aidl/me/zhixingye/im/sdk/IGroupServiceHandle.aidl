@@ -1,10 +1,10 @@
-// IGroupManagerHandle.aidl
+// IGroupServiceHandle.aidl
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
 import me.zhixingye.im.sdk.IResultCallback;
 
-interface IGroupManagerHandle {
+interface IGroupServiceHandle {
     void createGroup(String groupName, out List<String> memberUserIdArr, IResultCallback callback);
 
     void joinGroup(String groupId, String reason, IResultCallback callback);

@@ -32,8 +32,7 @@ public class GroupApi extends BasicApi {
 
     private GroupServiceGrpc.GroupServiceStub mGroupServiceStub;
 
-    public GroupApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
-        super(adapter);
+    public GroupApi(ManagedChannel channel) {
         mGroupServiceStub = GroupServiceGrpc.newStub(channel);
     }
 

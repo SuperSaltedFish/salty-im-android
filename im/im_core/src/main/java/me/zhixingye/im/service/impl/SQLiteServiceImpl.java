@@ -189,7 +189,6 @@ public class SQLiteServiceImpl implements SQLiteService {
             mWritableDatabase.endTransaction();
         }
 
-
         @Override
         public void close() {
             if (mWritableDatabase != null) {

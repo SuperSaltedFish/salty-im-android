@@ -1,21 +1,14 @@
 package me.zhixingye.im.service.impl;
 
-import android.content.Context;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Locale;
 
 import io.grpc.ManagedChannel;
 import io.grpc.android.AndroidChannelBuilder;
 import io.grpc.okhttp.OkHttpChannelBuilder;
+import me.zhixingye.im.BuildConfig;
+import me.zhixingye.im.IMCore;
 import me.zhixingye.im.api.BasicApi;
-import me.zhixingye.im.api.ContactApi;
-import me.zhixingye.im.api.ConversationApi;
-import me.zhixingye.im.api.GroupApi;
-import me.zhixingye.im.api.MessageApi;
-import me.zhixingye.im.api.SMSApi;
-import me.zhixingye.im.api.UserApi;
 import me.zhixingye.im.service.ApiService;
 
 /**
@@ -25,26 +18,13 @@ import me.zhixingye.im.service.ApiService;
 public class ApiServiceImpl implements ApiService {
 
     private ManagedChannel mChannel;
-    private Adapter mAdapter;
 
-    public ApiServiceImpl(Context context, String serverAddress, Adapter adapter) {
-        if (adapter == null) {
-            throw new RuntimeException("adapter == null");
-        }
-        mAdapter = adapter;
-        initChannel(context, serverAddress);
-    }
-
-    private void initChannel(Context context, String serverAddress) {
-        OkHttpChannelBuilder builder = OkHttpChannelBuilder.forTarget(serverAddress)
+    public ApiServiceImpl() {
+        OkHttpChannelBuilder builder = OkHttpChannelBuilder.forTarget(BuildConfig.SERVER_ADDRESS)
                 .usePlaintext();
-        if (context == null) {
-            mChannel = builder.build();
-        } else {
-            mChannel = AndroidChannelBuilder.usingBuilder(builder)
-                    .context(context.getApplicationContext())
-                    .build();
-        }
+        mChannel = AndroidChannelBuilder.usingBuilder(builder)
+                .context(IMCore.get().getAppContext().getApplicationContext())
+                .build();
     }
 
 
@@ -61,21 +41,11 @@ public class ApiServiceImpl implements ApiService {
             return null;
         }
         try {
-            Constructor<T> constructor = c.getConstructor(ManagedChannel.class, Adapter.class);
-            return constructor.newInstance(mChannel, mAdapter);
+            Constructor<T> constructor = c.getConstructor(ManagedChannel.class);
+            return constructor.newInstance(mChannel);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public interface Adapter {
-        String getDeviceId();
-
-        String getToken();
-
-        String getAppVersion();
-
-        Locale getLanguage();
     }
 }

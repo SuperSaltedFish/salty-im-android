@@ -7,23 +7,22 @@ import android.os.Process;
 import android.os.RemoteException;
 
 import me.zhixingye.im.IMCore;
-import me.zhixingye.im.sdk.handle.ContactManagerHandle;
-import me.zhixingye.im.sdk.handle.ConversationManagerHandle;
-import me.zhixingye.im.sdk.handle.GroupManagerHandle;
-import me.zhixingye.im.sdk.handle.MessageManagerHandle;
-import me.zhixingye.im.sdk.handle.StorageManagerHandle;
-import me.zhixingye.im.sdk.handle.UserManagerHandle;
+import me.zhixingye.im.sdk.handle.AccountServiceHandle;
+import me.zhixingye.im.sdk.handle.ContactServiceHandle;
+import me.zhixingye.im.sdk.handle.ConversationServiceHandle;
+import me.zhixingye.im.sdk.handle.GroupServiceHandle;
+import me.zhixingye.im.sdk.handle.MessageServiceHandle;
+import me.zhixingye.im.sdk.handle.SMSServiceHandle;
+import me.zhixingye.im.sdk.handle.StorageServiceHandle;
+import me.zhixingye.im.sdk.handle.UserServiceHandle;
 
 public class IMRemoteService extends Service {
 
-    public IMRemoteService() {
-
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        IMCore.tryInit(this, "https:// www.orline.cn:9090", "1.0.0");
+        IMCore.tryInit(this);
     }
 
     @Override
@@ -40,58 +39,43 @@ public class IMRemoteService extends Service {
     private final IBinder mIMServiceBinder = new IRemoteService.Stub() {
 
         @Override
-        public IContactManagerHandle getContactManagerHandle() throws RemoteException {
-            return new ContactManagerHandle();
+        public IAccountServiceHandle getAccountServiceHandle() throws RemoteException {
+            return new AccountServiceHandle();
         }
 
         @Override
-        public IConversationManagerHandle getConversationManagerHandle() throws RemoteException {
-            return new ConversationManagerHandle();
+        public IContactServiceHandle getContactServiceHandle() throws RemoteException {
+            return new ContactServiceHandle();
         }
 
         @Override
-        public IGroupManagerHandle getGroupManagerHandle() throws RemoteException {
-            return new GroupManagerHandle();
+        public IConversationServiceHandle getConversationServiceHandle() throws RemoteException {
+            return new ConversationServiceHandle();
         }
 
         @Override
-        public IMessageManagerHandle getMessageManagerHandle() throws RemoteException {
-            return new MessageManagerHandle();
+        public IGroupServiceHandle getGroupServiceHandle() throws RemoteException {
+            return new GroupServiceHandle();
         }
 
         @Override
-        public IStorageManagerHandle getStorageManagerHandle() throws RemoteException {
-            return new StorageManagerHandle();
+        public IMessageServiceHandle getMessageServiceHandle() throws RemoteException {
+            return new MessageServiceHandle();
         }
 
         @Override
-        public IUserManagerHandle getUserManagerHandle() throws RemoteException {
-            return new UserManagerHandle();
+        public ISMSServiceHandle getSMSServiceHandle() throws RemoteException {
+            return new SMSServiceHandle();
         }
 
         @Override
-        public void registerByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
+        public IStorageServiceHandle getStorageServiceHandle() throws RemoteException {
+            return new StorageServiceHandle();
         }
 
         @Override
-        public void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
-        }
-
-        @Override
-        public void loginByEmail(String email, String password, String verificationCode, IResultCallback callback) throws RemoteException {
-
-        }
-
-        @Override
-        public void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback) throws RemoteException {
-
-        }
-
-        @Override
-        public void resetLoginPassword(String telephone, String oldPassword, String newPassword, IResultCallback callback) throws RemoteException {
-
+        public IUserServiceHandle getUserServiceHandle() throws RemoteException {
+            return new UserServiceHandle();
         }
     };
 }

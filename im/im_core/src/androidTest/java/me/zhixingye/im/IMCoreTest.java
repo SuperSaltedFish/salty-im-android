@@ -163,15 +163,15 @@ public class IMCoreTest {
         UserProfile.Sex sex = UserProfile.Sex.FEMALE;
         long birthday = 10086;
         String location = "地球";
-        IMCore.get().getUserManager().updateUserInfo(nickname, description, sex, birthday, location, new LockRequestCallback<UpdateUserInfoResp>() {
+        IMCore.get().getUserService().updateUserInfo(nickname, description, sex, birthday, location, new LockRequestCallback<UpdateUserInfoResp>() {
             @Override
             void onSuccessful(UpdateUserInfoResp resp) {
 
             }
         });
 
-        UserProfile profile = IMCore.get().getUserManager().getUserProfile();
-        IMCore.get().getUserManager().getUserInfoByUserId(profile.getUserId(), new LockRequestCallback<GetUserInfoResp>() {
+        UserProfile profile = IMCore.get().getUserService().getUserProfile();
+        IMCore.get().getUserService().getUserInfoByUserId(profile.getUserId(), new LockRequestCallback<GetUserInfoResp>() {
             @Override
             void onSuccessful(GetUserInfoResp resp) {
                 UserProfile profile = resp.getProfile();
@@ -183,7 +183,7 @@ public class IMCoreTest {
             }
         });
 
-        IMCore.get().getUserManager().queryUserInfoByTelephone(profile.getTelephone(), new LockRequestCallback<QueryUserInfoResp>() {
+        IMCore.get().getUserService().queryUserInfoByTelephone(profile.getTelephone(), new LockRequestCallback<QueryUserInfoResp>() {
             @Override
             void onSuccessful(QueryUserInfoResp resp) {
                 UserProfile profile = resp.getProfile();

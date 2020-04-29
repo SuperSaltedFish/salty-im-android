@@ -22,8 +22,7 @@ public class ContactApi extends BasicApi {
 
     private ContactServiceGrpc.ContactServiceStub mContactServiceStub;
 
-    public ContactApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
-        super(adapter);
+    public ContactApi(ManagedChannel channel) {
         mContactServiceStub = ContactServiceGrpc.newStub(channel);
     }
 

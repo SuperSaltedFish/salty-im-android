@@ -1,10 +1,10 @@
-// IContactManagerHandle.aidl
+// IContactServiceHandle.aidl
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
 import me.zhixingye.im.sdk.IResultCallback;
 
-interface IContactManagerHandle {
+interface IContactServiceHandle {
     void requestContact(String userId, String reason, IResultCallback callback);
 
     void refusedContact(String userId, String reason, IResultCallback callback);

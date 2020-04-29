@@ -7,10 +7,14 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
 
+import me.zhixingye.im.sdk.proxy.AccountServiceProxy;
+import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
+import me.zhixingye.im.service.AccountService;
 import me.zhixingye.im.service.ContactService;
 import me.zhixingye.im.service.ConversationService;
 import me.zhixingye.im.service.GroupService;
 import me.zhixingye.im.service.MessageService;
+import me.zhixingye.im.service.SMSService;
 import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.sdk.proxy.BasicProxy;
@@ -51,12 +55,14 @@ public class IMClient {
 
     private Context mAppContext;
 
-    private ContactServiceProxy mContactService;
-    private ConversationServiceProxy mConversationService;
-    private GroupServiceProxy mGroupService;
-    private MessageManagerProxy mMessageService;
-    private StorageServiceProxy mStorageService;
-    private UserServiceProxy mUserService;
+    private AccountServiceProxy mAccountServiceProxy;
+    private ContactServiceProxy mContactServiceProxy;
+    private ConversationServiceProxy mConversationServiceProxy;
+    private GroupServiceProxy mGroupServiceProxy;
+    private MessageManagerProxy mMessageManagerProxy;
+    private SMSServiceProxy mSMSServiceProxy;
+    private StorageServiceProxy mStorageServiceProxy;
+    private UserServiceProxy mUserServiceProxy;
 
     private IRemoteService mIRemoteService;
 
@@ -66,12 +72,14 @@ public class IMClient {
     }
 
     private void initProxyService() {
-        mContactService = BasicProxy.createProxy(new ContactServiceProxy(mIMServiceConnector));
-        mConversationService = BasicProxy.createProxy(new ConversationServiceProxy(mIMServiceConnector));
-        mGroupService = BasicProxy.createProxy(new GroupServiceProxy(mIMServiceConnector));
-        mMessageService = BasicProxy.createProxy(new MessageManagerProxy(mIMServiceConnector));
-        mStorageService = BasicProxy.createProxy(new StorageServiceProxy(mIMServiceConnector));
-        mUserService = BasicProxy.createProxy(new UserServiceProxy(mIMServiceConnector));
+        mAccountServiceProxy = BasicProxy.createProxy(new AccountServiceProxy(mIMServiceConnector));
+        mContactServiceProxy = BasicProxy.createProxy(new ContactServiceProxy(mIMServiceConnector));
+        mConversationServiceProxy = BasicProxy.createProxy(new ConversationServiceProxy(mIMServiceConnector));
+        mGroupServiceProxy = BasicProxy.createProxy(new GroupServiceProxy(mIMServiceConnector));
+        mMessageManagerProxy = BasicProxy.createProxy(new MessageManagerProxy(mIMServiceConnector));
+        mSMSServiceProxy = BasicProxy.createProxy(new SMSServiceProxy(mIMServiceConnector));
+        mStorageServiceProxy = BasicProxy.createProxy(new StorageServiceProxy(mIMServiceConnector));
+        mUserServiceProxy = BasicProxy.createProxy(new UserServiceProxy(mIMServiceConnector));
     }
 
     private final BasicProxy.IMServiceConnector mIMServiceConnector = callback -> {
@@ -104,29 +112,36 @@ public class IMClient {
         }, Context.BIND_AUTO_CREATE);
     };
 
+    public AccountService getAccountService() {
+        return mAccountServiceProxy;
+    }
 
     public ContactService getContactService() {
-        return mContactService;
+        return mContactServiceProxy;
     }
 
     public ConversationService getConversationService() {
-        return mConversationService;
+        return mConversationServiceProxy;
     }
 
     public GroupService getGroupService() {
-        return mGroupService;
+        return mGroupServiceProxy;
     }
 
     public MessageService getMessageService() {
-        return mMessageService;
+        return mMessageManagerProxy;
+    }
+
+    public SMSService getSMSService() {
+        return mSMSServiceProxy;
     }
 
     public StorageService getStorageService() {
-        return mStorageService;
+        return mStorageServiceProxy;
     }
 
     public UserService getUserService() {
-        return mUserService;
+        return mUserServiceProxy;
     }
 
 }

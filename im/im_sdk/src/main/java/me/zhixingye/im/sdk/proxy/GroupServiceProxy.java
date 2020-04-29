@@ -14,7 +14,7 @@ import com.salty.protos.UpdateMemberNicknameResp;
 import java.util.List;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IGroupManagerHandle;
+import me.zhixingye.im.sdk.IGroupServiceHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.service.GroupService;
@@ -25,7 +25,7 @@ import me.zhixingye.im.service.GroupService;
  */
 public class GroupServiceProxy extends BasicProxy implements GroupService {
 
-    private IGroupManagerHandle mGroupHandle;
+    private IGroupServiceHandle mGroupHandle;
 
     public GroupServiceProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -34,7 +34,7 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mGroupHandle = service.getGroupManagerHandle();
+            mGroupHandle = service.getGroupServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mGroupHandle = null;

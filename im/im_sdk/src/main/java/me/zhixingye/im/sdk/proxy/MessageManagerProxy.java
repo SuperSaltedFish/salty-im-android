@@ -2,8 +2,8 @@ package me.zhixingye.im.sdk.proxy;
 
 import android.os.RemoteException;
 
+import me.zhixingye.im.sdk.IMessageServiceHandle;
 import me.zhixingye.im.service.MessageService;
-import me.zhixingye.im.sdk.IMessageManagerHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 
 /**
@@ -12,7 +12,7 @@ import me.zhixingye.im.sdk.IRemoteService;
  */
 public class MessageManagerProxy extends BasicProxy implements MessageService {
 
-    private IMessageManagerHandle mMessageHandle;
+    private IMessageServiceHandle mMessageHandle;
 
     public MessageManagerProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -21,7 +21,7 @@ public class MessageManagerProxy extends BasicProxy implements MessageService {
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mMessageHandle = service.getMessageManagerHandle();
+            mMessageHandle = service.getMessageServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mMessageHandle = null;
@@ -29,7 +29,7 @@ public class MessageManagerProxy extends BasicProxy implements MessageService {
     }
 
 
-    public void bindHandle(IMessageManagerHandle handle) {
+    public void bindHandle(IMessageServiceHandle handle) {
         mMessageHandle = handle;
     }
 

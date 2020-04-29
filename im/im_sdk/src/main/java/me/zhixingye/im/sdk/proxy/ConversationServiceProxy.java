@@ -12,7 +12,7 @@ import com.salty.protos.UpdateConversationTopResp;
 import com.salty.protos.UpdateNotificationStatusResp;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IConversationManagerHandle;
+import me.zhixingye.im.sdk.IConversationServiceHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.service.ConversationService;
@@ -23,7 +23,7 @@ import me.zhixingye.im.service.ConversationService;
  */
 public class ConversationServiceProxy extends BasicProxy implements ConversationService {
 
-    private IConversationManagerHandle mConversationHandle;
+    private IConversationServiceHandle mConversationHandle;
 
     public ConversationServiceProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -32,7 +32,7 @@ public class ConversationServiceProxy extends BasicProxy implements Conversation
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mConversationHandle = service.getConversationManagerHandle();
+            mConversationHandle = service.getConversationServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mConversationHandle = null;

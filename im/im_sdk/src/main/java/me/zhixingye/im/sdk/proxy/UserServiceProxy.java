@@ -10,7 +10,7 @@ import com.salty.protos.UserProfile;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.sdk.IRemoteService;
-import me.zhixingye.im.sdk.IUserManagerHandle;
+import me.zhixingye.im.sdk.IUserServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 
 /**
@@ -19,7 +19,7 @@ import me.zhixingye.im.sdk.util.CallbackUtil;
  */
 public class UserServiceProxy extends BasicProxy implements UserService {
 
-    private IUserManagerHandle mUserHandle;
+    private IUserServiceHandle mUserHandle;
 
     public UserServiceProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -28,7 +28,7 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mUserHandle = service.getUserManagerHandle();
+            mUserHandle = service.getUserServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mUserHandle = null;

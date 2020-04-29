@@ -1,10 +1,10 @@
-// IConversationManagerHandle.aidl
+// IConversationServiceHandle.aidl
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
 import me.zhixingye.im.sdk.IResultCallback;
 
-interface IConversationManagerHandle {
+interface IConversationServiceHandle {
     void getAllConversations(IResultCallback callback);
 
     void getConversationDetail(String conversationId, int type, IResultCallback callback);

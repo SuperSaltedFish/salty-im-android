@@ -24,7 +24,7 @@ import me.zhixingye.im.util.Base64Util;
 @SuppressLint("ApplySharedPref")
 public class StorageServiceImpl implements StorageService {
 
-    private static final String TAG = "StorageService";
+    private static final String TAG = StorageServiceImpl.class.getName() + ".StorageService";
 
     private static final String AES_KET_ALIAS = "AES_Salty";
 
@@ -32,8 +32,8 @@ public class StorageServiceImpl implements StorageService {
     private Key mAESKey;
 
     //初始化过程中传入了storageName
-    public StorageServiceImpl(Context appContent, String storageName) {
-        mConfigurationPreferences = appContent.getSharedPreferences(storageName, Context.MODE_PRIVATE);
+    public StorageServiceImpl() {
+        mConfigurationPreferences = IMCore.get().getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
         mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         if (mAESKey == null) {
             Logger.w(TAG, "generateAESKeyInAndroidKeyStore fail");

@@ -8,7 +8,7 @@ import com.salty.protos.RefusedContactResp;
 import com.salty.protos.RequestContactResp;
 
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IContactManagerHandle;
+import me.zhixingye.im.sdk.IContactServiceHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.service.ContactService;
@@ -19,7 +19,7 @@ import me.zhixingye.im.service.ContactService;
  */
 public class ContactServiceProxy extends BasicProxy implements ContactService {
 
-    private IContactManagerHandle mContactHandle;
+    private IContactServiceHandle mContactHandle;
 
     public ContactServiceProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -28,7 +28,7 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mContactHandle = service.getContactManagerHandle();
+            mContactHandle = service.getContactServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mContactHandle = null;

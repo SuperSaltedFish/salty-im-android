@@ -5,7 +5,7 @@ import android.os.RemoteException;
 
 import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.sdk.IRemoteService;
-import me.zhixingye.im.sdk.IStorageManagerHandle;
+import me.zhixingye.im.sdk.IStorageServiceHandle;
 
 
 /**
@@ -16,7 +16,7 @@ import me.zhixingye.im.sdk.IStorageManagerHandle;
 @SuppressLint("ApplySharedPref")
 public class StorageServiceProxy extends BasicProxy implements StorageService {
 
-    private IStorageManagerHandle mStorageHandle;
+    private IStorageServiceHandle mStorageHandle;
 
     public StorageServiceProxy(IMServiceConnector proxy) {
         super(proxy);
@@ -25,7 +25,7 @@ public class StorageServiceProxy extends BasicProxy implements StorageService {
     @Override
     protected void onConnectRemoteService(IRemoteService service) {
         try {
-            mStorageHandle = service.getStorageManagerHandle();
+            mStorageHandle = service.getStorageServiceHandle();
         } catch (RemoteException e) {
             e.printStackTrace();
             mStorageHandle = null;

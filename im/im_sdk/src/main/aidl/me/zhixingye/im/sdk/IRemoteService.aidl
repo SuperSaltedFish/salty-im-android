@@ -2,34 +2,31 @@
 package me.zhixingye.im.sdk;
 
 // Declare any non-default types here with import statements
-import me.zhixingye.im.sdk.IContactManagerHandle;
-import me.zhixingye.im.sdk.IConversationManagerHandle;
-import me.zhixingye.im.sdk.IGroupManagerHandle;
-import me.zhixingye.im.sdk.IMessageManagerHandle;
-import me.zhixingye.im.sdk.IStorageManagerHandle;
-import me.zhixingye.im.sdk.IUserManagerHandle;
+import me.zhixingye.im.sdk.IAccountServiceHandle;
+import me.zhixingye.im.sdk.IContactServiceHandle;
+import me.zhixingye.im.sdk.IConversationServiceHandle;
+import me.zhixingye.im.sdk.IGroupServiceHandle;
+import me.zhixingye.im.sdk.IMessageServiceHandle;
+import me.zhixingye.im.sdk.ISMSServiceHandle;
+import me.zhixingye.im.sdk.IStorageServiceHandle;
+import me.zhixingye.im.sdk.IUserServiceHandle;
 import me.zhixingye.im.sdk.IResultCallback;
 
 interface IRemoteService {
-    IContactManagerHandle getContactManagerHandle();
+    IAccountServiceHandle getAccountServiceHandle();
 
-    IConversationManagerHandle getConversationManagerHandle();
+    IContactServiceHandle getContactServiceHandle();
 
-    IGroupManagerHandle getGroupManagerHandle();
+    IConversationServiceHandle getConversationServiceHandle();
 
-    IMessageManagerHandle getMessageManagerHandle();
+    IGroupServiceHandle getGroupServiceHandle();
 
-    IStorageManagerHandle getStorageManagerHandle();
+    IMessageServiceHandle getMessageServiceHandle();
 
-    IUserManagerHandle getUserManagerHandle();
+    ISMSServiceHandle getSMSServiceHandle();
 
-    void registerByTelephone(String telephone, String password, String verificationCode, IResultCallback callback);
+    IStorageServiceHandle getStorageServiceHandle();
 
-    void loginByTelephone(String telephone, String password, String verificationCode, IResultCallback callback);
+    IUserServiceHandle getUserServiceHandle();
 
-    void loginByEmail(String email, String password, String verificationCode, IResultCallback callback);
-
-    void resetLoginPasswordByTelephone(String telephone, String verificationCode, String newPassword, IResultCallback callback);
-
-    void resetLoginPassword(String telephone, String oldPassword, String newPassword, IResultCallback callback);
 }

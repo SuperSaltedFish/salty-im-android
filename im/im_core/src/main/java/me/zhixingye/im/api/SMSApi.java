@@ -19,8 +19,7 @@ public class SMSApi extends BasicApi {
 
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
-    public SMSApi(ManagedChannel channel, ApiServiceImpl.Adapter adapter) {
-        super(adapter);
+    public SMSApi(ManagedChannel channel) {
         mSMSServiceStub = SMSServiceGrpc.newStub(channel);
     }
 

@@ -41,8 +41,9 @@ public abstract class BasicProxy {
                 new Class[]{instance.getClass()},
                 (proxy, method, args) -> {
                     if (method.getReturnType() != void.class) {
-                        throw new RuntimeException("代理方法要求不能有返回值");
+                        return method.invoke(instance, args);
                     }
+
                     instance.connectIMServiceIfNeed(new ConnectCallback() {
                         @Override
                         public void onCompleted(IRemoteService service) {
@@ -70,7 +71,7 @@ public abstract class BasicProxy {
                 });
     }
 
-    protected static class ResultCallbackWrapper<T extends GeneratedMessageLite> extends IResultCallback.Stub {
+    protected static class ResultCallbackWrapper<T> extends IResultCallback.Stub {
 
         private static final String TAG = "ResultCallbackWrapper";
 
@@ -96,6 +97,10 @@ public abstract class BasicProxy {
 
             try {
                 Class type = (Class) pType.getActualTypeArguments()[0];
+                if (type == Void.class) {
+                    mCallback.onCompleted(null);
+                    return;
+                }
                 Method method = type.getMethod("parseFrom", byte[].class);
                 T resultMessage = (T) method.invoke(null, (Object) protoData);
                 if (resultMessage == null) {

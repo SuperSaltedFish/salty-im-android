@@ -1,7 +1,5 @@
 package me.zhixingye.im.sdk.proxy;
 
-import android.os.RemoteException;
-
 import com.salty.protos.AcceptContactResp;
 import com.salty.protos.DeleteContactResp;
 import com.salty.protos.RefusedContactResp;
@@ -12,6 +10,7 @@ import me.zhixingye.im.sdk.IContactServiceHandle;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.util.CallbackUtil;
 import me.zhixingye.im.service.ContactService;
+import me.zhixingye.im.tool.Logger;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -19,18 +18,16 @@ import me.zhixingye.im.service.ContactService;
  */
 public class ContactServiceProxy extends BasicProxy implements ContactService {
 
+    private static final String TAG = "ContactServiceProxy";
+
     private IContactServiceHandle mContactHandle;
 
-    public ContactServiceProxy(IMServiceConnector proxy) {
-        super(proxy);
-    }
-
     @Override
-    protected void onConnectRemoteService(IRemoteService service) {
+    public void onBindHandle(IRemoteService service) {
         try {
             mContactHandle = service.getContactServiceHandle();
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             mContactHandle = null;
         }
     }
@@ -41,7 +38,8 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
         try {
             mContactHandle.requestContact(userId, reason, new ResultCallbackWrapper<>(callback));
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -51,7 +49,8 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
         try {
             mContactHandle.refusedContact(userId, reason, new ResultCallbackWrapper<>(callback));
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -61,7 +60,8 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
         try {
             mContactHandle.acceptContact(userId, new ResultCallbackWrapper<>(callback));
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -71,7 +71,8 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
         try {
             mContactHandle.deleteContact(userId, new ResultCallbackWrapper<>(callback));
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }

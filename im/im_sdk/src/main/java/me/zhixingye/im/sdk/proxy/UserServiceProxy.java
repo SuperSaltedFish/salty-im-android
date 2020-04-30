@@ -1,7 +1,5 @@
 package me.zhixingye.im.sdk.proxy;
 
-import android.os.RemoteException;
-
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.QueryUserInfoResp;
 import com.salty.protos.UpdateUserInfoResp;
@@ -12,6 +10,7 @@ import me.zhixingye.im.service.UserService;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.IUserServiceHandle;
 import me.zhixingye.im.sdk.util.CallbackUtil;
+import me.zhixingye.im.tool.Logger;
 
 /**
  * Created by zhixingye on 2019年12月31日.
@@ -19,18 +18,16 @@ import me.zhixingye.im.sdk.util.CallbackUtil;
  */
 public class UserServiceProxy extends BasicProxy implements UserService {
 
+    private static final String TAG = "ContactServiceProxy";
+
     private IUserServiceHandle mUserHandle;
 
-    public UserServiceProxy(IMServiceConnector proxy) {
-        super(proxy);
-    }
-
     @Override
-    protected void onConnectRemoteService(IRemoteService service) {
+    public void onBindHandle(IRemoteService service) {
         try {
             mUserHandle = service.getUserServiceHandle();
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             mUserHandle = null;
         }
     }
@@ -44,8 +41,9 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
         try {
             mUserHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -54,8 +52,9 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
         try {
             mUserHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -64,8 +63,9 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
         try {
             mUserHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -74,8 +74,9 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
         try {
             mUserHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }

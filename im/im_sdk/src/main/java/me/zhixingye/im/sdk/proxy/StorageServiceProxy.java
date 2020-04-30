@@ -1,11 +1,11 @@
 package me.zhixingye.im.sdk.proxy;
 
 import android.annotation.SuppressLint;
-import android.os.RemoteException;
 
 import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.sdk.IRemoteService;
 import me.zhixingye.im.sdk.IStorageServiceHandle;
+import me.zhixingye.im.tool.Logger;
 
 
 /**
@@ -16,18 +16,16 @@ import me.zhixingye.im.sdk.IStorageServiceHandle;
 @SuppressLint("ApplySharedPref")
 public class StorageServiceProxy extends BasicProxy implements StorageService {
 
+    private static final String TAG = "ContactServiceProxy";
+
     private IStorageServiceHandle mStorageHandle;
 
-    public StorageServiceProxy(IMServiceConnector proxy) {
-        super(proxy);
-    }
-
     @Override
-    protected void onConnectRemoteService(IRemoteService service) {
+    public void onBindHandle(IRemoteService service) {
         try {
             mStorageHandle = service.getStorageServiceHandle();
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             mStorageHandle = null;
         }
     }
@@ -36,8 +34,8 @@ public class StorageServiceProxy extends BasicProxy implements StorageService {
     public boolean putToConfigurationPreferences(String key, String value) {
         try {
             return mStorageHandle.putToConfigurationPreferences(key, value);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             return false;
         }
     }
@@ -46,8 +44,8 @@ public class StorageServiceProxy extends BasicProxy implements StorageService {
     public String getFromConfigurationPreferences(String key) {
         try {
             return mStorageHandle.getFromConfigurationPreferences(key);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             return "";
         }
     }
@@ -56,8 +54,8 @@ public class StorageServiceProxy extends BasicProxy implements StorageService {
     public boolean putToUserPreferences(String key, String value) {
         try {
             return mStorageHandle.putToUserPreferences(key, value);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             return false;
         }
     }
@@ -66,8 +64,8 @@ public class StorageServiceProxy extends BasicProxy implements StorageService {
     public String getFromUserPreferences(String key) {
         try {
             return mStorageHandle.getFromUserPreferences(key);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
             return "";
         }
     }

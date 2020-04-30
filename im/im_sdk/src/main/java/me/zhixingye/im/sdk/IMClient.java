@@ -7,8 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import java.util.concurrent.Executors;
-
 import me.zhixingye.im.sdk.proxy.AccountServiceProxy;
 import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
 import me.zhixingye.im.service.AccountService;
@@ -23,7 +21,7 @@ import me.zhixingye.im.sdk.proxy.BasicProxy;
 import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
 import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
 import me.zhixingye.im.sdk.proxy.GroupServiceProxy;
-import me.zhixingye.im.sdk.proxy.MessageManagerProxy;
+import me.zhixingye.im.sdk.proxy.MessageServiceProxy;
 import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
 import me.zhixingye.im.sdk.proxy.UserServiceProxy;
 import me.zhixingye.im.sdk.util.SystemUtils;
@@ -61,7 +59,7 @@ public class IMClient {
     private ContactServiceProxy mContactServiceProxy;
     private ConversationServiceProxy mConversationServiceProxy;
     private GroupServiceProxy mGroupServiceProxy;
-    private MessageManagerProxy mMessageManagerProxy;
+    private MessageServiceProxy mMessageServiceProxy;
     private SMSServiceProxy mSMSServiceProxy;
     private StorageServiceProxy mStorageServiceProxy;
     private UserServiceProxy mUserServiceProxy;
@@ -71,54 +69,50 @@ public class IMClient {
     private IMClient(Context context) {
         mAppContext = context;
         initProxyService();
+        autoBindRemoteService();
     }
 
     private void initProxyService() {
-        mAccountServiceProxy = BasicProxy.createProxy(new AccountServiceProxy(mIMServiceConnector));
-        mContactServiceProxy = BasicProxy.createProxy(new ContactServiceProxy(mIMServiceConnector));
-        mConversationServiceProxy = BasicProxy.createProxy(new ConversationServiceProxy(mIMServiceConnector));
-        mGroupServiceProxy = BasicProxy.createProxy(new GroupServiceProxy(mIMServiceConnector));
-        mMessageManagerProxy = BasicProxy.createProxy(new MessageManagerProxy(mIMServiceConnector));
-        mSMSServiceProxy = BasicProxy.createProxy(new SMSServiceProxy(mIMServiceConnector));
-        mStorageServiceProxy = BasicProxy.createProxy(new StorageServiceProxy(mIMServiceConnector));
-        mUserServiceProxy = BasicProxy.createProxy(new UserServiceProxy(mIMServiceConnector));
+        mAccountServiceProxy = new AccountServiceProxy();
+        mContactServiceProxy = new ContactServiceProxy();
+        mConversationServiceProxy = new ConversationServiceProxy();
+        mGroupServiceProxy = new GroupServiceProxy();
+        mMessageServiceProxy = new MessageServiceProxy();
+        mSMSServiceProxy = new SMSServiceProxy();
+        mStorageServiceProxy = new StorageServiceProxy();
+        mUserServiceProxy = new UserServiceProxy();
     }
 
-    private final BasicProxy.IMServiceConnector mIMServiceConnector = new BasicProxy.IMServiceConnector() {
-        @Override
-        public void connectRemoteIMService(final BasicProxy.ConnectCallback callback) {
-            if (mIRemoteService != null) {
-                if (callback != null) {
-                    callback.onCompleted(mIRemoteService);
-                }
-                return;
-            }
-            mAppContext.bindService(
-                    new Intent(mAppContext, IMRemoteService.class),
-                    Context.BIND_AUTO_CREATE,
-                    Executors.newSingleThreadExecutor(),
-                    new ServiceConnection() {
-                        @Override
-                        public void onServiceConnected(ComponentName name, IBinder service) {
-                            mIRemoteService = IRemoteService.Stub.asInterface(service);
-                            if (callback != null) {
-                                callback.onCompleted(mIRemoteService);
-                            }
-                        }
+    private void autoBindRemoteService() {
+        mAppContext.bindService(
+                new Intent(mAppContext, IMRemoteService.class),
+                new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName name, IBinder service) {
+                        mIRemoteService = IRemoteService.Stub.asInterface(service);
 
-                        @Override
-                        public void onServiceDisconnected(ComponentName name) {
-                            mIRemoteService = null;
-                        }
+                        mAccountServiceProxy.onBindHandle(mIRemoteService);
+                        mContactServiceProxy.onBindHandle(mIRemoteService);
+                        mConversationServiceProxy.onBindHandle(mIRemoteService);
+                        mGroupServiceProxy.onBindHandle(mIRemoteService);
+                        mMessageServiceProxy.onBindHandle(mIRemoteService);
+                        mSMSServiceProxy.onBindHandle(mIRemoteService);
+                        mStorageServiceProxy.onBindHandle(mIRemoteService);
+                        mUserServiceProxy.onBindHandle(mIRemoteService);
+                    }
 
-                        @Override
-                        public void onBindingDied(ComponentName name) {
-                            onServiceDisconnected(name);
-                        }
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
+                        mIRemoteService = null;
+                    }
 
-                    });
-        }
-    };
+                    @Override
+                    public void onBindingDied(ComponentName name) {
+                        onServiceDisconnected(name);
+                    }
+
+                }, Context.BIND_AUTO_CREATE);
+    }
 
     public AccountService getAccountService() {
         return mAccountServiceProxy;
@@ -137,7 +131,7 @@ public class IMClient {
     }
 
     public MessageService getMessageService() {
-        return mMessageManagerProxy;
+        return mMessageServiceProxy;
     }
 
     public SMSService getSMSService() {

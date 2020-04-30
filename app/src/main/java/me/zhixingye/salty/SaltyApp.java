@@ -8,10 +8,10 @@ import androidx.emoji.bundled.BundledEmojiCompatConfig;
 import androidx.emoji.text.EmojiCompat;
 import me.jessyan.autosize.AutoSizeConfig;
 import me.zhixingye.im.sdk.IMClient;
+import me.zhixingye.im.sdk.util.SystemUtils;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.tool.ActivityHelper;
 import me.zhixingye.salty.util.AndroidHelper;
-import me.zhixingye.salty.util.AndroidUtil;
 
 /**
  * Created by zhixingye on 2020年02月03日.
@@ -23,7 +23,7 @@ public class SaltyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (TextUtils.equals(AndroidUtil.getProcessName(this), getPackageName())) {
+        if (TextUtils.equals(SystemUtils.getCurrentProcessName(this), getPackageName())) {
             AppConfig.init(this);
             AndroidHelper.init(this);
             ActivityHelper.init(this);

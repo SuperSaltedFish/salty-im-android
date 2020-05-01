@@ -14,8 +14,9 @@ import android.widget.ImageView;
 import androidx.core.view.ViewCompat;
 
 /**
- * Created by yzx on 2017年05月14日
- * 当你将信心放在自己身上时，你将永远充满力量
+ * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
+ *
+ * @author zhixingye , 2020年05月01日.
  */
 
 public class AnimationUtil {

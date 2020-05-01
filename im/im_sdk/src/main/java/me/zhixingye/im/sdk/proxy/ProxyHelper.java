@@ -9,8 +9,9 @@ import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.BasicService;
 
 /**
- * Created by zhixingye on 2020年05月01日.
- * 每一个不曾起舞的日子 都是对生命的辜负
+ * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
+ *
+ * @author zhixingye , 2020年05月01日.
  */
 public class ProxyHelper {
 
@@ -32,8 +33,10 @@ public class ProxyHelper {
 
 
     /**
-     * protoBuf要求参数不能为null，包括String，所以这里统一用动态代理转换
-     */
+ * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
+ *
+ * @author zhixingye , 2020年05月01日.
+ */
     private static class NullStringHandler implements InvocationHandler {
 
         private Object mOriginal;

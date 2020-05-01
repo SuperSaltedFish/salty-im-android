@@ -15,7 +15,7 @@ import me.zhixingye.im.service.DeviceService;
 public class DeviceServiceImpl implements DeviceService {
     @Override
     public String getAppVersion() {
-        Context context = IMCore.get().getAppContext();
+        Context context = IMCore.getAppContext();
         PackageManager packageManager = context.getPackageManager();
         try {
             PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
@@ -28,7 +28,7 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public String getDeviceId() {
         return Settings.System.getString(
-                IMCore.get().getAppContext().getContentResolver(),
+                IMCore.getAppContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
 }

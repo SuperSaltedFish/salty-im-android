@@ -48,7 +48,9 @@ public class UserApi extends BasicApi {
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
+        mUserServiceStub.register(
+                createReq(req),
+                new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
 
     public void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
@@ -62,33 +64,41 @@ public class UserApi extends BasicApi {
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.register(createReq(req), new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
+        mUserServiceStub.register(
+                createReq(req),
+                new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
 
-    public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+    public void loginByTelephone(String telephone, String password, String verificationCode, RequestCallback<LoginResp> callback) {
         LoginReq req = LoginReq.newBuilder()
                 .setTelephone(telephone)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
+        mUserServiceStub.login(
+                createReq(req),
+                new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
-    public void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
+    public void loginByEmail(String email, String password, String verificationCode, RequestCallback<LoginResp> callback) {
         LoginReq req = LoginReq.newBuilder()
                 .setEmail(email)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
                 .setVerificationCode(verificationCode)
                 .build();
 
-        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
+        mUserServiceStub.login(
+                createReq(req),
+                new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
     public void logout(RequestCallback<LogoutResp> callback) {
         LogoutReq req = LogoutReq.newBuilder()
                 .build();
-        mUserServiceStub.login(createReq(req), new DefaultStreamObserver<>(LogoutResp.getDefaultInstance(), callback));
+        mUserServiceStub.login(
+                createReq(req),
+                new DefaultStreamObserver<>(LogoutResp.getDefaultInstance(), callback));
     }
 
     public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
@@ -98,7 +108,9 @@ public class UserApi extends BasicApi {
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
-        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+        mUserServiceStub.resetPassword(
+                createReq(req),
+                new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
     public void resetLoginPasswordByEmailSMS(String email, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
@@ -108,7 +120,9 @@ public class UserApi extends BasicApi {
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
-        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+        mUserServiceStub.resetPassword(
+                createReq(req),
+                new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
     public void resetLoginPasswordByTelephonePassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
@@ -118,7 +132,9 @@ public class UserApi extends BasicApi {
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
-        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+        mUserServiceStub.resetPassword(
+                createReq(req),
+                new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
     public void resetLoginPasswordByEmailPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
@@ -128,7 +144,9 @@ public class UserApi extends BasicApi {
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
-        mUserServiceStub.resetPassword(createReq(req), new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
+        mUserServiceStub.resetPassword(
+                createReq(req),
+                new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
@@ -144,7 +162,9 @@ public class UserApi extends BasicApi {
                 .setProfile(profile)
                 .build();
 
-        mUserServiceStub.updateUserInfo(createReq(req), new DefaultStreamObserver<>(UpdateUserInfoResp.getDefaultInstance(), callback));
+        mUserServiceStub.updateUserInfo(
+                createReq(req),
+                new DefaultStreamObserver<>(UpdateUserInfoResp.getDefaultInstance(), callback));
     }
 
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
@@ -152,7 +172,9 @@ public class UserApi extends BasicApi {
                 .setUserId(userId)
                 .build();
 
-        mUserServiceStub.getUserInfo(createReq(req), new DefaultStreamObserver<>(GetUserInfoResp.getDefaultInstance(), callback));
+        mUserServiceStub.getUserInfo(
+                createReq(req),
+                new DefaultStreamObserver<>(GetUserInfoResp.getDefaultInstance(), callback));
     }
 
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
@@ -160,7 +182,9 @@ public class UserApi extends BasicApi {
                 .setTelephone(telephone)
                 .build();
 
-        mUserServiceStub.queryUserInfo(createReq(req), new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
+        mUserServiceStub.queryUserInfo(
+                createReq(req),
+                new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
     }
 
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
@@ -168,6 +192,8 @@ public class UserApi extends BasicApi {
                 .setEmail(email)
                 .build();
 
-        mUserServiceStub.queryUserInfo(createReq(req), new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
+        mUserServiceStub.queryUserInfo(
+                createReq(req),
+                new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
     }
 }

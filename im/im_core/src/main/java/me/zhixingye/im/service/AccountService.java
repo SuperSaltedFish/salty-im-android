@@ -21,6 +21,8 @@ public interface AccountService extends BasicService {
 
     void logout();
 
+    boolean isLogged();
+
     String getCurrentUserId();
 
     String getCurrentUserToken();

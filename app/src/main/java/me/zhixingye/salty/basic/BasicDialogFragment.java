@@ -27,6 +27,7 @@ import androidx.annotation.StyleRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
@@ -37,6 +38,9 @@ import me.zhixingye.salty.widget.listener.Cancelable;
  * 每一个不曾起舞的日子，都是对生命的辜负。
  */
 public abstract class BasicDialogFragment<P extends BasicPresenter> extends DialogFragment {
+
+    private static final String TAG = "BasicFragment";
+
     @LayoutRes
     protected abstract int getLayoutID();
 
@@ -291,37 +295,46 @@ public abstract class BasicDialogFragment<P extends BasicPresenter> extends Dial
         return mPresenter != null;
     }
 
-    //初始化Presenter，这里用到了反射，这段不是很好理解，可以断点Debug一行行看代码执行情况以及对应的一些class变量
     @SuppressWarnings("unchecked")
     private void initPresenter() {
-        if (this instanceof BasicView) {
-            BasicView view = (BasicView) this;
-            mPresenter = (P) view.getPresenter();//获取一个Presenter，子类实现了getPresenter();
-            if (mPresenter == null) {
+        if (!(this instanceof BasicView)) {
+            return;
+        }
+        BasicView view = (BasicView) this;
+        Class thisClass = this.getClass();
+        while (thisClass.getSuperclass() != null) {
+            Class superClass = thisClass.getSuperclass();
+            if (superClass != BasicCompatActivity.class) {
+                thisClass = superClass;
+                continue;
+            }
+
+            Type type = thisClass.getGenericSuperclass();
+            if (!(type instanceof ParameterizedType)) {
                 return;
             }
-            Class aClass = this.getClass();
-            while (aClass != null) {
-                //获取父类，这里的type就是BaseActivity
-                Type type = aClass.getGenericSuperclass();
-                if (type instanceof ParameterizedType) {
-                    ParameterizedType parameterizedType = (ParameterizedType) type;
-                    //获取泛型类型，这里的genericType就是泛型T
-                    Type genericType = parameterizedType.getActualTypeArguments()[0];
-                    //这里获取Presenter实现的那些接口
-                    Class<?>[] interfaces = mPresenter.getClass().getInterfaces();
-                    //判断Presenter实现的接口是否有泛型T，本质上就是判断mPresenter是否就是泛型T的实例
-                    for (Class c : interfaces) {
-                        if (c == genericType) {
-                            mPresenter.attachView(view);
-                            return;
-                        }
-                    }
-                } else {
-                    aClass = aClass.getSuperclass();
+
+            ParameterizedType pType = (ParameterizedType) type;
+            for (Type genericType : pType.getActualTypeArguments()) {
+                if (!(genericType instanceof Class)) {
+                    continue;
+                }
+                Class pClass = (Class) genericType;
+                try {
+                    mPresenter = (P) pClass.newInstance();
+                } catch (Exception e) {
+                    Logger.e(TAG, "初始化Presenter失败,class:" + pClass.getName(), e);
+                    return;
+                }
+
+                try {
+                    mPresenter.attachView(view);
+                } catch (ClassCastException e) {
+                    Logger.e(TAG, "Presenter与view不匹配", e);
+                    return;
                 }
             }
-            mPresenter = null;
+            return;
         }
     }
 }

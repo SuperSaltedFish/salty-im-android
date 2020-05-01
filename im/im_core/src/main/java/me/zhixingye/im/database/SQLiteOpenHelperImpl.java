@@ -22,7 +22,7 @@ public class SQLiteOpenHelperImpl extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.beginTransaction();
         try {
-//            db.execSQL(UserDao.CREATE_TABLE_SQL);
+            db.execSQL(UserDao.CREATE_TABLE_SQL);
 //            db.execSQL(ContactOperationDao.CREATE_TABLE_SQL);
 //            db.execSQL(ContactDao.CREATE_TABLE_SQL);
 //            db.execSQL(GroupDao.CREATE_TABLE_SQL);

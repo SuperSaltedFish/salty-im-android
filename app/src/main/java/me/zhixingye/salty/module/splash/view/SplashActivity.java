@@ -11,7 +11,7 @@ import me.zhixingye.salty.module.splash.contract.SplashContract;
 import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
 import me.zhixingye.salty.util.PermissionHelper;
 
-public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter> implements SplashContract.View {
+public class SplashActivity extends BasicCompatActivity<SplashPresenter> implements SplashContract.View {
 
     @Override
     protected int getLayoutID() {
@@ -52,6 +52,10 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
     }
 
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     public void startLoginActivity() {
         LoginActivity.startActivity(this);
         finish();
@@ -76,10 +80,5 @@ public class SplashActivity extends BasicCompatActivity<SplashContract.Presenter
                 SplashActivity.this.finish();
             }
         });
-    }
-
-    @Override
-    public SplashContract.Presenter getPresenter() {
-        return new SplashPresenter();
     }
 }

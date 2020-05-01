@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import me.zhixingye.im.sdk.proxy.AccountServiceProxy;
+import me.zhixingye.im.sdk.proxy.ProxyHelper;
 import me.zhixingye.im.sdk.proxy.SMSServiceProxy;
 import me.zhixingye.im.service.AccountService;
 import me.zhixingye.im.service.ContactService;
@@ -17,7 +18,7 @@ import me.zhixingye.im.service.MessageService;
 import me.zhixingye.im.service.SMSService;
 import me.zhixingye.im.service.StorageService;
 import me.zhixingye.im.service.UserService;
-import me.zhixingye.im.sdk.proxy.BasicProxy;
+import me.zhixingye.im.sdk.proxy.RemoteProxy;
 import me.zhixingye.im.sdk.proxy.ContactServiceProxy;
 import me.zhixingye.im.sdk.proxy.ConversationServiceProxy;
 import me.zhixingye.im.sdk.proxy.GroupServiceProxy;
@@ -55,14 +56,14 @@ public class IMClient {
 
     private Context mAppContext;
 
-    private AccountServiceProxy mAccountServiceProxy;
-    private ContactServiceProxy mContactServiceProxy;
-    private ConversationServiceProxy mConversationServiceProxy;
-    private GroupServiceProxy mGroupServiceProxy;
-    private MessageServiceProxy mMessageServiceProxy;
-    private SMSServiceProxy mSMSServiceProxy;
-    private StorageServiceProxy mStorageServiceProxy;
-    private UserServiceProxy mUserServiceProxy;
+    private AccountService mAccountServiceProxy;
+    private ContactService mContactServiceProxy;
+    private ConversationService mConversationServiceProxy;
+    private GroupService mGroupServiceProxy;
+    private MessageService mMessageServiceProxy;
+    private SMSService mSMSServiceProxy;
+    private StorageService mStorageServiceProxy;
+    private UserService mUserServiceProxy;
 
     private IRemoteService mIRemoteService;
 
@@ -73,14 +74,15 @@ public class IMClient {
     }
 
     private void initProxyService() {
-        mAccountServiceProxy = new AccountServiceProxy();
-        mContactServiceProxy = new ContactServiceProxy();
-        mConversationServiceProxy = new ConversationServiceProxy();
-        mGroupServiceProxy = new GroupServiceProxy();
-        mMessageServiceProxy = new MessageServiceProxy();
-        mSMSServiceProxy = new SMSServiceProxy();
-        mStorageServiceProxy = new StorageServiceProxy();
-        mUserServiceProxy = new UserServiceProxy();
+        mAccountServiceProxy = ProxyHelper.createProxy(new AccountServiceProxy());
+        mContactServiceProxy = ProxyHelper.createProxy(new ContactServiceProxy());
+        mConversationServiceProxy = ProxyHelper.createProxy(new ConversationServiceProxy());
+        mGroupServiceProxy = ProxyHelper.createProxy(new GroupServiceProxy());
+        mMessageServiceProxy = ProxyHelper.createProxy(new MessageServiceProxy());
+        mSMSServiceProxy = ProxyHelper.createProxy(new SMSServiceProxy());
+        mStorageServiceProxy = ProxyHelper.createProxy(new StorageServiceProxy());
+        mUserServiceProxy = ProxyHelper.createProxy(new UserServiceProxy());
+
     }
 
     private void autoBindRemoteService() {
@@ -91,14 +93,14 @@ public class IMClient {
                     public void onServiceConnected(ComponentName name, IBinder service) {
                         mIRemoteService = IRemoteService.Stub.asInterface(service);
 
-                        mAccountServiceProxy.onBindHandle(mIRemoteService);
-                        mContactServiceProxy.onBindHandle(mIRemoteService);
-                        mConversationServiceProxy.onBindHandle(mIRemoteService);
-                        mGroupServiceProxy.onBindHandle(mIRemoteService);
-                        mMessageServiceProxy.onBindHandle(mIRemoteService);
-                        mSMSServiceProxy.onBindHandle(mIRemoteService);
-                        mStorageServiceProxy.onBindHandle(mIRemoteService);
-                        mUserServiceProxy.onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mAccountServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mContactServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mConversationServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mGroupServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mMessageServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mSMSServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mStorageServiceProxy).onBindHandle(mIRemoteService);
+                        ((RemoteProxy) mUserServiceProxy).onBindHandle(mIRemoteService);
                     }
 
                     @Override

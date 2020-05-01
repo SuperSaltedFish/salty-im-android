@@ -10,10 +10,6 @@ import me.zhixingye.salty.widget.listener.Cancelable;
 
 //这里都是一些公共的方法，一般baseActivity或者baseFragment等base都已经实现了
 public interface BasicView<P> {
-
-    //获取一个Presenter实例
-    P getPresenter();
-
     //显示Loading对话框
     void setEnableLoading(boolean isEnable);
 

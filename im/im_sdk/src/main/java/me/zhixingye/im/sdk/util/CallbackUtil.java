@@ -6,14 +6,14 @@ import com.google.protobuf.MessageLite;
 
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
-import me.zhixingye.im.sdk.IResultCallback;
+import me.zhixingye.im.sdk.IRemoteCallback;
 
 /**
  * Created by zhixingye on 2020年02月01日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
 public class CallbackUtil {
-    public static void callCompleted(IResultCallback callback, MessageLite message) {
+    public static void callCompleted(IRemoteCallback callback, MessageLite message) {
         if (callback == null) {
             return;
         }
@@ -24,7 +24,7 @@ public class CallbackUtil {
         }
     }
 
-    public static void callFailure(IResultCallback callback, int code, String error) {
+    public static void callFailure(IRemoteCallback callback, int code, String error) {
         if (callback == null) {
             return;
         }

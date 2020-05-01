@@ -33,7 +33,7 @@ public class StorageServiceImpl implements StorageService {
 
     //初始化过程中传入了storageName
     public StorageServiceImpl() {
-        mConfigurationPreferences = IMCore.get().getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        mConfigurationPreferences = IMCore.getAppContext().getSharedPreferences(TAG, Context.MODE_PRIVATE);
         mAESKey = AESUtil.generateAESKeyInAndroidKeyStore(AES_KET_ALIAS, 192);
         if (mAESKey == null) {
             Logger.w(TAG, "generateAESKeyInAndroidKeyStore fail");
@@ -74,7 +74,7 @@ public class StorageServiceImpl implements StorageService {
         if (TextUtils.isEmpty(userId)) {
             return false;
         }
-        SharedPreferences p = IMCore.get().getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
+        SharedPreferences p = IMCore.getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
             byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
             if (data != null && data.length > 0) {
@@ -93,7 +93,7 @@ public class StorageServiceImpl implements StorageService {
         if (TextUtils.isEmpty(userId)) {
             return "";
         }
-        SharedPreferences p = IMCore.get().getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
+        SharedPreferences p = IMCore.getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
         String value = p.getString(key, null);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
             byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, null);

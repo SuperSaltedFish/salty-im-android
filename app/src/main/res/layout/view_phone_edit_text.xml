@@ -4,12 +4,12 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/mTilCallPrefix"
+        android:id="@+id/mTilPhonePrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/mEtCallPrefix"
+            android:id="@+id/mEtPhonePrefix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:cursorVisible="false"
@@ -25,14 +25,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/mTilTelephone"
+        android:id="@+id/mTilPhoneSuffix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:hint="请输入手机号码">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/mEtTelephone"
+            android:id="@+id/mEtPhoneSuffix"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number" />

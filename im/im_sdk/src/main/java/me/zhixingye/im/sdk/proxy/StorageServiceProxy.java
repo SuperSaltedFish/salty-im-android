@@ -14,7 +14,7 @@ import me.zhixingye.im.tool.Logger;
  */
 
 @SuppressLint("ApplySharedPref")
-public class StorageServiceProxy extends BasicProxy implements StorageService {
+public class StorageServiceProxy implements StorageService, RemoteProxy {
 
     private static final String TAG = "ContactServiceProxy";
 

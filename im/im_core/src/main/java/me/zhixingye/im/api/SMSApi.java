@@ -15,30 +15,20 @@ import me.zhixingye.im.tool.CallbackHelper;
  */
 public class SMSApi extends BasicApi {
 
-    private static volatile SMSApi sSMSApi;
-
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
     public SMSApi(ManagedChannel channel) {
         mSMSServiceStub = SMSServiceGrpc.newStub(channel);
     }
 
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, final RequestCallback<Void> callback) {
+    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
         ObtainSMSCodeReq smsReq = ObtainSMSCodeReq.newBuilder()
                 .setTelephone(telephone)
                 .setCodeType(type)
                 .build();
 
-        mSMSServiceStub.obtainSMSCode(createReq(smsReq), new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), new RequestCallback<ObtainSMSCodeResp>() {
-            @Override
-            public void onCompleted(ObtainSMSCodeResp response) {
-                CallbackHelper.callCompleted(null, callback);
-            }
-
-            @Override
-            public void onFailure(int code, String error) {
-                CallbackHelper.callFailure(code, error, callback);
-            }
-        }));
+        mSMSServiceStub.obtainSMSCode(
+                createReq(smsReq),
+                new DefaultStreamObserver<>(ObtainSMSCodeResp.getDefaultInstance(), callback));
     }
 }

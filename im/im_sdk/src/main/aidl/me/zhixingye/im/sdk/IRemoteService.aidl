@@ -10,7 +10,7 @@ import me.zhixingye.im.sdk.IMessageServiceHandle;
 import me.zhixingye.im.sdk.ISMSServiceHandle;
 import me.zhixingye.im.sdk.IStorageServiceHandle;
 import me.zhixingye.im.sdk.IUserServiceHandle;
-import me.zhixingye.im.sdk.IResultCallback;
+import me.zhixingye.im.sdk.IRemoteCallback;
 
 interface IRemoteService {
     IAccountServiceHandle getAccountServiceHandle();

@@ -1,6 +1,7 @@
 package me.zhixingye.salty.module.splash.presenter;
 
 import android.content.Context;
+import android.os.Handler;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.configure.AppConfig;
@@ -28,12 +29,20 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void checkLoginState(Context context) {
-//        IMClient.init(context.getApplicationContext(), new IMClient.ConnectCallback() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (IMClient.get().getAccountService().isLogged()) {
+                    mSplashView.startHomeActivity();
+                } else {
+                    if (AppConfig.isEverStartedGuide()) {
+                        mSplashView.startLoginActivity();
+                    } else {
+                        mSplashView.startGuideActivity();
+                    }
+                }
+            }
+        }, 300);//延迟是为了防止进程还没起来就调用IMClient
     }
 
 }

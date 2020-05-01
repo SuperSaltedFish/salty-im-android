@@ -16,7 +16,7 @@ import me.zhixingye.im.tool.Logger;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class ContactServiceProxy extends BasicProxy implements ContactService {
+public class ContactServiceProxy implements ContactService, RemoteProxy {
 
     private static final String TAG = "ContactServiceProxy";
 
@@ -36,10 +36,10 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
     @Override
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {
         try {
-            mContactHandle.requestContact(userId, reason, new ResultCallbackWrapper<>(callback));
+            mContactHandle.requestContact(userId, reason, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -47,10 +47,10 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
     @Override
     public void refusedContact(String userId, String reason, RequestCallback<RefusedContactResp> callback) {
         try {
-            mContactHandle.refusedContact(userId, reason, new ResultCallbackWrapper<>(callback));
+            mContactHandle.refusedContact(userId, reason, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -58,10 +58,10 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
     @Override
     public void acceptContact(String userId, RequestCallback<AcceptContactResp> callback) {
         try {
-            mContactHandle.acceptContact(userId, new ResultCallbackWrapper<>(callback));
+            mContactHandle.acceptContact(userId, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -69,10 +69,10 @@ public class ContactServiceProxy extends BasicProxy implements ContactService {
     @Override
     public void deleteContact(String userId, RequestCallback<DeleteContactResp> callback) {
         try {
-            mContactHandle.deleteContact(userId, new ResultCallbackWrapper<>(callback));
+            mContactHandle.deleteContact(userId, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }

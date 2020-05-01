@@ -40,11 +40,11 @@ public class BasicApi {
         AccountService accountService = ServiceAccessor.get(AccountService.class);
 
         GrpcReq req = GrpcReq.newBuilder()
-                .setDeviceId(deviceService.getDeviceId())
+                .setDeviceId(StringUtil.checkNull(deviceService.getDeviceId()))
                 .setOs(GrpcReq.OS.ANDROID)
                 .setLanguage(GrpcReq.Language.CHINESE)
-                .setVersion(deviceService.getAppVersion())
-                .setToken(accountService.getCurrentUserToken())
+                .setVersion(StringUtil.checkNull(deviceService.getAppVersion()))
+                .setToken(StringUtil.checkNull(accountService.getCurrentUserToken()))
                 .setData(data)
                 .build();
 

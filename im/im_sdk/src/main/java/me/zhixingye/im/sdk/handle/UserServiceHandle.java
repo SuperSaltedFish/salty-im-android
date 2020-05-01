@@ -3,7 +3,7 @@ package me.zhixingye.im.sdk.handle;
 
 import android.os.RemoteException;
 
-import me.zhixingye.im.sdk.IResultCallback;
+import me.zhixingye.im.sdk.IRemoteCallback;
 import me.zhixingye.im.sdk.IUserServiceHandle;
 
 /**
@@ -12,22 +12,22 @@ import me.zhixingye.im.sdk.IUserServiceHandle;
  */
 public class UserServiceHandle extends IUserServiceHandle.Stub {
     @Override
-    public void updateUserInfo(String nickname, String description, int sex, long birthday, String location, IResultCallback callback) throws RemoteException {
+    public void updateUserInfo(String nickname, String description, int sex, long birthday, String location, IRemoteCallback callback)  {
 
     }
 
     @Override
-    public void getUserInfoByUserId(String userId, IResultCallback callback) throws RemoteException {
+    public void getUserInfoByUserId(String userId, IRemoteCallback callback)  {
 
     }
 
     @Override
-    public void queryUserInfoByTelephone(String telephone, IResultCallback callback) throws RemoteException {
+    public void queryUserInfoByTelephone(String telephone, IRemoteCallback callback)  {
 
     }
 
     @Override
-    public void queryUserInfoByEmail(String email, IResultCallback callback) throws RemoteException {
+    public void queryUserInfoByEmail(String email, IRemoteCallback callback)  {
 
     }
 }

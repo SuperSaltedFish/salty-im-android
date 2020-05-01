@@ -33,6 +33,7 @@ public class IMCore {
     private static final String TAG = "IMCore";
 
     private volatile static IMCore sClient;
+    private static Context mAppContext;
 
     public synchronized static void tryInit(Context context) {
         if (sClient != null) {
@@ -41,7 +42,8 @@ public class IMCore {
         if (context == null) {
             throw new RuntimeException("context == null");
         }
-        sClient = new IMCore(context);
+        mAppContext = context;
+        sClient = new IMCore();
     }
 
     public static IMCore get() {
@@ -51,11 +53,11 @@ public class IMCore {
         return sClient;
     }
 
-    private Context mAppContext;
+    public static Context getAppContext() {
+        return mAppContext;
+    }
 
-    private IMCore(Context context) {
-        mAppContext = context.getApplicationContext();
-
+    private IMCore() {
         ServiceAccessor.register(AccountService.class, new AccountServiceImpl());
         ServiceAccessor.register(ApiService.class, new ApiServiceImpl());
         ServiceAccessor.register(ContactService.class, new ContactServiceImpl());
@@ -99,11 +101,6 @@ public class IMCore {
 
     public UserService getUserService() {
         return ServiceAccessor.get(UserService.class);
-    }
-
-
-    public Context getAppContext() {
-        return mAppContext;
     }
 
 }

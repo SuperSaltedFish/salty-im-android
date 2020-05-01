@@ -40,7 +40,7 @@ public class UserDao extends AbstractDao<UserProfile> {
                     + COLUMN_NAME_Avatar + " TEXT,"
                     + COLUMN_NAME_Description + " TEXT,"
                     + COLUMN_NAME_Location + " TEXT,"
-                    + COLUMN_NAME_Birthday + " TEXT,"
+                    + COLUMN_NAME_Birthday + " INTEGER,"
                     + COLUMN_NAME_Sex + " INTEGER,"
                     + "PRIMARY KEY (" + COLUMN_NAME_UserId + ")"
                     + ")";

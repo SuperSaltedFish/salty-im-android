@@ -1,7 +1,10 @@
 package me.zhixingye.im.service.impl;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import io.grpc.ManagedChannel;
 import io.grpc.android.AndroidChannelBuilder;
@@ -23,7 +26,7 @@ public class ApiServiceImpl implements ApiService {
         OkHttpChannelBuilder builder = OkHttpChannelBuilder.forTarget(BuildConfig.SERVER_ADDRESS)
                 .usePlaintext();
         mChannel = AndroidChannelBuilder.usingBuilder(builder)
-                .context(IMCore.get().getAppContext().getApplicationContext())
+                .context(IMCore.getAppContext().getApplicationContext())
                 .build();
     }
 
@@ -48,4 +51,5 @@ public class ApiServiceImpl implements ApiService {
         }
         return null;
     }
+
 }

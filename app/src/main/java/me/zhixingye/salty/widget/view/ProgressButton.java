@@ -94,6 +94,9 @@ public class ProgressButton extends ConstraintLayout {
         super.onDetachedFromWindow();
     }
 
+    public void startShowAnim() {
+        startShowAnim(null);
+    }
     public void startShowAnim(@Nullable Animator.AnimatorListener listener) {
         if (mButton.getVisibility() == View.VISIBLE || (mShowAnimator != null && mShowAnimator.isRunning())) {
             return;
@@ -109,6 +112,9 @@ public class ProgressButton extends ConstraintLayout {
         }
     }
 
+    public void startHideAnim() {
+        startHideAnim(null);
+    }
     public void startHideAnim(@Nullable Animator.AnimatorListener listener) {
         if (mButton.getVisibility() == View.INVISIBLE || (mHideAnimator != null && mHideAnimator.isRunning())) {
             return;

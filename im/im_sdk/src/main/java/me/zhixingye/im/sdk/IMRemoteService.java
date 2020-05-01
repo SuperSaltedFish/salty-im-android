@@ -18,7 +18,6 @@ import me.zhixingye.im.sdk.handle.UserServiceHandle;
 
 public class IMRemoteService extends Service {
 
-
     @Override
     public void onCreate() {
         super.onCreate();

@@ -16,7 +16,7 @@ import me.zhixingye.im.tool.Logger;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class UserServiceProxy extends BasicProxy implements UserService {
+public class UserServiceProxy implements UserService, RemoteProxy {
 
     private static final String TAG = "ContactServiceProxy";
 
@@ -40,10 +40,10 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     @Override
     public void updateUserInfo(String nickname, String description, UserProfile.Sex sex, long birthday, String location, RequestCallback<UpdateUserInfoResp> callback) {
         try {
-            mUserHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new ResultCallbackWrapper<>(callback));
+            mUserHandle.updateUserInfo(nickname, description, sex.getNumber(), birthday, location, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -51,10 +51,10 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     @Override
     public void getUserInfoByUserId(String userId, RequestCallback<GetUserInfoResp> callback) {
         try {
-            mUserHandle.getUserInfoByUserId(userId, new ResultCallbackWrapper<>(callback));
+            mUserHandle.getUserInfoByUserId(userId, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -62,10 +62,10 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     @Override
     public void queryUserInfoByTelephone(String telephone, RequestCallback<QueryUserInfoResp> callback) {
         try {
-            mUserHandle.queryUserInfoByTelephone(telephone, new ResultCallbackWrapper<>(callback));
+            mUserHandle.queryUserInfoByTelephone(telephone, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -73,10 +73,10 @@ public class UserServiceProxy extends BasicProxy implements UserService {
     @Override
     public void queryUserInfoByEmail(String email, RequestCallback<QueryUserInfoResp> callback) {
         try {
-            mUserHandle.queryUserInfoByEmail(email, new ResultCallbackWrapper<>(callback));
+            mUserHandle.queryUserInfoByEmail(email, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }

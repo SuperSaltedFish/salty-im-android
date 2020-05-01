@@ -22,7 +22,7 @@ import me.zhixingye.im.tool.Logger;
  * Created by zhixingye on 2019年12月31日.
  * 每一个不曾起舞的日子 都是对生命的辜负
  */
-public class GroupServiceProxy extends BasicProxy implements GroupService {
+public class GroupServiceProxy implements GroupService, RemoteProxy {
 
     private static final String TAG = "ContactServiceProxy";
 
@@ -41,10 +41,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {
         try {
-            mGroupHandle.createGroup(groupName, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.createGroup(groupName, memberUserIdArr, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -52,10 +52,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
         try {
-            mGroupHandle.joinGroup(groupId, reason, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.joinGroup(groupId, reason, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -63,10 +63,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
         try {
-            mGroupHandle.quitGroup(groupId, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.quitGroup(groupId, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -74,10 +74,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
         try {
-            mGroupHandle.addGroupMember(groupId, memberUserIdArr, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.addGroupMember(groupId, memberUserIdArr, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -85,10 +85,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
         try {
-            mGroupHandle.kickGroupMember(groupId, memberUserId, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.kickGroupMember(groupId, memberUserId, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -96,10 +96,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
         try {
-            mGroupHandle.updateGroupName(groupId, groupName, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateGroupName(groupId, groupName, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -107,10 +107,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
         try {
-            mGroupHandle.updateGroupNotice(groupId, notice, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateGroupNotice(groupId, notice, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }
@@ -118,10 +118,10 @@ public class GroupServiceProxy extends BasicProxy implements GroupService {
     @Override
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
         try {
-            mGroupHandle.updateMemberNickname(groupId, memberNickname, new ResultCallbackWrapper<>(callback));
+            mGroupHandle.updateMemberNickname(groupId, memberNickname, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
-            callRemoteFail(callback);
+            ProxyHelper.callRemoteFail(callback);
             CallbackUtil.callRemoteError(callback);
         }
     }

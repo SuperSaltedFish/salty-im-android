@@ -41,7 +41,9 @@ public class GroupApi extends BasicApi {
                 .setGroupName(groupName)
                 .addAllMemberUserIdArr(memberUserIdArr)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(CreateGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(CreateGroupResp.getDefaultInstance(), callback));
     }
 
     public void joinGroup(String groupId, String reason, RequestCallback<JoinGroupResp> callback) {
@@ -49,14 +51,18 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .setReason(reason)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(JoinGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(JoinGroupResp.getDefaultInstance(), callback));
     }
 
     public void quitGroup(String groupId, RequestCallback<QuitGroupResp> callback) {
         QuitGroupReq req = QuitGroupReq.newBuilder()
                 .setGroupId(groupId)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(QuitGroupResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(QuitGroupResp.getDefaultInstance(), callback));
     }
 
     public void addGroupMember(String groupId, List<String> memberUserIdArr, RequestCallback<AddGroupMemberResp> callback) {
@@ -64,7 +70,9 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .addAllMemberUserIdArr(memberUserIdArr)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(AddGroupMemberResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(AddGroupMemberResp.getDefaultInstance(), callback));
     }
 
     public void kickGroupMember(String groupId, String memberUserId, RequestCallback<KickGroupMemberResp> callback) {
@@ -72,7 +80,9 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .setMemberUserId(memberUserId)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(KickGroupMemberResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(KickGroupMemberResp.getDefaultInstance(), callback));
     }
 
     public void updateGroupName(String groupId, String groupName, RequestCallback<UpdateGroupNameResp> callback) {
@@ -80,7 +90,9 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .setGroupName(groupName)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateGroupNameResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(UpdateGroupNameResp.getDefaultInstance(), callback));
     }
 
     public void updateGroupNotice(String groupId, String notice, RequestCallback<UpdateGroupNoticeResp> callback) {
@@ -88,7 +100,9 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .setNotice(notice)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateGroupNoticeResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(UpdateGroupNoticeResp.getDefaultInstance(), callback));
     }
 
     public void updateMemberNickname(String groupId, String memberNickname, RequestCallback<UpdateMemberNicknameResp> callback) {
@@ -96,6 +110,8 @@ public class GroupApi extends BasicApi {
                 .setGroupId(groupId)
                 .setMemberNickname(memberNickname)
                 .build();
-        mGroupServiceStub.createGroup(createReq(req), new DefaultStreamObserver<>(UpdateMemberNicknameResp.getDefaultInstance(), callback));
+        mGroupServiceStub.createGroup(
+                createReq(req),
+                new DefaultStreamObserver<>(UpdateMemberNicknameResp.getDefaultInstance(), callback));
     }
 }

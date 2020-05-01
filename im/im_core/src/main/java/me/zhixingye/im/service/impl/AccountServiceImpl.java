@@ -97,7 +97,7 @@ public class AccountServiceImpl implements AccountService {
                         .putToConfigurationPreferences(STORAGE_KEY_TOKEN, token);
 
                 SQLiteServiceImpl service = new SQLiteServiceImpl(
-                        IMCore.get().getAppContext(),
+                        IMCore.getAppContext(),
                         MD5Util.encrypt16(userId),
                         DATABASE_VERSION);
 
@@ -117,6 +117,9 @@ public class AccountServiceImpl implements AccountService {
 
                 isLogged = true;
                 mLoginLock.release();
+                if(callback!=null){
+                    callback.onCompleted(loginResp);
+                }
             }
 
             @Override
@@ -151,6 +154,11 @@ public class AccountServiceImpl implements AccountService {
         }
         mUserId = null;
         mToken = null;
+    }
+
+    @Override
+    public boolean isLogged() {
+        return !TextUtils.isEmpty(mUserId) && TextUtils.isEmpty(mToken);
     }
 
     @Override

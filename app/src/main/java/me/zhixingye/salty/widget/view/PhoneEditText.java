@@ -18,10 +18,10 @@ import me.zhixingye.salty.R;
  */
 public class PhoneEditText extends LinearLayout {
 
-    private TextInputLayout mTilCallPrefix;
-    private TextInputLayout mTilTelephone;
-    private EditText mEtCallPrefix;
-    private EditText mEtTelephone;
+    private TextInputLayout mTilPhonePrefix;
+    private TextInputLayout mTilPhoneSuffix;
+    private EditText mEtPhonePrefix;
+    private EditText mEtPhoneSuffix;
 
     public PhoneEditText(Context context) {
         this(context, null);
@@ -41,50 +41,51 @@ public class PhoneEditText extends LinearLayout {
 
         LayoutInflater.from(getContext()).inflate(R.layout.view_phone_edit_text, this, true);
 
-        mTilCallPrefix = findViewById(R.id.mTilCallPrefix);
-        mEtCallPrefix = findViewById(R.id.mEtCallPrefix);
-        mTilTelephone = findViewById(R.id.mTilTelephone);
-        mEtTelephone = findViewById(R.id.mEtTelephone);
+        mTilPhonePrefix = findViewById(R.id.mTilPhonePrefix);
+        mEtPhonePrefix = findViewById(R.id.mEtPhonePrefix);
+        mTilPhoneSuffix = findViewById(R.id.mTilPhoneSuffix);
+        mEtPhoneSuffix = findViewById(R.id.mEtPhoneSuffix);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        mTilCallPrefix.setEnabled(enabled);
-        mEtCallPrefix.setEnabled(enabled);
-        mTilTelephone.setEnabled(enabled);
-        mEtTelephone.setEnabled(enabled);
+        mTilPhonePrefix.setEnabled(enabled);
+        mEtPhonePrefix.setEnabled(enabled);
+        mTilPhoneSuffix.setEnabled(enabled);
+        mEtPhoneSuffix.setEnabled(enabled);
     }
 
-    public void setCallPrefixText(String text) {
-        mEtCallPrefix.setText(text);
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        throw new RuntimeException("该view不支持设置OnClickListener");
     }
 
-    public String getCallPrefixText() {
-        CharSequence callPrefix = mEtCallPrefix.getText();
+    public String getPhonePrefixText() {
+        CharSequence callPrefix = mEtPhonePrefix.getText();
         if (TextUtils.isEmpty(callPrefix)) {
             return "";
         }
         return callPrefix.toString();
     }
 
-    public void setTelephoneText(CharSequence text) {
-        mEtTelephone.setText(text);
-    }
-
-    public String getTelephoneText() {
-        CharSequence callPrefix = mEtCallPrefix.getText();
+    public String getPhoneSuffixText(){
+        CharSequence callPrefix = mEtPhoneSuffix.getText();
         if (TextUtils.isEmpty(callPrefix)) {
             return "";
         }
         return callPrefix.toString();
     }
 
-    public void setTelephoneHintText(CharSequence text) {
-        mTilTelephone.setHelperText(text);
+    public void setPhonePrefixText(CharSequence text) {
+        mEtPhonePrefix.setText(text);
     }
 
-    public void setTelephoneErrorText(CharSequence text) {
-        mTilTelephone.setError(text);
+    public void setPhoneSuffixText(CharSequence text){
+        mEtPhoneSuffix.setText(text);
+    }
+
+    public void setError(String error) {
+        mTilPhoneSuffix.setError(error);
     }
 }

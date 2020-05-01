@@ -32,7 +32,9 @@ public class ContactApi extends BasicApi {
                 .setReason(reason)
                 .build();
 
-        mContactServiceStub.requestContact(createReq(req), new DefaultStreamObserver<>(RequestContactResp.getDefaultInstance(), callback));
+        mContactServiceStub.requestContact(
+                createReq(req),
+                new DefaultStreamObserver<>(RequestContactResp.getDefaultInstance(), callback));
     }
 
     public void refusedContact(String userId, String reason, RequestCallback<RefusedContactResp> callback) {
@@ -41,7 +43,9 @@ public class ContactApi extends BasicApi {
                 .setReason(reason)
                 .build();
 
-        mContactServiceStub.refusedContact(createReq(req), new DefaultStreamObserver<>(RefusedContactResp.getDefaultInstance(), callback));
+        mContactServiceStub.refusedContact(
+                createReq(req),
+                new DefaultStreamObserver<>(RefusedContactResp.getDefaultInstance(), callback));
     }
 
     public void acceptContact(String userId, RequestCallback<AcceptContactResp> callback) {
@@ -49,7 +53,9 @@ public class ContactApi extends BasicApi {
                 .setUserId(userId)
                 .build();
 
-        mContactServiceStub.acceptContact(createReq(req), new DefaultStreamObserver<>(AcceptContactResp.getDefaultInstance(), callback));
+        mContactServiceStub.acceptContact(
+                createReq(req),
+                new DefaultStreamObserver<>(AcceptContactResp.getDefaultInstance(), callback));
     }
 
     public void deleteContact(String userId, RequestCallback<DeleteContactResp> callback) {
@@ -57,6 +63,8 @@ public class ContactApi extends BasicApi {
                 .setUserId(userId)
                 .build();
 
-        mContactServiceStub.deleteContact(createReq(req), new DefaultStreamObserver<>(DeleteContactResp.getDefaultInstance(), callback));
+        mContactServiceStub.deleteContact(
+                createReq(req),
+                new DefaultStreamObserver<>(DeleteContactResp.getDefaultInstance(), callback));
     }
 }

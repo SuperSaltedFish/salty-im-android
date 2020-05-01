@@ -11,22 +11,22 @@ import me.zhixingye.im.sdk.IStorageServiceHandle;
  */
 public class StorageServiceHandle extends IStorageServiceHandle.Stub {
     @Override
-    public boolean putToConfigurationPreferences(String key, String value) throws RemoteException {
+    public boolean putToConfigurationPreferences(String key, String value)  {
         return IMCore.get().getStorageService().putToConfigurationPreferences(key,value);
     }
 
     @Override
-    public String getFromConfigurationPreferences(String key) throws RemoteException {
+    public String getFromConfigurationPreferences(String key)  {
         return IMCore.get().getStorageService().getFromConfigurationPreferences(key);
     }
 
     @Override
-    public boolean putToUserPreferences(String key, String value) throws RemoteException {
+    public boolean putToUserPreferences(String key, String value)  {
         return IMCore.get().getStorageService().putToUserPreferences(key,value);
     }
 
     @Override
-    public String getFromUserPreferences(String key) throws RemoteException {
+    public String getFromUserPreferences(String key)  {
         return IMCore.get().getStorageService().getFromUserPreferences(key);
     }
 }

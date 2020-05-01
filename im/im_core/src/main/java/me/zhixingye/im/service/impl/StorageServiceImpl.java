@@ -29,6 +29,8 @@ public class StorageServiceImpl implements StorageService {
 
     private static final String AES_KET_ALIAS = "AES_Salty";
 
+    private static final byte[] IV = {1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8};
+
     private SharedPreferences mConfigurationPreferences;
     private Key mAESKey;
 
@@ -46,7 +48,7 @@ public class StorageServiceImpl implements StorageService {
     //put一个数据到ConfigurationPreferences
     public boolean putToConfigurationPreferences(String key, String value) {
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
-            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
+            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, IV);
             if (data != null && data.length > 0) {
                 value = Base64Util.encodeToString(data);
             } else {
@@ -61,7 +63,7 @@ public class StorageServiceImpl implements StorageService {
     public String getFromConfigurationPreferences(String key) {
         String value = mConfigurationPreferences.getString(key, null);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
-            byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, null);
+            byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, IV);
             if (data != null && data.length > 0) {
                 value = new String(data, Charset.defaultCharset());
             }
@@ -77,7 +79,7 @@ public class StorageServiceImpl implements StorageService {
         }
         SharedPreferences p = IMCore.getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
-            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, null);
+            byte[] data = AESUtil.encrypt(value.getBytes(Charset.defaultCharset()), mAESKey, IV);
             if (data != null && data.length > 0) {
                 value = Base64Util.encodeToString(data);
             } else {
@@ -97,7 +99,7 @@ public class StorageServiceImpl implements StorageService {
         SharedPreferences p = IMCore.getAppContext().getSharedPreferences(userId, Context.MODE_PRIVATE);
         String value = p.getString(key, null);
         if (!TextUtils.isEmpty(value) && mAESKey != null) {
-            byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, null);
+            byte[] data = AESUtil.decrypt(Base64Util.decode(value), mAESKey, IV);
             if (data != null && data.length > 0) {
                 value = new String(data, Charset.defaultCharset());
             }

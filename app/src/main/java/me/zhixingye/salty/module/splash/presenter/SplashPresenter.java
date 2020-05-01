@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import me.zhixingye.im.sdk.IMClient;
+import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
 
@@ -42,6 +43,8 @@ public class SplashPresenter implements SplashContract.Presenter {
                         mSplashView.startGuideActivity();
                     }
                 }
+                IMClient.get().getStorageService().putToConfigurationPreferences("22", "22");
+                Logger.e("sssssssssssss",  IMClient.get().getStorageService().getFromConfigurationPreferences("22")); ;
             }
         }, 300);//延迟是为了防止进程还没起来就调用IMClient
     }

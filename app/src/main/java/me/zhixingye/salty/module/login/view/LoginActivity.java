@@ -112,6 +112,7 @@ public class LoginActivity
     @Override
     public void startHomeActivity() {
         MainActivity.startActivity(this);
+        finish();
     }
 
     @Override

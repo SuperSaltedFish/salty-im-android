@@ -7,6 +7,7 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
 import java.io.IOException;
+import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.spec.InvalidParameterSpecException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -53,11 +55,11 @@ public class AESUtil {
         DEFAULT_KEY_SIZE = 192;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             AES = "AES";
-            BLOCK_MODE = "ECB";
+            BLOCK_MODE = "CBC";
             ENCRYPTION_PADDING = "PKCS7Padding";
         } else {
             AES = KeyProperties.KEY_ALGORITHM_AES;
-            BLOCK_MODE = KeyProperties.BLOCK_MODE_ECB;
+            BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC;
             ENCRYPTION_PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7;
         }
         ALGORITHM = String.format("%s/%s/%s", AES, BLOCK_MODE, ENCRYPTION_PADDING);
@@ -106,6 +108,7 @@ public class AESUtil {
                 builder.setBlockModes(BLOCK_MODE);
                 builder.setEncryptionPaddings(ENCRYPTION_PADDING);
                 builder.setKeySize(keySize);
+                builder.setRandomizedEncryptionRequired(false);
                 builder.setCertificateSubject(new X500Principal("CN=" + keyAlias));
                 generator.init(builder.build());
                 key = generator.generateKey();
@@ -145,7 +148,9 @@ public class AESUtil {
             if (iv == null) {
                 cipher.init(Cipher.ENCRYPT_MODE, key);
             } else {
-                cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
+                AlgorithmParameters params = AlgorithmParameters.getInstance(AES);
+                params.init(new IvParameterSpec(iv));
+                cipher.init(Cipher.ENCRYPT_MODE, key, params);
             }
             return cipher.doFinal(content);
         } catch (NoSuchAlgorithmException
@@ -153,7 +158,8 @@ public class AESUtil {
                 | InvalidKeyException
                 | BadPaddingException
                 | InvalidAlgorithmParameterException
-                | IllegalBlockSizeException e) {
+                | IllegalBlockSizeException
+                | InvalidParameterSpecException e) {
             Logger.d(TAG, e.toString(), e);
         }
         return null;
@@ -174,7 +180,9 @@ public class AESUtil {
             if (iv == null) {
                 cipher.init(Cipher.DECRYPT_MODE, key);
             } else {
-                cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+                AlgorithmParameters params = AlgorithmParameters.getInstance("AES");
+                params.init(new IvParameterSpec(iv));
+                cipher.init(Cipher.DECRYPT_MODE, key, params);
             }
             return cipher.doFinal(content);
         } catch (NoSuchAlgorithmException
@@ -182,7 +190,8 @@ public class AESUtil {
                 | IllegalBlockSizeException
                 | InvalidKeyException
                 | InvalidAlgorithmParameterException
-                | BadPaddingException e) {
+                | BadPaddingException
+                | InvalidParameterSpecException e) {
             Logger.d(TAG, e.toString(), e);
         }
         return null;

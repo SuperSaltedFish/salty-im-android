@@ -29,11 +29,11 @@ import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
+import me.zhixingye.salty.widget.view.SaltyToast;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -98,7 +98,6 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             if (mDefaultToolbar != null) {
                 setSupportActionBar(mDefaultToolbar);
                 setTitle("");
-                setDisplayHomeAsUpEnabled(true);
             }
         }
         initPresenter();//MVP模式，这里开始初始化presenter,注意了，这个方法应该在init()方法之前。
@@ -259,18 +258,16 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         mVibrator.vibrate(milliseconds);
     }
 
-    public void showToast(String content) {
-        showToast(content, Toast.LENGTH_SHORT);
+    public void showShortToast(String content, @SaltyToast.ToastType int type) {
+        showToast(content, type, Toast.LENGTH_SHORT);
     }
 
-    public void showLongToast(String content) {
-        showToast(content, Toast.LENGTH_LONG);
+    public void showLongToast(String content, @SaltyToast.ToastType int type) {
+        showToast(content, type, Toast.LENGTH_LONG);
     }
 
-    public void showToast(String content, int duration) {
-        Toast toast = Toast.makeText(this, content, duration);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+    public void showToast(String content, @SaltyToast.ToastType int type, int duration) {
+        SaltyToast.showToast(content, type, duration);
     }
 
     //强制开启键盘
@@ -367,7 +364,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         if (TextUtils.isEmpty(error)) {
             return;
         }
-        showToast(error);
+        showShortToast(error,SaltyToast.TYPE_ERROR);
         vibrate(50);
     }
 

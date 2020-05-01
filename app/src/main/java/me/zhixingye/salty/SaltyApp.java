@@ -1,6 +1,7 @@
 package me.zhixingye.salty;
 
 import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 
@@ -20,9 +21,12 @@ import me.zhixingye.salty.util.AndroidHelper;
  */
 public class SaltyApp extends Application {
 
+    private static Context sAppContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sAppContext = this;
 
         if (TextUtils.equals(SystemUtils.getCurrentProcessName(this), getPackageName())) {
             AppConfig.init(this);
@@ -37,6 +41,10 @@ public class SaltyApp extends Application {
     private void setupThirdPart() {
         EmojiCompat.init(new BundledEmojiCompatConfig(this));
         AutoSizeConfig.getInstance().setDesignWidthInDp(420).setBaseOnWidth(true).setExcludeFontScale(true);
+    }
+
+    public static Context getAppContext() {
+        return sAppContext;
     }
 
 }

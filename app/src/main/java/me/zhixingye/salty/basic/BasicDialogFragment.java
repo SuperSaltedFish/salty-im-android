@@ -27,11 +27,11 @@ import androidx.annotation.StyleRes;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
+import me.zhixingye.salty.widget.view.SaltyToast;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -229,18 +229,16 @@ public abstract class BasicDialogFragment<P extends BasicPresenter> extends Dial
         mVibrator.vibrate(milliseconds);
     }
 
-    public void showToast(String content) {
-        showToast(content, Toast.LENGTH_SHORT);
+    public void showShortToast(String content, @SaltyToast.ToastType int type) {
+        showToast(content, type, Toast.LENGTH_SHORT);
     }
 
-    public void showLongToast(String content) {
-        showToast(content, Toast.LENGTH_LONG);
+    public void showLongToast(String content, @SaltyToast.ToastType int type) {
+        showToast(content, type, Toast.LENGTH_LONG);
     }
 
-    public void showToast(String content, int duration) {
-        Toast toast = Toast.makeText(mContext, content, duration);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+    public void showToast(String content, @SaltyToast.ToastType int type, int duration) {
+        SaltyToast.showToast(content, type, duration);
     }
 
     //是否显示loading对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
@@ -288,7 +286,10 @@ public abstract class BasicDialogFragment<P extends BasicPresenter> extends Dial
 
     //显示一个Error错误，默认使用toast实现的，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public void showError(String error) {
-        showToast(error);
+        if (TextUtils.isEmpty(error)) {
+            return;
+        }
+        showShortToast(error,SaltyToast.TYPE_ERROR);
         vibrate(50);
     }
 
@@ -324,15 +325,13 @@ public abstract class BasicDialogFragment<P extends BasicPresenter> extends Dial
                 try {
                     mPresenter = (P) pClass.newInstance();
                 } catch (Exception e) {
-                    Logger.e(TAG, "初始化Presenter失败,class:" + pClass.getName(), e);
-                    return;
+                    throw new RuntimeException("初始化Presenter失败,class:" + pClass.getName(), e);
                 }
 
                 try {
                     mPresenter.attachView(view);
                 } catch (ClassCastException e) {
-                    Logger.e(TAG, "Presenter与view不匹配", e);
-                    return;
+                    throw new RuntimeException("初始化Presenter失败,class:", e);
                 }
             }
             return;

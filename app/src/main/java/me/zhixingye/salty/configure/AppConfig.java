@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
  */
 public class AppConfig {
 
+    public static final int MIN_TELEPHONE_LENGTH = 8;
+
     private static final String TAG = "AppConfig";
 
     private static SharedPreferences sConfigPreferences;

@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_horizontal"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
     tools:context="me.zhixingye.salty.module.login.view.LoginActivity">
 
 
@@ -32,7 +33,7 @@
 
     <include
         android:id="@+id/mTilPassword"
-        layout="@layout/include_password_edit_text"
+        layout="@layout/layout_password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -79,24 +80,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="注册账号"
+        android:text="找回密码"
         app:layout_constraintBottom_toBottomOf="@id/mIvDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/mIvDivider"
         app:layout_constraintTop_toTopOf="@id/mIvDivider" />
 
-
-    <TextView
-        android:id="@+id/mTvCopyright"
-        android:layout_width="match_parent"
+    <include
+        layout="@layout/layout_copyright"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal|bottom"
         android:paddingBottom="8dp"
-        android:text="Copyright © 2016-2020 咸鱼部落 版权所有"
-        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/mGlCentre"

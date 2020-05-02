@@ -23,7 +23,7 @@ ext {
 
             zxing                 : "3.4.0",
             autosize              : "1.1.2",
-            leakcanary            : "2.1",
+            leakcanary            : "2.2",
             glide                 : "4.11.0",
             map                   : "latest.integration",
 

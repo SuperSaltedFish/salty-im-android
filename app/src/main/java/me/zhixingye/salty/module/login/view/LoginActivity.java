@@ -58,7 +58,7 @@ public class LoginActivity
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS);
+        setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
         mBtnRegister.setOnClickListener(mOnClickListener);
         mBtnResetPassword.setOnClickListener(mOnClickListener);
         mPBtnLogin.setOnClickListener(mOnClickListener);
@@ -72,7 +72,7 @@ public class LoginActivity
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            mTilPassword.setError("请输入密码");
+            mTilPassword.setError("密码不能为空，请输入密码");
             return;
         }
 
@@ -84,10 +84,6 @@ public class LoginActivity
         });
     }
 
-    private void gotoRegisterActivity() {
-        RegisterActivity.startActivity(this);
-    }
-
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -96,17 +92,22 @@ public class LoginActivity
                     tryLogin();
                     break;
                 case R.id.mBtnRegister:
-                    LoginActivity.this.gotoRegisterActivity();
+                    startRegisterActivity();
                     break;
                 case R.id.mBtnResetPassword:
+                    startPhoneVerifyActivity();
                     break;
             }
         }
     };
 
     @Override
-    public void jumpToVerifyPage() {
+    public void startPhoneVerifyActivity() {
+        PhoneVerifyCodeActivity.startActivity(this);
+    }
 
+    public void startRegisterActivity() {
+        RegisterActivity.startActivity(this);
     }
 
     @Override

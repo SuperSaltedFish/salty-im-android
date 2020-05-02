@@ -1,7 +1,9 @@
 package me.zhixingye.salty.widget.view;
 
 import android.content.Context;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.EditText;
@@ -46,6 +48,23 @@ public class PhoneEditText extends LinearLayout {
         mEtPhonePrefix = findViewById(R.id.mEtPhonePrefix);
         mTilPhoneSuffix = findViewById(R.id.mTilPhoneSuffix);
         mEtPhoneSuffix = findViewById(R.id.mEtPhoneSuffix);
+
+        mEtPhoneSuffix.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mTilPhoneSuffix.setError(null);
+            }
+        });
     }
 
     @Override

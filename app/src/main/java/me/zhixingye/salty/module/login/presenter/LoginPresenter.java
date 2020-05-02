@@ -42,7 +42,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     protected boolean onError(int code, String error) {
                         if (code == ResponseCode.REMOTE_NEED_LOGIN_AUTH.getCode()) {
-                            mLoginView.jumpToVerifyPage();
+                            mLoginView.startPhoneVerifyActivity();
                             return true;
                         }
                         return false;

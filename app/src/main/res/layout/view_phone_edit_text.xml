@@ -29,13 +29,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:hint="请输入手机号码">
+        android:hint="手机号码: 8 - 11位数字">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/mEtPhoneSuffix"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="11" />
 
     </com.google.android.material.textfield.TextInputLayout>
 </merge>

@@ -35,7 +35,7 @@ public class AnimationUtil {
                 .setDuration(millisecond);
     }
 
-    public static void errorTranslateAnim(View view) {
+    public static void shakeAnim(View view) {
         TranslateAnimation animation = new TranslateAnimation(-8, 8, 0, 0);
         animation.setDuration(20);
         animation.setRepeatCount(4);

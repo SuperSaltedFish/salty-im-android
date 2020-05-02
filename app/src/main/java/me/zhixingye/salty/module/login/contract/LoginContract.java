@@ -15,7 +15,7 @@ public class LoginContract {
 
     public interface View extends BasicView<Presenter> {
 
-        void jumpToVerifyPage();
+        void startPhoneVerifyActivity();
 
         void startHomeActivity();
     }

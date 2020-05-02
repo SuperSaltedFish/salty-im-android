@@ -53,7 +53,7 @@ public class ProgressButton extends ConstraintLayout {
     public ProgressButton(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs);
-        if(!isInEditMode()){
+        if (!isInEditMode()) {
             mTransparentDialog = new TransparentDialog(context);
         }
     }
@@ -67,7 +67,7 @@ public class ProgressButton extends ConstraintLayout {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ProgressButton);
             setText(array.getString(R.styleable.ProgressButton_text));
             mButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ProgressButton_textSize, mButton.getTextSize()));
-            setEnabled( array.getBoolean(R.styleable.ProgressButton_enabled,true));
+            setEnabled(array.getBoolean(R.styleable.ProgressButton_enabled, true));
             array.recycle();
         }
 
@@ -98,6 +98,7 @@ public class ProgressButton extends ConstraintLayout {
     public void startShowAnim() {
         startShowAnim(null);
     }
+
     public void startShowAnim(@Nullable Animator.AnimatorListener listener) {
         if (mButton.getVisibility() == View.VISIBLE || (mShowAnimator != null && mShowAnimator.isRunning())) {
             return;
@@ -116,6 +117,7 @@ public class ProgressButton extends ConstraintLayout {
     public void startHideAnim() {
         startHideAnim(null);
     }
+
     public void startHideAnim(@Nullable Animator.AnimatorListener listener) {
         if (mButton.getVisibility() == View.INVISIBLE || (mHideAnimator != null && mHideAnimator.isRunning())) {
             return;
@@ -225,13 +227,13 @@ public class ProgressButton extends ConstraintLayout {
 
     @Override
     public void setEnabled(boolean enabled) {
-        recursiveSetEnabled(this,enabled);
+        recursiveSetEnabled(this, enabled);
         super.setEnabled(enabled);
     }
 
     @Override
     public void setClickable(boolean clickable) {
-        recursiveSetClickable(this,clickable);
+        recursiveSetClickable(this, clickable);
         super.setClickable(clickable);
     }
 

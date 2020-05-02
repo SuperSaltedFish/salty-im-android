@@ -14,7 +14,6 @@ import me.zhixingye.salty.basic.BasicView;
 public class LoginContract {
 
     public interface View extends BasicView<Presenter> {
-
         void startPhoneVerifyActivity();
 
         void startHomeActivity();

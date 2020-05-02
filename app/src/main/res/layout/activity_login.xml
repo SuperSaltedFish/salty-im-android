@@ -12,6 +12,13 @@
     android:gravity="center_horizontal"
     tools:context="me.zhixingye.salty.module.login.view.LoginActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mGlCentre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.42" />
+
 
     <ImageView
         android:layout_width="280dp"
@@ -66,10 +73,10 @@
 
     <ImageView
         android:id="@+id/mIvDivider"
-        android:layout_width="1dp"
-        android:layout_height="32dp"
+        android:layout_width="1px"
+        android:layout_height="28dp"
         android:background="@color/dividerColor"
-        app:layout_constraintBottom_toTopOf="@id/mTvCopyright"
+        app:layout_constraintBottom_toTopOf="@id/mTvThirdPartLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mPBtnLogin" />
@@ -87,6 +94,7 @@
         app:layout_constraintTop_toTopOf="@id/mIvDivider" />
 
     <include
+        android:id="@+id/mTvCopyright"
         layout="@layout/layout_copyright"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,13 +103,64 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/mGlCentre"
+    <TextView
+        android:id="@+id/mTvThirdPartLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45" />
+        android:layout_marginBottom="12dp"
+        android:text="是用其他方式登录"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/mIvWeChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/mIvWeChat"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_wechat"
+        app:layout_constraintBottom_toTopOf="@id/mTvCopyright"
+        app:layout_constraintEnd_toStartOf="@id/mIvQQ"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/mIvQQ"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_qq"
+        app:layout_constraintBottom_toBottomOf="@id/mIvWeChat"
+        app:layout_constraintEnd_toStartOf="@id/mIvTwitter"
+        app:layout_constraintStart_toEndOf="@id/mIvWeChat"
+        app:layout_constraintTop_toTopOf="@id/mIvWeChat" />
+
+    <ImageView
+        android:id="@+id/mIvTwitter"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_twitter"
+        app:layout_constraintBottom_toBottomOf="@id/mIvWeChat"
+        app:layout_constraintEnd_toStartOf="@id/mIvFacebook"
+        app:layout_constraintStart_toEndOf="@id/mIvQQ"
+        app:layout_constraintTop_toTopOf="@id/mIvWeChat" />
+
+    <ImageView
+        android:id="@+id/mIvFacebook"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_facebook"
+        app:layout_constraintBottom_toBottomOf="@id/mIvWeChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mIvTwitter"
+        app:layout_constraintTop_toTopOf="@id/mIvWeChat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

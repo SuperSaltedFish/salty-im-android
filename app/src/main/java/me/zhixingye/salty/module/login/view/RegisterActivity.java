@@ -1,17 +1,28 @@
 package me.zhixingye.salty.module.login.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
+import me.zhixingye.salty.module.login.contract.RegisterContract;
+import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.util.RegexUtil;
 import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
@@ -23,7 +34,7 @@ import me.zhixingye.salty.widget.view.ProgressButton;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class RegisterActivity extends BasicCompatActivity {
+public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> implements RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";
 
@@ -39,7 +50,7 @@ public class RegisterActivity extends BasicCompatActivity {
     private EditText mEtConfirmPassword;
     private TextView mTvRuleConsistency;
     private ProgressButton mPBtnNext;
-    private TextView mTvTermRules;
+    private TextView mTvAgreement;
 
     @Override
     protected int getLayoutID() {
@@ -56,7 +67,7 @@ public class RegisterActivity extends BasicCompatActivity {
         mEtConfirmPassword = findViewById(R.id.mEtConfirmPassword);
         mTvRuleConsistency = findViewById(R.id.mTvRuleConsistency);
         mPBtnNext = findViewById(R.id.mPBtnNext);
-        mTvTermRules = findViewById(R.id.mTvTermRules);
+        mTvAgreement = findViewById(R.id.mTvAgreement);
     }
 
     @Override
@@ -65,8 +76,10 @@ public class RegisterActivity extends BasicCompatActivity {
         setDisplayHomeAsUpEnabled(true);
 
         setupPasswordRuleVerificationAnimation();
+        setupUserAgreement();
 
         mPBtnNext.setOnClickListener(mOnClickListener);
+
     }
 
     private void setupPasswordRuleVerificationAnimation() {
@@ -95,8 +108,24 @@ public class RegisterActivity extends BasicCompatActivity {
         });
     }
 
+    private void setupUserAgreement() {
+        String userAgreement = "注册即代表您同意";
+        String focus = "《咸鱼协议》";
+        int startIndex = userAgreement.length();
+        SpannableString sStr = new SpannableString(userAgreement + focus);
+        sStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)) {
+            @Override
+            public void updateDrawState(@NonNull TextPaint textPaint) {
+                super.updateDrawState(textPaint);
+                textPaint.setFakeBoldText(true);
+            }
+        }, startIndex, startIndex + focus.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mTvAgreement.setText(sStr);
+    }
+
     private void tryNext() {
-        String telephone = mPetPhone.getPhoneSuffixText();
+        final String telephone = mPetPhone.getPhoneSuffixText();
         if (TextUtils.isEmpty(telephone)) {
             mPetPhone.setError("请输入一个合法的手机号码");
             return;
@@ -117,6 +146,13 @@ public class RegisterActivity extends BasicCompatActivity {
             AnimationUtil.shakeAnim(mTvRuleConsistency);
             return;
         }
+
+        mPBtnNext.startHideAnim(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mPresenter.obtainTelephoneRegisterVerifyCode(telephone);
+            }
+        });
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -130,4 +166,14 @@ public class RegisterActivity extends BasicCompatActivity {
         }
     };
 
+    @Override
+    public void startPhoneVerifyActivity() {
+        PhoneVerifyCodeActivity.startActivity(this);
+    }
+
+    @Override
+    public void showError(String error) {
+        super.showError(error);
+        mPBtnNext.startShowAnim();
+    }
 }

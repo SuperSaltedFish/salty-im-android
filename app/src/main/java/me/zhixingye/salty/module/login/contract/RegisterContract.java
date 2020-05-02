@@ -11,11 +11,11 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class RegisterContract {
     public interface View extends BasicView<Presenter> {
-        void jumpToVerifyPage();
+        void startPhoneVerifyActivity();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void obtainRegisterVerifyCode(String username);
+        void obtainTelephoneRegisterVerifyCode(String telephone);
     }
 }

@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:clipChildren="false"
     android:orientation="vertical"
     tools:context="me.zhixingye.salty.module.login.view.RegisterActivity">
 
@@ -32,9 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="20dp"
-        android:text="现在使用您的电话和密码注册"
+        android:text="现在使用您的电话和密码进行注册"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp" />
 
     <include
@@ -63,11 +63,11 @@
         app:text="下一步" />
 
     <TextView
-        android:id="@+id/mTvTermRules"
+        android:id="@+id/mTvAgreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:textSize="14sp" />
 
 </LinearLayout>

@@ -96,6 +96,8 @@ public class LoginActivity
         if (TextUtils.isEmpty(password)) {
             return;
         }
+        mPetPhone.setPhoneSuffixText(telephone);
+        mEtPassword.setText(password);
         mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {

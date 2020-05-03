@@ -64,10 +64,8 @@ public class RegisterSuccessfulActivity extends BasicCompatActivity {
     }
 
     private void gotoLoginActivity(String telephone, String password) {
-        if (!TextUtils.isEmpty(telephone) && !TextUtils.isEmpty(password)) {
-            LoginActivity.startActivityByTelephoneAccount(this, telephone, password);
-            finish();
-        }
+        LoginActivity.startActivityByTelephoneAccount(this, telephone, password);
+        finish();
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {

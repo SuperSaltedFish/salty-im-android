@@ -34,7 +34,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                 new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mRegisterView, false) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
-
+                        mRegisterView.startPhoneVerifyActivity();
                     }
                 });
     }

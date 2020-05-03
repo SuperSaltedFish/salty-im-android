@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.zhixingye.salty" >
+    package="me.zhixingye.salty">
     <!-- 以下为不需要手动申请的权限 -->
     <!-- 允许程序振动 -->
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 允许程序访问网络连接 -->
@@ -25,41 +25,40 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".module.login.view.ResetLoginPasswordActivity" >
-        </activity>
-        <activity android:name=".module.login.view.PhoneVerifyCodeActivity" />
-        <activity android:name=".module.login.view.RegisterActivity" />
-        <activity android:name=".TestActivity" >
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".module.splash.view.SplashActivity"
-            android:theme="@style/SplashTheme" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        android:theme="@style/AppTheme">
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
+        <activity android:name=".TestActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".module.splash.view.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
+        <activity android:name=".module.login.view.PhoneSMSVerifyActivity" />
+        <activity android:name=".module.login.view.RegisterActivity" />
         <activity android:name=".module.main.view.MainActivity" />
         <activity android:name=".module.login.view.LoginActivity" />
         <activity android:name=".module.splash.view.GuideActivity" />
+
     </application>
 
 </manifest>

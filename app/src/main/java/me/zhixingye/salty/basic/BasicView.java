@@ -13,10 +13,10 @@ import me.zhixingye.salty.widget.view.SaltyToast;
 //这里都是一些公共的方法，一般baseActivity或者baseFragment等base都已经实现了
 public interface BasicView<P> {
     //显示Loading对话框
-    void setEnableLoading(boolean isEnable);
+    void setDisplayLoading(boolean isEnable);
 
     //显示Loading对话框，并且Loading是允许取消的
-    void setEnableLoading(boolean isEnable, Cancelable cancelableTask);
+    void setDisplayLoading(boolean isEnable, Cancelable cancelableTask);
 
     //展示对话框
     void showDialog(String content);

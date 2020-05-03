@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,15 +156,15 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         SaltyToast.showToast(content, type, duration);
     }
 
-    public void setEnableLoading(boolean isEnable) {
-        setEnableLoading(isEnable, null);
+    public void setDisplayLoading(boolean isDisplay) {
+        setDisplayLoading(isDisplay, null);
     }
 
-    public void setEnableLoading(boolean isEnable, final Cancelable cancelable) {
+    public void setDisplayLoading(boolean isDisplay, final Cancelable cancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext, getString(R.string.Hint_Loading));
         }
-        if (isEnable) {
+        if (isDisplay) {
             if (cancelable != null) {
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

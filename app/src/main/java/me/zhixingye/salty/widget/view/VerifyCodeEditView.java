@@ -76,7 +76,7 @@ public class VerifyCodeEditView extends LinearLayout {
         mTextColor = Color.BLACK;
         mItemBackground = null;
         isPasswordMode = false;
-        mItemCount = 4;
+        mItemCount = 6;
         mEditTextList = new ArrayList<>();
         this.setOnClickListener(mOnClickListener);
     }

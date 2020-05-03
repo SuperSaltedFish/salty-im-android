@@ -57,9 +57,9 @@ public class SaltyToast {
         Toast toast = new Toast(SaltyApp.getAppContext());
         toast.setView(v);
         toast.setGravity(
-                Gravity.CENTER_HORIZONTAL | Gravity.TOP,
+                Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,
                 0,
-                (int) (AndroidHelper.getScreenHeight() * 0.7));
+                (int) (AndroidHelper.getScreenHeight() * 0.2));
         toast.setDuration(duration);
         toast.show();
     }

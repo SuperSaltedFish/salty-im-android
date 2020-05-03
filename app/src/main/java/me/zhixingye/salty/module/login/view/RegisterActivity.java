@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -96,14 +95,14 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
                 mTvRuleCombination.setEnabled(
                         !TextUtils.isEmpty(s)
                                 && RegexUtil.isContainsNumbersOrLettersOrSymbol(s));
-                mTvRuleConsistency.setEnabled(TextUtils.equals(s, mEtConfirmPassword.getText()));
+                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtConfirmPassword.getText()));
             }
         });
 
         mEtConfirmPassword.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                mTvRuleConsistency.setEnabled(TextUtils.equals(s, mEtPassword.getText()));
+                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
             }
         });
     }
@@ -113,13 +112,11 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         String focus = "《咸鱼协议》";
         int startIndex = userAgreement.length();
         SpannableString sStr = new SpannableString(userAgreement + focus);
-        sStr.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)) {
-            @Override
-            public void updateDrawState(@NonNull TextPaint textPaint) {
-                super.updateDrawState(textPaint);
-                textPaint.setFakeBoldText(true);
-            }
-        }, startIndex, startIndex + focus.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sStr.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
+                startIndex,
+                startIndex + focus.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mTvAgreement.setText(sStr);
     }
@@ -167,8 +164,19 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     };
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mEtPassword.setText("");
+        mEtConfirmPassword.setText("");
+    }
+
+    @Override
     public void startPhoneVerifyActivity() {
-        PhoneVerifyCodeActivity.startActivity(this);
+        mPBtnNext.startShowAnim();
+        PhoneSMSVerifyActivity.startActivityToRegister(
+                this,
+                mPetPhone.getPhoneSuffixText(),
+                mEtPassword.getText().toString());
     }
 
     @Override

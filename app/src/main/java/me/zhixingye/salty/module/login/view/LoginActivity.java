@@ -62,6 +62,8 @@ public class LoginActivity
         mBtnRegister.setOnClickListener(mOnClickListener);
         mBtnResetPassword.setOnClickListener(mOnClickListener);
         mPBtnLogin.setOnClickListener(mOnClickListener);
+
+        setDisplayLoading(true);
     }
 
     private void tryLogin() {
@@ -102,8 +104,17 @@ public class LoginActivity
     };
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mEtPassword.setText("");
+    }
+
+    @Override
     public void startPhoneVerifyActivity() {
-        PhoneVerifyCodeActivity.startActivity(this);
+        PhoneSMSVerifyActivity.startActivityToLogin(
+                this,
+                mPetPhone.getPhoneSuffixText(),
+                mEtPassword.getText().toString());
     }
 
     public void startRegisterActivity() {

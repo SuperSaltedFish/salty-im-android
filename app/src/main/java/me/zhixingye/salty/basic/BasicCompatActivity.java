@@ -10,7 +10,6 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -315,15 +314,15 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     }
 
     //是否显示loading对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
-    public void setEnableLoading(boolean isEnable) {
-        setEnableLoading(isEnable, null);
+    public void setDisplayLoading(boolean isDisplay) {
+        setDisplayLoading(isDisplay, null);
     }
 
-    public void setEnableLoading(boolean isEnable, final Cancelable cancelable) {
+    public void setDisplayLoading(boolean isDisplay, final Cancelable cancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this, getString(R.string.Hint_Loading));
         }
-        if (isEnable) {
+        if (isDisplay) {
             //显示对话框之前把键盘隐藏
             hideSoftKeyboard();
             if (cancelable != null) {
@@ -364,7 +363,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         if (TextUtils.isEmpty(error)) {
             return;
         }
-        showShortToast(error,SaltyToast.TYPE_ERROR);
+        showShortToast(error, SaltyToast.TYPE_ERROR);
         vibrate(50);
     }
 

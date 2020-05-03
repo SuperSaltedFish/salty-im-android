@@ -30,7 +30,7 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
         this.isEnableLoading = isEnableLoading;
         this.isAutoDismissLoadingInSuccessful = isAutoDismissLoadingInSuccessful;
         if (isEnableLoading && lifecycleView != null) {
-            lifecycleView.setEnableLoading(true);
+            lifecycleView.setDisplayLoading(true);
         }
     }
 
@@ -40,13 +40,12 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
         return false;
     }
 
-
     @Override
     public void onCompleted(T response) {
         BasicView view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
             if (isEnableLoading && isAutoDismissLoadingInSuccessful) {
-                view.setEnableLoading(false);
+                view.setDisplayLoading(false);
             }
             onSuccess(response);
         }
@@ -57,7 +56,7 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
         BasicView view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
             if (isEnableLoading) {
-                view.setEnableLoading(false);
+                view.setDisplayLoading(false);
             }
             if (!onError(code, error)) {
                 view.showError(error);

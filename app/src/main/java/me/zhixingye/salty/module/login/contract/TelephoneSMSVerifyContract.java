@@ -9,26 +9,24 @@ import me.zhixingye.salty.basic.BasicView;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class VerifyContract {
+public class TelephoneSMSVerifyContract {
     public interface View extends BasicView<Presenter> {
-
         void showCountDown();
 
         void startHomeActivity();
 
-        void jumpToLoginPage();
+        void showRegisterSuccessfulPage();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
+        void loginByTelephone(String telephone, String password, String verifyCode);
 
-        void login(String username, String password, String verifyCode);
+        void registerByTelephone(String telephone, String password, String verifyCode);
 
-        void register(String username, String password, String nickname, String verifyCode);
+        void obtainLoginTelephoneSMS(String telephone);
 
-        void obtainLoginSMS(String username, String password);
-
-        void obtainRegisterSMS(String username);
+        void obtainRegisterTelephoneSMS(String telephone);
 
     }
 }

@@ -32,6 +32,7 @@ public class RemoteCallbackWrapper<T> extends IRemoteCallback.Stub {
     @Override
     public void onCompleted(byte[] protoData) {
         if (mCallback == null) {
+            Logger.i(TAG, "mCallback==null");
             return;
         }
 

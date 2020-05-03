@@ -11,6 +11,6 @@
 
     <!--    全局的按钮样式，没有背景只有文字的那种-->
     <style name="TextButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
-
+        <item name="android:textColor">@color/text_btn_text_color</item>
     </style>
 </resources>

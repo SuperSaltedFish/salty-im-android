@@ -20,8 +20,6 @@ import me.zhixingye.salty.util.AndroidHelper;
  *
  * @author zhixingye , 2020年05月01日.
  */
-
-
 public class ProgressDialog extends Dialog {
 
     private TextView mTvHint;

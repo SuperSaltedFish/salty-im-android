@@ -4,7 +4,7 @@
     <string name="PermissionDialog_Cancel">取消</string>
     <string name="PermissionDialog_Setting">设置</string>
 
-    <string name="Hint_Loading">正在加载…</string>
+    <string name="Hint_Loading">加载中…</string>
 
     <string-array name="SplashActivity_Titles">
         <item name="Splash_1">Easy to find events</item>

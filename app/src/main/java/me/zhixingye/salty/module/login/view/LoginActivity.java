@@ -62,8 +62,6 @@ public class LoginActivity
         mBtnRegister.setOnClickListener(mOnClickListener);
         mBtnResetPassword.setOnClickListener(mOnClickListener);
         mPBtnLogin.setOnClickListener(mOnClickListener);
-
-        setDisplayLoading(true);
     }
 
     private void tryLogin() {

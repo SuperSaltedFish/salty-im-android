@@ -36,16 +36,7 @@ public class TelephoneSMSVerifyActivity
     private static final String EXTRA_TELEPHONE = "Telephone";
     private static final String EXTRA_PASSWORD = "Password";
 
-    private static final int OPERATION_TYPE_REGISTER_BY_TELEPHONE = 1;
     private static final int OPERATION_TYPE_LOGIN_BY_TELEPHONE = 2;
-
-    public static void startActivityToRegister(Context context, String telephone, String password) {
-        Intent intent = new Intent(context, TelephoneSMSVerifyActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_REGISTER_BY_TELEPHONE);
-        intent.putExtra(EXTRA_TELEPHONE, telephone);
-        intent.putExtra(EXTRA_PASSWORD, password);
-        context.startActivity(intent);
-    }
 
     public static void startActivityToLogin(Context context, String telephone, String password) {
         Intent intent = new Intent(context, TelephoneSMSVerifyActivity.class);
@@ -164,9 +155,6 @@ public class TelephoneSMSVerifyActivity
             case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
                 mPresenter.loginByTelephone(mTelephone, mPassword, smsCode);
                 break;
-            case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                mPresenter.registerByTelephone(mTelephone, mPassword, smsCode);
-                break;
             default:
                 finish();
         }
@@ -176,9 +164,6 @@ public class TelephoneSMSVerifyActivity
         switch (mOperationType) {
             case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
                 mPresenter.obtainLoginTelephoneSMS(mTelephone);
-                break;
-            case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                mPresenter.obtainRegisterTelephoneSMS(mTelephone);
                 break;
             default:
                 finish();
@@ -231,21 +216,6 @@ public class TelephoneSMSVerifyActivity
     @Override
     public void startHomeActivity() {
         MainActivity.startActivity(this);
-        finish();
-    }
-
-    @Override
-    public void showRegisterSuccessfulPage() {
-        SuccessfulActivity.startActivityForTelephoneRegister(this, mTelephone, mPassword);
-        finish();
-    }
-
-    @Override
-    public void showResetSuccessfulPage() {
-        SuccessfulActivity.startActivityForRecoverTelephoneLoginPassword(
-                this,
-                mTelephone,
-                mPassword);
         finish();
     }
 

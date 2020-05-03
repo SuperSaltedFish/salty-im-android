@@ -2,6 +2,7 @@ package me.zhixingye.salty.module.login.presenter;
 
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
+import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
 
 import me.zhixingye.im.sdk.IMClient;
@@ -28,11 +29,20 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
     }
 
     @Override
+    public void obtainTelephoneRegisterSMS(String telephone) {
+        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.REGISTER);
+    }
+
+    @Override
     public void obtainResetTelephoneLoginPasswordSMS(String telephone) {
+        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.RESET_PASSWORD);
+    }
+
+    private void obtainTelephoneSMS(String telephone, ObtainSMSCodeReq.CodeType type) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
-                ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView, false) {
+                type,
+                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView,false) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
                         mView.starResendCountDown();
@@ -41,6 +51,26 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
                     @Override
                     protected boolean onError(int code, String error) {
                         mView.showObtainSMSError(error);
+                        return true;
+                    }
+                });
+    }
+
+    @Override
+    public void registerByTelephone(String telephone, String password, String smsCode) {
+        IMClient.get().getAccountService().registerByTelephone(
+                telephone,
+                password,
+                smsCode,
+                new LifecycleMVPRequestCallback<RegisterResp>(mView,false) {
+                    @Override
+                    protected void onSuccess(RegisterResp result) {
+                        mView.showRegisterSuccessfulPage();
+                    }
+
+                    @Override
+                    protected boolean onError(int code, String error) {
+                        mView.showConfirmError(error);
                         return true;
                     }
                 });
@@ -60,7 +90,7 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
 
                     @Override
                     protected boolean onError(int code, String error) {
-                        mView.showResetPasswordError(error);
+                        mView.showConfirmError(error);
                         return true;
                     }
                 });
@@ -80,7 +110,7 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
 
                     @Override
                     protected boolean onError(int code, String error) {
-                        mView.showResetPasswordError(error);
+                        mView.showConfirmError(error);
                         return true;
                     }
                 });

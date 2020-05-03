@@ -40,13 +40,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     }
 
     private PhoneEditText mPetPhone;
-    private EditText mEtPassword;
-    private TextView mTvRuleCombination;
-    private TextView mTvRuleRepeatedNumbers;
-    private TextView mTvRuleLength;
-    private EditText mEtConfirmPassword;
-    private TextView mTvRuleConsistency;
-    private ProgressButton mPBtnNext;
+    private ProgressButton mPBtnRegister;
     private TextView mTvAgreement;
 
     @Override
@@ -57,13 +51,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     @Override
     protected void init(Bundle savedInstanceState) {
         mPetPhone = findViewById(R.id.mPetPhone);
-        mEtPassword = findViewById(R.id.mEtPassword);
-        mTvRuleCombination = findViewById(R.id.mTvRuleCombination);
-        mTvRuleRepeatedNumbers = findViewById(R.id.mTvRuleRepeatedNumbers);
-        mTvRuleLength = findViewById(R.id.mTvRuleLength);
-        mEtConfirmPassword = findViewById(R.id.mEtConfirmPassword);
-        mTvRuleConsistency = findViewById(R.id.mTvRuleConsistency);
-        mPBtnNext = findViewById(R.id.mPBtnNext);
+        mPBtnRegister = findViewById(R.id.mPBtnRegister);
         mTvAgreement = findViewById(R.id.mTvAgreement);
     }
 
@@ -72,37 +60,10 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
         setDisplayHomeAsUpEnabled(true);
 
-        setupPasswordRuleVerificationAnimation();
         setupUserAgreement();
 
-        mPBtnNext.setOnClickListener(mOnClickListener);
+        mPBtnRegister.setOnClickListener(mOnClickListener);
 
-    }
-
-    private void setupPasswordRuleVerificationAnimation() {
-        mEtPassword.addTextChangedListener(new SimpleTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                mTvRuleLength.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && (s.length() >= AppConfig.MIN_TELEPHONE_LENGTH));
-                mTvRuleRepeatedNumbers.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && s.length() > 3
-                                && !RegexUtil.isRepeatedNumber(s, 3));
-                mTvRuleCombination.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && RegexUtil.isContainsNumbersOrLettersOrSymbol(s));
-                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtConfirmPassword.getText()));
-            }
-        });
-
-        mEtConfirmPassword.addTextChangedListener(new SimpleTextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
-            }
-        });
     }
 
     private void setupUserAgreement() {
@@ -125,24 +86,8 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
             mPetPhone.setError("请输入一个合法的手机号码");
             return;
         }
-        if (!mTvRuleLength.isEnabled()) {
-            AnimationUtil.shakeAnim(mTvRuleLength);
-            return;
-        }
-        if (!mTvRuleRepeatedNumbers.isEnabled()) {
-            AnimationUtil.shakeAnim(mTvRuleRepeatedNumbers);
-            return;
-        }
-        if (!mTvRuleCombination.isEnabled()) {
-            AnimationUtil.shakeAnim(mTvRuleCombination);
-            return;
-        }
-        if (!mTvRuleConsistency.isEnabled()) {
-            AnimationUtil.shakeAnim(mTvRuleConsistency);
-            return;
-        }
 
-        mPBtnNext.startHideAnim(new AnimatorListenerAdapter() {
+        mPBtnRegister.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mPresenter.obtainTelephoneRegisterSMS(telephone);
@@ -154,7 +99,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.mPBtnNext:
+                case R.id.mPBtnRegister:
                     tryNext();
                     break;
             }
@@ -162,24 +107,16 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     };
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mEtPassword.setText("");
-        mEtConfirmPassword.setText("");
-    }
-
-    @Override
     public void startPhoneVerifyActivity() {
-        mPBtnNext.startShowAnim();
-        TelephoneSMSVerifyActivity.startActivityToRegister(
+        mPBtnRegister.startShowAnim();
+        ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
                 this,
-                mPetPhone.getPhoneSuffixText(),
-                mEtPassword.getText().toString());
+                mPetPhone.getPhoneSuffixText());
     }
 
     @Override
     public void showError(String error) {
         super.showError(error);
-        mPBtnNext.startShowAnim();
+        mPBtnRegister.startShowAnim();
     }
 }

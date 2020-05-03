@@ -86,7 +86,7 @@ public class SuccessfulActivity extends BasicCompatActivity {
                 mBtnNegative.setText("返回登录页");
                 break;
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
-                mTvSuccessfulTitle.setText("重置登陆密码成功");
+                mTvSuccessfulTitle.setText("重置登录密码成功");
                 mTvSuccessfulHint.setText("恭喜你！您可以使用新的密码登陆啦");
                 mBtnPositive.setText("立即登录");
                 mBtnNegative.setText("返回登录页");

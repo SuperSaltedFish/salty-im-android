@@ -13,17 +13,17 @@ import me.zhixingye.im.listener.RequestCallback;
  * @author zhixingye , 2020年05月01日.
  */
 public interface AccountService extends BasicService {
-    void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback);
+    void registerByTelephone(String telephone, String password, String smsCode, RequestCallback<RegisterResp> callback);
 
-    void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback);
+    void registerByEmail(String email, String password, String smsCode, RequestCallback<RegisterResp> callback);
 
     void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
-    void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback);
+    void resetLoginPasswordByTelephoneSMS(String telephone, String smsCode, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
-    void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback);
+    void loginByTelephone(String telephone, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback);
 
-    void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback);
+    void loginByEmail(String email, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback);
 
     void logout();
 

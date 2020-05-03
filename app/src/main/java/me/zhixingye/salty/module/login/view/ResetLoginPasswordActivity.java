@@ -34,8 +34,16 @@ public class ResetLoginPasswordActivity
     private static final String EXTRA_OPERATION_TYPE = "OperationType";
     private static final String EXTRA_TELEPHONE = "Telephone";
 
-    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD = 1;
-    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS = 2;
+    private static final int OPERATION_TYPE_REGISTER_BY_TELEPHONE = 1;
+    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD = 2;
+    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS = 3;
+
+    public static void startActivityToRegisterByTelephone(Context context, String telephone) {
+        Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
+        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_REGISTER_BY_TELEPHONE);
+        intent.putExtra(EXTRA_TELEPHONE, telephone);
+        context.startActivity(intent);
+    }
 
     public static void startActivityToResetTelephoneLoginPasswordByOldPassword(Context context, String telephone) {
         Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
@@ -61,6 +69,8 @@ public class ResetLoginPasswordActivity
     private TextView mTvRuleLength;
     private TextView mTvRuleRepeatedNumbers;
     private TextView mTvRuleCombination;
+    private TextView mTvTitle;
+    private TextView mTvHint;
     private EditText mEtConfirmPassword;
     private TextView mTvRuleConsistency;
     private ProgressButton mPBtnConfirm;
@@ -89,6 +99,8 @@ public class ResetLoginPasswordActivity
         mTilOldPassword = findViewById(R.id.mTilOldPassword);
         mPBtnConfirm = findViewById(R.id.mPBtnConfirm);
         mTilSMSCode = findViewById(R.id.mTilSMSCode);
+        mTvTitle = findViewById(R.id.mTvTitle);
+        mTvHint = findViewById(R.id.mTvHint);
 
         mOperationType = getIntent().getIntExtra(EXTRA_OPERATION_TYPE, -1);
         mTelephone = getIntent().getStringExtra(EXTRA_TELEPHONE);
@@ -110,13 +122,23 @@ public class ResetLoginPasswordActivity
 
     private void setupMode() {
         switch (mOperationType) {
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
-                mFlSMSInputLayout.setVisibility(View.GONE);
-                mTilOldPassword.setVisibility(View.VISIBLE);
+            case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
+                mFlSMSInputLayout.setVisibility(View.VISIBLE);
+                mTilOldPassword.setVisibility(View.GONE);
+                mTvTitle.setText("注册，设置登录密码");
+                mTvHint.setText("注册前需要验证您的手机号码\n请在下方输入您收到的手机验证码并设置登录密码");
                 break;
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
                 mFlSMSInputLayout.setVisibility(View.VISIBLE);
                 mTilOldPassword.setVisibility(View.GONE);
+                mTvTitle.setText("设置登录密码");
+                mTvHint.setText("设置完成之后您将可以使用新的登录密码进行登录");
+                break;
+            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
+                mFlSMSInputLayout.setVisibility(View.GONE);
+                mTilOldPassword.setVisibility(View.VISIBLE);
+                mTvTitle.setText("设置登录密码");
+                mTvHint.setText("设置完成之后您将可以使用新的登录密码进行登录");
                 break;
         }
     }
@@ -147,7 +169,7 @@ public class ResetLoginPasswordActivity
         });
     }
 
-    private void resetPassword() {
+    private void confirm() {
         final String oldPassword = mEtOldPassword.getText().toString();
         final String smsCode = mEtSMSCode.getText().toString();
         final String newPassword = mEtPassword.getText().toString();
@@ -159,6 +181,7 @@ public class ResetLoginPasswordActivity
                     return;
                 }
                 break;
+            case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
                 if (TextUtils.isEmpty(smsCode)) {
                     mTilSMSCode.setError("验证码不能为空，请输入手机验证码");
@@ -190,6 +213,9 @@ public class ResetLoginPasswordActivity
             @Override
             public void onAnimationEnd(Animator animation) {
                 switch (mOperationType) {
+                    case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
+                        mPresenter.registerByTelephone(mTelephone, newPassword, smsCode);
+                        break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
                         mPresenter.resetTelephoneLoginPasswordByOldPassword(mTelephone, oldPassword, newPassword);
                         break;
@@ -209,6 +235,9 @@ public class ResetLoginPasswordActivity
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
                         mPresenter.obtainResetTelephoneLoginPasswordSMS(mTelephone);
                         break;
+                    case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
+                        mPresenter.obtainTelephoneRegisterSMS(mTelephone);
+                        break;
                 }
             }
         });
@@ -216,7 +245,7 @@ public class ResetLoginPasswordActivity
 
     private void setAllowResendSMSCode(boolean isAllow) {
         mPBtnResend.setEnabled(isAllow);
-        mPBtnResend.setText("重新发送");
+        mPBtnResend.setText("重发");
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -224,7 +253,7 @@ public class ResetLoginPasswordActivity
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.mPBtnConfirm:
-                    resetPassword();
+                    confirm();
                     break;
                 case R.id.mPBtnResend:
                     resendSMSCode();
@@ -254,6 +283,15 @@ public class ResetLoginPasswordActivity
     }
 
     @Override
+    public void showRegisterSuccessfulPage() {
+        SuccessfulActivity.startActivityForTelephoneRegister(
+                this,
+                mTelephone,
+                mEtPassword.getText().toString());
+        finish();
+    }
+
+    @Override
     public void showResetSuccessfulPage() {
         switch (mOperationType) {
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
@@ -272,10 +310,11 @@ public class ResetLoginPasswordActivity
         mResendCountDown.cancel();
         mResendCountDown.start();
         setAllowResendSMSCode(false);
+        mPBtnResend.startShowAnim();
     }
 
     @Override
-    public void showResetPasswordError(String error) {
+    public void showConfirmError(String error) {
         showError(error);
         mPBtnConfirm.startShowAnim();
     }

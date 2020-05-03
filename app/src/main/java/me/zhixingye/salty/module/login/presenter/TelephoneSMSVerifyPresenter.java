@@ -44,27 +44,8 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
     }
 
     @Override
-    public void registerByTelephone(String telephone, String password, String smsCode) {
-        IMClient.get().getAccountService().registerByTelephone(
-                telephone,
-                password,
-                smsCode,
-                new LifecycleMVPRequestCallback<RegisterResp>(mView) {
-                    @Override
-                    protected void onSuccess(RegisterResp result) {
-                        mView.showRegisterSuccessfulPage();
-                    }
-                });
-    }
-
-    @Override
     public void obtainLoginTelephoneSMS(String telephone) {
         obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.LOGIN);
-    }
-
-    @Override
-    public void obtainRegisterTelephoneSMS(String telephone) {
-        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.REGISTER);
     }
 
     private void obtainTelephoneSMS(String telephone, ObtainSMSCodeReq.CodeType type) {

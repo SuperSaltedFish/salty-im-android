@@ -14,20 +14,12 @@ public class TelephoneSMSVerifyContract {
         void showCountDown();
 
         void startHomeActivity();
-
-        void showRegisterSuccessfulPage();
-
-        void showResetSuccessfulPage();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
         void loginByTelephone(String telephone, String password, String smsCode);
 
-        void registerByTelephone(String telephone, String password, String smsCode);
-
         void obtainLoginTelephoneSMS(String telephone);
-
-        void obtainRegisterTelephoneSMS(String telephone);
     }
 }

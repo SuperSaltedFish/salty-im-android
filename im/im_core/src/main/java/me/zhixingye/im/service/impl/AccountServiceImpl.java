@@ -49,17 +49,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+    public void registerByTelephone(String telephone, String password, String smsCode, RequestCallback<RegisterResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .registerByTelephone(telephone, password, verificationCode, callback);
+                .registerByTelephone(telephone, password, smsCode, callback);
     }
 
     @Override
-    public void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+    public void registerByEmail(String email, String password, String smsCode, RequestCallback<RegisterResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .registerByEmail(email, password, verificationCode, callback);
+                .registerByEmail(email, password, smsCode, callback);
     }
 
     @Override
@@ -70,20 +70,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String smsCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .resetLoginPasswordByTelephoneSMS(telephone, verificationCode, newPassword, callback);
+                .resetLoginPasswordByTelephoneSMS(telephone, smsCode, newPassword, callback);
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        login(telephone, null, password, verificationCode, callback);
+    public void loginByTelephone(String telephone, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
+        login(telephone, null, password, smsCode, callback);
     }
 
     @Override
-    public void loginByEmail(String email, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback) {
-        login(null, email, password, verificationCode, callback);
+    public void loginByEmail(String email, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
+        login(null, email, password, smsCode, callback);
     }
 
     private void login(String telephone, String email, String password, @Nullable String verificationCode, final RequestCallback<LoginResp> callback) {

@@ -34,7 +34,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:text="现在使用您的电话和密码进行注册"
+        android:text="现在使用您的电话进行注册\n请在下方输入您要注册的手机号码"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -43,24 +43,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp" />
 
-    <include
-        layout="@layout/layout_reset_login_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp" />
 
     <me.zhixingye.salty.widget.view.ProgressButton
-        android:id="@+id/mPBtnNext"
+        android:id="@+id/mPBtnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
-        app:text="下一步" />
+        app:text="注册" />
 
     <TextView
         android:id="@+id/mTvAgreement"

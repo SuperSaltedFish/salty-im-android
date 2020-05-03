@@ -7,6 +7,7 @@ import android.util.Log;
 import com.salty.protos.GetUserInfoResp;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
+import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.QueryUserInfoResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
@@ -43,7 +44,7 @@ public class IMCoreTest {
     @Test
     public void useAppContext() {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        IMCore.tryInit(appContext, "111.231.238.209", 9090, "1.0");
+        IMCore.tryInit(appContext);
 
         startTest();
         Log.e(TAG, "测试结束");
@@ -82,19 +83,19 @@ public class IMCoreTest {
             builder.append(random.nextInt(10));
         }
         mAccount = builder.toString();
-        IMCore.get().obtainTelephoneSMSCode(
+        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.REGISTER,
-                new LockRequestCallback<Void>() {
+                new LockRequestCallback<ObtainSMSCodeResp>() {
                     @Override
-                    public void onSuccessful(Void resp) {
+                    public void onSuccessful(ObtainSMSCodeResp resp) {
 
 
                     }
                 });
 
         mPassword = "123";
-        IMCore.get().registerByTelephone(
+        IMCore.get().getAccountService().registerByTelephone(
                 mAccount,
                 mPassword,
                 "123456",
@@ -107,8 +108,8 @@ public class IMCoreTest {
     }
 
     private void testResetLoginPasswordByOldPassword() {
-        String newPassword = "141";
-        IMCore.get().resetLoginPasswordByTelephonePassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
+        final String newPassword = "141";
+        IMCore.get().getAccountService().resetLoginPasswordByTelephoneOldPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
             @Override
             void onSuccessful(ResetPasswordResp resp) {
                 mPassword = newPassword;
@@ -118,19 +119,19 @@ public class IMCoreTest {
     }
 
     private void testResetLoginPasswordByVerificationCode() {
-        IMCore.get().obtainTelephoneSMSCode(
+        IMCore.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 mAccount,
                 ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
-                new LockRequestCallback<Void>() {
+                new LockRequestCallback<ObtainSMSCodeResp>() {
                     @Override
-                    public void onSuccessful(Void resp) {
+                    public void onSuccessful(ObtainSMSCodeResp resp) {
 
 
                     }
                 });
 
         mPassword = "yezhixing";
-        IMCore.get().resetLoginPasswordByTelephoneSMS(
+        IMCore.get().getAccountService().resetLoginPasswordByTelephoneOldPassword(
                 mAccount,
                 "112233",
                 mPassword,
@@ -143,7 +144,7 @@ public class IMCoreTest {
     }
 
     private void testLoginReq() {
-        IMCore.get().loginByTelephone(
+        IMCore.get().getAccountService().loginByTelephone(
                 mAccount,
                 mPassword,
                 "",
@@ -158,11 +159,11 @@ public class IMCoreTest {
     }
 
     private void testUpdateUserInfoReq() {
-        String nickname = "zhixingye";
-        String description = "天才星";
-        UserProfile.Sex sex = UserProfile.Sex.FEMALE;
-        long birthday = 10086;
-        String location = "地球";
+        final String nickname = "zhixingye";
+        final String description = "天才星";
+        final UserProfile.Sex sex = UserProfile.Sex.FEMALE;
+        final long birthday = 10086;
+        final String location = "地球";
         IMCore.get().getUserService().updateUserInfo(nickname, description, sex, birthday, location, new LockRequestCallback<UpdateUserInfoResp>() {
             @Override
             void onSuccessful(UpdateUserInfoResp resp) {

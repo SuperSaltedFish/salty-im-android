@@ -1,0 +1,54 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="80dp"
+            android:height="80dp"
+            android:viewportWidth="80"
+            android:viewportHeight="80">
+            <group android:name="group">
+                <path
+                    android:name="ring"
+                    android:pathData="M 52.903 10.951 C 48.821 9.126 44.487 8.2 40.018 8.198 L 40 8.198 C 31.539 8.198 23.583 11.501 17.596 17.499 C 11.605 23.503 8.303 31.487 8.298 39.982 C 8.293 48.476 11.586 56.465 17.57 62.475 C 23.555 68.485 31.514 71.798 39.982 71.802 L 40 71.802 C 48.461 71.802 56.417 68.499 62.404 62.501 C 68.395 56.497 71.697 48.513 71.702 40.017 L 71.702 37.309"
+                    android:strokeColor="#373f4a"
+                    android:strokeWidth="7"
+                    android:trimPathEnd="0"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+                <path
+                    android:name="hook"
+                    android:pathData="M 29.155 35.291 L 38.137 43.985 C 38.676 44.514 39.383 44.779 40.09 44.779 C 40.798 44.779 41.505 44.514 42.044 43.985 L 73.671 12.25"
+                    android:strokeColor="?android:/attr/colorAccent"
+                    android:strokeWidth="6"
+                    android:trimPathEnd="0"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="round"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="ring">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:duration="700"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="hook">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathEnd"
+                android:startOffset="550"
+                android:duration="450"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

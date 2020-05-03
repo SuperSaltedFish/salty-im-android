@@ -126,7 +126,7 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPasswordByTelephonePassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
                 .setOldPassword(Sha256Util.sha256WithSalt(oldPassword, PASSWORD_SALTY))
@@ -138,7 +138,7 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPasswordByEmailPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByEmailOldPassword(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setEmail(email)
                 .setOldPassword(Sha256Util.sha256WithSalt(oldPassword, PASSWORD_SALTY))

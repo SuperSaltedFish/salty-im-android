@@ -1,8 +1,11 @@
 package me.zhixingye.im.sdk.handle;
 
 
+import android.os.RemoteException;
+
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 
 import me.zhixingye.im.IMCore;
 import me.zhixingye.im.sdk.IAccountServiceHandle;
@@ -32,6 +35,26 @@ public class AccountServiceHandle extends IAccountServiceHandle.Stub {
                         password,
                         verificationCode,
                         new ByteRemoteCallback<RegisterResp>(callback));
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, IRemoteCallback callback) {
+        IMCore.get().getAccountService()
+                .resetLoginPasswordByTelephoneOldPassword(
+                        telephone,
+                        oldPassword,
+                        newPassword,
+                        new ByteRemoteCallback<ResetPasswordResp>(callback));
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, IRemoteCallback callback) throws RemoteException {
+        IMCore.get().getAccountService()
+                .resetLoginPasswordByTelephoneSMS(
+                        telephone,
+                        verificationCode,
+                        newPassword,
+                        new ByteRemoteCallback<ResetPasswordResp>(callback));
     }
 
     @Override

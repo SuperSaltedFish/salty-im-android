@@ -26,6 +26,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".module.login.view.RegisterSuccessfulActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -38,27 +39,29 @@
         </provider>
 
         <activity android:name=".TestActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".module.splash.view.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
         <activity android:name=".module.login.view.PhoneSMSVerifyActivity" />
         <activity android:name=".module.login.view.RegisterActivity" />
         <activity android:name=".module.main.view.MainActivity" />
-        <activity android:name=".module.login.view.LoginActivity" />
+        <activity
+            android:name=".module.login.view.LoginActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".module.splash.view.GuideActivity" />
-
     </application>
 
 </manifest>

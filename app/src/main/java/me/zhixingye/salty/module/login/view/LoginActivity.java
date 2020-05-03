@@ -29,8 +29,19 @@ public class LoginActivity
         extends BasicCompatActivity<LoginPresenter>
         implements LoginContract.View {
 
+    private static final String EXTRA_TELEPHONE = "Telephone";
+    private static final String EXTRA_PASSWORD = "Password";
+
     public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, LoginActivity.class));
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void startActivityByTelephoneAccount(Context context, String telephone, String password) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.putExtra(EXTRA_TELEPHONE, telephone);
+        intent.putExtra(EXTRA_PASSWORD, password);
+        context.startActivity(intent);
     }
 
     private PhoneEditText mPetPhone;
@@ -75,7 +86,16 @@ public class LoginActivity
             mTilPassword.setError("密码不能为空，请输入密码");
             return;
         }
+        tryLogin(telephone, password);
+    }
 
+    private void tryLogin(final String telephone, final String password) {
+        if (TextUtils.isEmpty(telephone)) {
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            return;
+        }
         mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -95,7 +115,7 @@ public class LoginActivity
                     startRegisterActivity();
                     break;
                 case R.id.mBtnResetPassword:
-                    startPhoneVerifyActivity();
+//                    RegisterSuccessfulActivity.startActivity(LoginActivity.this);
                     break;
             }
         }
@@ -105,6 +125,12 @@ public class LoginActivity
     protected void onStart() {
         super.onStart();
         mEtPassword.setText("");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        tryLogin(intent.getStringExtra(EXTRA_TELEPHONE), intent.getStringExtra(EXTRA_PASSWORD));
     }
 
     @Override

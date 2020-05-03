@@ -2,6 +2,7 @@ package me.zhixingye.im.sdk.proxy;
 
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 
 import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
@@ -45,6 +46,26 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     public void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
         try {
             mAccountHandle.registerByEmail(email, password, verificationCode, new RemoteCallbackWrapper<>(callback));
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            ProxyHelper.callRemoteFail(callback);
+        }
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        try {
+            mAccountHandle.resetLoginPasswordByTelephoneOldPassword(telephone, oldPassword, newPassword, new RemoteCallbackWrapper<>(callback));
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            ProxyHelper.callRemoteFail(callback);
+        }
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneSMS(String email, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        try {
+            mAccountHandle.resetLoginPasswordByTelephoneSMS(email, oldPassword, newPassword, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);

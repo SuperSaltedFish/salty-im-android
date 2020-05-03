@@ -37,7 +37,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 public class VerifyCodeEditView extends LinearLayout {
 
     private Context mContext;
-    InputMethodManager mInputMethodManager;
+    private InputMethodManager mInputMethodManager;
     private List<EditText> mEditTextList;
     private OnInputListener mOnInputListener;
 
@@ -65,6 +65,8 @@ public class VerifyCodeEditView extends LinearLayout {
         mContext = context;
         mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         setGravity(Gravity.CENTER);
+        setFocusable(false);
+        setFocusableInTouchMode(false);
         initDefault();
         update();
     }
@@ -84,6 +86,7 @@ public class VerifyCodeEditView extends LinearLayout {
     private void update() {
         mEditTextList.clear();
         removeAllViews();
+        mCurrentInputPosition = 0;
         if (mItemCount > 0) {
             for (int i = 0; i < mItemCount; i++) {
                 EditText editItem = new EditItem(mContext);
@@ -91,6 +94,8 @@ public class VerifyCodeEditView extends LinearLayout {
                 if (i != 0) {
                     params.setMarginStart(mItemSpace);
                 }
+                editItem.setFocusable(true);
+                editItem.setFocusableInTouchMode(true);
                 editItem.setLayoutParams(params);
                 editItem.setGravity(Gravity.CENTER);
                 editItem.setSingleLine();
@@ -115,6 +120,10 @@ public class VerifyCodeEditView extends LinearLayout {
         }
     }
 
+    public void cleanInputContent() {
+        update();
+    }
+
     public String getCurrentInputContent() {
         return mContent == null ? "" : mContent.toString();
     }
@@ -135,10 +144,7 @@ public class VerifyCodeEditView extends LinearLayout {
     private final OnClickListener mOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (mCurrentInputPosition >= mItemCount) {
-                return;
-            }
-            EditText editText = mEditTextList.get(mCurrentInputPosition);
+            EditText editText = mEditTextList.get(mContent.length());
             editText.requestFocus();
             if (mInputMethodManager != null) {
                 mInputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
@@ -260,9 +266,6 @@ public class VerifyCodeEditView extends LinearLayout {
             }
 
             public interface BackspaceListener {
-                /**
-                 * @return true 代表消费了这个事件
-                 */
                 boolean onBackspace();
             }
 

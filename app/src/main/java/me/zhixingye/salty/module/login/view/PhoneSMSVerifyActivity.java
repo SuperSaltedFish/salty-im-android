@@ -93,6 +93,8 @@ public class PhoneSMSVerifyActivity
         setupAutoConfirm();
 
         showCountDown();
+
+        showSoftKeyboard(mVerifyEditView.getChildAt(0));
     }
 
     private void setupTitleHint() {
@@ -230,10 +232,18 @@ public class PhoneSMSVerifyActivity
     @Override
     public void startHomeActivity() {
         MainActivity.startActivity(this);
+        finish();
     }
 
     @Override
     public void showRegisterSuccessfulPage() {
+        RegisterSuccessfulActivity.startActivityByTelephone(this, mTelephone, mPassword);
+        finish();
+    }
 
+    @Override
+    public void showError(String error) {
+        super.showError(error);
+        mVerifyEditView.cleanInputContent();
     }
 }

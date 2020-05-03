@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 import com.salty.protos.UserProfile;
 
 import java.util.concurrent.Semaphore;
@@ -59,6 +60,20 @@ public class AccountServiceImpl implements AccountService {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
                 .registerByEmail(email, password, verificationCode, callback);
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ServiceAccessor.get(ApiService.class)
+                .createApi(UserApi.class)
+                .resetLoginPasswordByTelephoneOldPassword(telephone, oldPassword, newPassword, callback);
+    }
+
+    @Override
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+        ServiceAccessor.get(ApiService.class)
+                .createApi(UserApi.class)
+                .resetLoginPasswordByTelephoneSMS(telephone, verificationCode, newPassword, callback);
     }
 
     @Override
@@ -118,7 +133,7 @@ public class AccountServiceImpl implements AccountService {
 
                 isLogged = true;
                 mLoginLock.release();
-                if(callback!=null){
+                if (callback != null) {
                     callback.onCompleted(loginResp);
                 }
             }

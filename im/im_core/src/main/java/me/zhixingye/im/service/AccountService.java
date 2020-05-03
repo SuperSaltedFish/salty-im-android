@@ -2,6 +2,7 @@ package me.zhixingye.im.service;
 
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 
 import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
@@ -15,6 +16,10 @@ public interface AccountService extends BasicService {
     void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback);
 
     void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback);
+
+    void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback);
+
+    void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
     void loginByTelephone(String telephone, String password, @Nullable String verificationCode, RequestCallback<LoginResp> callback);
 

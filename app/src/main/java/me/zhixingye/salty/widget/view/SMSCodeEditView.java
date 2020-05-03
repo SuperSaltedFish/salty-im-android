@@ -34,7 +34,7 @@ import androidx.appcompat.widget.AppCompatEditText;
  * 当你将信心放在自己身上时，你将永远充满力量
  */
 
-public class VerifyCodeEditView extends LinearLayout {
+public class SMSCodeEditView extends LinearLayout {
 
     private Context mContext;
     private InputMethodManager mInputMethodManager;
@@ -52,15 +52,15 @@ public class VerifyCodeEditView extends LinearLayout {
     private int mCurrentInputPosition;
     private StringBuilder mContent;
 
-    public VerifyCodeEditView(Context context) {
+    public SMSCodeEditView(Context context) {
         this(context, null);
     }
 
-    public VerifyCodeEditView(Context context, @Nullable AttributeSet attrs) {
+    public SMSCodeEditView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public VerifyCodeEditView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SMSCodeEditView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         mInputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -12,7 +12,7 @@
     tools:context="me.zhixingye.salty.module.login.view.RegisterActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/Default_mToolbar"
+        android:id="@+id/mDefaultToolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:theme="@style/ToolbarLightStyle" />
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:text="现在使用您的电话和密码进行注册"
         android:textSize="15sp"

@@ -3,8 +3,14 @@
 
     <declare-styleable name="ProgressButton">
         <attr name="text" format="string" localization="suggested" />
-        <attr name="textSize" format="dimension"/>
-        <attr name="enabled" format="boolean"/>
+        <attr name="textSize" format="dimension" />
+        <attr name="enabled" format="boolean" />
+        <attr name="buttonPaddingStart" format="dimension" />
+        <attr name="buttonPaddingEnd" format="dimension" />
+        <attr name="buttonPaddingTop" format="dimension" />
+        <attr name="buttonPaddingBottom" format="dimension" />
+        <attr name="buttonMinWidth" format="dimension" />
+        <attr name="buttonMinHeight" format="dimension" />
     </declare-styleable>
 
 </resources>

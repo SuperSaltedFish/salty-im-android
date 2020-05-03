@@ -117,7 +117,7 @@ public class LoginActivity
                     startRegisterActivity();
                     break;
                 case R.id.mBtnResetPassword:
-//                    RegisterSuccessfulActivity.startActivity(LoginActivity.this);
+                    startRecoverPasswordActivity();
                     break;
             }
         }
@@ -137,14 +137,18 @@ public class LoginActivity
 
     @Override
     public void startPhoneVerifyActivity() {
-        PhoneSMSVerifyActivity.startActivityToLogin(
+        TelephoneSMSVerifyActivity.startActivityToLogin(
                 this,
                 mPetPhone.getPhoneSuffixText(),
                 mEtPassword.getText().toString());
     }
 
-    public void startRegisterActivity() {
+    private void startRegisterActivity() {
         RegisterActivity.startActivity(this);
+    }
+
+    private void startRecoverPasswordActivity() {
+        RecoverPasswordActivity.startActivity(this);
     }
 
     @Override

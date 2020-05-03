@@ -93,7 +93,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         if (layoutID != 0) {
             setContentView(layoutID);
             //这里做了全局toolbar的默认初始化，如果有toolbar就会初始化
-            mDefaultToolbar = findViewById(R.id.Default_mToolbar);
+            mDefaultToolbar = findViewById(R.id.mDefaultToolbar);
             if (mDefaultToolbar != null) {
                 setSupportActionBar(mDefaultToolbar);
                 setTitle("");

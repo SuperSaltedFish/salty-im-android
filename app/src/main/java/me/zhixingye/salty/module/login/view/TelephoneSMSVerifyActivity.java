@@ -8,7 +8,7 @@ import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
 import me.zhixingye.salty.module.login.presenter.TelephoneSMSVerifyPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
-import me.zhixingye.salty.widget.view.VerifyCodeEditView;
+import me.zhixingye.salty.widget.view.SMSCodeEditView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class PhoneSMSVerifyActivity
+public class TelephoneSMSVerifyActivity
         extends BasicCompatActivity<TelephoneSMSVerifyPresenter>
         implements TelephoneSMSVerifyContract.View {
 
@@ -40,7 +40,7 @@ public class PhoneSMSVerifyActivity
     private static final int OPERATION_TYPE_LOGIN_BY_TELEPHONE = 2;
 
     public static void startActivityToRegister(Context context, String telephone, String password) {
-        Intent intent = new Intent(context, PhoneSMSVerifyActivity.class);
+        Intent intent = new Intent(context, TelephoneSMSVerifyActivity.class);
         intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_REGISTER_BY_TELEPHONE);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         intent.putExtra(EXTRA_PASSWORD, password);
@@ -48,7 +48,7 @@ public class PhoneSMSVerifyActivity
     }
 
     public static void startActivityToLogin(Context context, String telephone, String password) {
-        Intent intent = new Intent(context, PhoneSMSVerifyActivity.class);
+        Intent intent = new Intent(context, TelephoneSMSVerifyActivity.class);
         intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_LOGIN_BY_TELEPHONE);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         intent.putExtra(EXTRA_PASSWORD, password);
@@ -57,12 +57,12 @@ public class PhoneSMSVerifyActivity
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_phone_sms_verify;
+        return R.layout.activity_telephone_sms_verify;
     }
 
-    private TextView mTvVerifyCodeSendHint;
+    private TextView mTvSMSCodeSendHint;
     private TextView mTvVoiceSMSHint;
-    private VerifyCodeEditView mVerifyEditView;
+    private SMSCodeEditView mSMSEditView;
     private Button mBtnResend;
 
     private int mOperationType;
@@ -71,9 +71,9 @@ public class PhoneSMSVerifyActivity
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mTvVerifyCodeSendHint = findViewById(R.id.mTvVerifyCodeSendHint);
+        mTvSMSCodeSendHint = findViewById(R.id.mTvSMSCodeSendHint);
         mTvVoiceSMSHint = findViewById(R.id.mTvVoiceSMSHint);
-        mVerifyEditView = findViewById(R.id.mVerifyEditView);
+        mSMSEditView = findViewById(R.id.mSMSEditView);
         mBtnResend = findViewById(R.id.mBtnResend);
 
         mOperationType = getIntent().getIntExtra(EXTRA_OPERATION_TYPE, -1);
@@ -94,7 +94,7 @@ public class PhoneSMSVerifyActivity
 
         showCountDown();
 
-        showSoftKeyboard(mVerifyEditView.getChildAt(0));
+        showSoftKeyboard(mSMSEditView.getChildAt(0));
     }
 
     private void setupTitleHint() {
@@ -114,7 +114,7 @@ public class PhoneSMSVerifyActivity
                 startIndex + telephone.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        mTvVerifyCodeSendHint.setText(sStr);
+        mTvSMSCodeSendHint.setText(sStr);
     }
 
     private void setupVoiceSMSHint() {
@@ -133,7 +133,7 @@ public class PhoneSMSVerifyActivity
             @Override
             public void updateDrawState(@NonNull TextPaint textPaint) {
                 super.updateDrawState(textPaint);
-                textPaint.setColor(ContextCompat.getColor(PhoneSMSVerifyActivity.this, R.color.colorPrimary));
+                textPaint.setColor(ContextCompat.getColor(TelephoneSMSVerifyActivity.this, R.color.colorPrimary));
                 textPaint.setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
             }
         }, startIndex, startIndex + voiceSMS.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -142,7 +142,7 @@ public class PhoneSMSVerifyActivity
     }
 
     private void setupAutoConfirm() {
-        mVerifyEditView.setOnInputListener(new VerifyCodeEditView.OnInputListener() {
+        mSMSEditView.setOnInputListener(new SMSCodeEditView.OnInputListener() {
             @Override
             public void onInputComplete(String content) {
                 confirm(content);
@@ -155,17 +155,17 @@ public class PhoneSMSVerifyActivity
         });
     }
 
-    private void confirm(String verifyCode) {
-        if (TextUtils.isEmpty(verifyCode) || verifyCode.length() < AppConfig.PHONE_VERIFY_CODE_LENGTH) {
+    private void confirm(String smsCode) {
+        if (TextUtils.isEmpty(smsCode) || smsCode.length() < AppConfig.PHONE_VERIFY_CODE_LENGTH) {
             showError("请输入完整的验证码");
         }
 
         switch (mOperationType) {
             case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
-                mPresenter.loginByTelephone(mTelephone, mPassword, verifyCode);
+                mPresenter.loginByTelephone(mTelephone, mPassword, smsCode);
                 break;
             case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                mPresenter.registerByTelephone(mTelephone, mPassword, verifyCode);
+                mPresenter.registerByTelephone(mTelephone, mPassword, smsCode);
                 break;
             default:
                 finish();
@@ -185,10 +185,9 @@ public class PhoneSMSVerifyActivity
         }
     }
 
-    private void setAllowResendVerifyCode(boolean isAllow) {
+    private void setAllowResendSMSCode(boolean isAllow) {
         mBtnResend.setEnabled(isAllow);
         mBtnResend.setText("重新发送验证码");
-
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -202,7 +201,7 @@ public class PhoneSMSVerifyActivity
         }
     };
 
-    private final CountDownTimer mVerifyCountDown = new CountDownTimer(60000, 1000) {
+    private final CountDownTimer mResendCountDown = new CountDownTimer(60000, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
@@ -212,21 +211,21 @@ public class PhoneSMSVerifyActivity
 
         @Override
         public void onFinish() {
-            setAllowResendVerifyCode(true);
+            setAllowResendSMSCode(true);
         }
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mVerifyCountDown.cancel();
+        mResendCountDown.cancel();
     }
 
     @Override
     public void showCountDown() {
-        setAllowResendVerifyCode(false);
-        mVerifyCountDown.cancel();
-        mVerifyCountDown.start();
+        setAllowResendSMSCode(false);
+        mResendCountDown.cancel();
+        mResendCountDown.start();
     }
 
     @Override
@@ -237,13 +236,22 @@ public class PhoneSMSVerifyActivity
 
     @Override
     public void showRegisterSuccessfulPage() {
-        RegisterSuccessfulActivity.startActivityByTelephone(this, mTelephone, mPassword);
+        SuccessfulActivity.startActivityForTelephoneRegister(this, mTelephone, mPassword);
+        finish();
+    }
+
+    @Override
+    public void showResetSuccessfulPage() {
+        SuccessfulActivity.startActivityForRecoverTelephoneLoginPassword(
+                this,
+                mTelephone,
+                mPassword);
         finish();
     }
 
     @Override
     public void showError(String error) {
         super.showError(error);
-        mVerifyEditView.cleanInputContent();
+        mSMSEditView.cleanInputContent();
     }
 }

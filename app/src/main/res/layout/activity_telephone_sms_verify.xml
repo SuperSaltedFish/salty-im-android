@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/Default_mToolbar"
+        android:id="@+id/mDefaultToolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:theme="@style/ToolbarLightStyle" />
@@ -28,7 +28,7 @@
         android:textSize="25sp" />
 
     <TextView
-        android:id="@+id/mTvVerifyCodeSendHint"
+        android:id="@+id/mTvSMSCodeSendHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -38,8 +38,8 @@
         android:textSize="14sp" />
 
 
-    <me.zhixingye.salty.widget.view.VerifyCodeEditView
-        android:id="@+id/mVerifyEditView"
+    <me.zhixingye.salty.widget.view.SMSCodeEditView
+        android:id="@+id/mSMSEditView"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"

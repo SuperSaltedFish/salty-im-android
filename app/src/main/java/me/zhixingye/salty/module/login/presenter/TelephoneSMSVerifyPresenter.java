@@ -4,6 +4,7 @@ import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.RegisterResp;
+import com.salty.protos.ResetPasswordResp;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
@@ -29,11 +30,11 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password, String verifyCode) {
+    public void loginByTelephone(String telephone, String password, String smsCode) {
         IMClient.get().getAccountService().loginByTelephone(
                 telephone,
                 password,
-                verifyCode,
+                smsCode,
                 new LifecycleMVPRequestCallback<LoginResp>(mView) {
                     @Override
                     protected void onSuccess(LoginResp result) {
@@ -43,11 +44,11 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
     }
 
     @Override
-    public void registerByTelephone(String telephone, String password, String verifyCode) {
+    public void registerByTelephone(String telephone, String password, String smsCode) {
         IMClient.get().getAccountService().registerByTelephone(
                 telephone,
                 password,
-                verifyCode,
+                smsCode,
                 new LifecycleMVPRequestCallback<RegisterResp>(mView) {
                     @Override
                     protected void onSuccess(RegisterResp result) {
@@ -58,22 +59,18 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
 
     @Override
     public void obtainLoginTelephoneSMS(String telephone) {
-        IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
-                telephone,
-                ObtainSMSCodeReq.CodeType.LOGIN,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView) {
-                    @Override
-                    protected void onSuccess(ObtainSMSCodeResp result) {
-                        mView.showCountDown();
-                    }
-                });
+        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.LOGIN);
     }
 
     @Override
     public void obtainRegisterTelephoneSMS(String telephone) {
+        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.REGISTER);
+    }
+
+    private void obtainTelephoneSMS(String telephone, ObtainSMSCodeReq.CodeType type) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
-                ObtainSMSCodeReq.CodeType.REGISTER,
+                type,
                 new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {

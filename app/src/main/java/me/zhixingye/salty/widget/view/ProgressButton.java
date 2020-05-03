@@ -68,6 +68,15 @@ public class ProgressButton extends ConstraintLayout {
             setText(array.getString(R.styleable.ProgressButton_text));
             mButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimension(R.styleable.ProgressButton_textSize, mButton.getTextSize()));
             setEnabled(array.getBoolean(R.styleable.ProgressButton_enabled, true));
+
+            int buttonPaddingStart = array.getDimensionPixelSize(R.styleable.ProgressButton_buttonPaddingStart, mButton.getPaddingStart());
+            int buttonPaddingEnd = array.getDimensionPixelSize(R.styleable.ProgressButton_buttonPaddingEnd, mButton.getPaddingEnd());
+            int buttonPaddingTop = array.getDimensionPixelSize(R.styleable.ProgressButton_buttonPaddingTop, mButton.getPaddingTop());
+            int buttonPaddingBottom = array.getDimensionPixelSize(R.styleable.ProgressButton_buttonPaddingBottom, mButton.getPaddingBottom());
+            mButton.setPadding(buttonPaddingStart, buttonPaddingTop, buttonPaddingEnd, buttonPaddingBottom);
+
+            mButton.setMinWidth(array.getDimensionPixelSize(R.styleable.ProgressButton_buttonMinWidth, mButton.getMinWidth()));
+            mButton.setMinHeight(array.getDimensionPixelSize(R.styleable.ProgressButton_buttonMinHeight, mButton.getMinHeight()));
             array.recycle();
         }
 

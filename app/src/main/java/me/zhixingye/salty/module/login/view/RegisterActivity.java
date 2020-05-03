@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
@@ -147,7 +145,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         mPBtnNext.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mPresenter.obtainTelephoneRegisterVerifyCode(telephone);
+                mPresenter.obtainTelephoneRegisterSMS(telephone);
             }
         });
     }
@@ -173,7 +171,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     @Override
     public void startPhoneVerifyActivity() {
         mPBtnNext.startShowAnim();
-        PhoneSMSVerifyActivity.startActivityToRegister(
+        TelephoneSMSVerifyActivity.startActivityToRegister(
                 this,
                 mPetPhone.getPhoneSuffixText(),
                 mEtPassword.getText().toString());

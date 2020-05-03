@@ -4,37 +4,37 @@ import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 
 import me.zhixingye.im.sdk.IMClient;
-import me.zhixingye.salty.module.login.contract.RegisterContract;
+import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
 import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
  *
- * @author zhixingye , 2020年05月01日.
+ * @author zhixingye , 2020年05月03日.
  */
-public class RegisterPresenter implements RegisterContract.Presenter {
+public class RecoverPasswordPresenter implements RecoverPasswordContract.Presenter {
 
-    private RegisterContract.View mRegisterView;
+    private RecoverPasswordContract.View mView;
 
     @Override
-    public void attachView(RegisterContract.View view) {
-        mRegisterView = view;
+    public void attachView(RecoverPasswordContract.View view) {
+        mView = view;
     }
 
     @Override
     public void detachView() {
-        mRegisterView = null;
+        mView = null;
     }
 
     @Override
-    public void obtainTelephoneRegisterSMS(String telephone) {
+    public void obtainResetTelephoneLoginPasswordSMS(String telephone) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
-                ObtainSMSCodeReq.CodeType.REGISTER,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mRegisterView, false) {
+                ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
+                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView, false) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
-                        mRegisterView.startPhoneVerifyActivity();
+                        mView.gotoResetTelephoneLoginPage();
                     }
                 });
     }

@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".module.login.view.RegisterSuccessfulActivity"></activity>
+        <activity android:name=".module.login.view.RecoverPasswordActivity"></activity>
+        <activity android:name=".module.login.view.SuccessfulActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -55,7 +56,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
-        <activity android:name=".module.login.view.PhoneSMSVerifyActivity" />
+        <activity android:name=".module.login.view.TelephoneSMSVerifyActivity" />
         <activity android:name=".module.login.view.RegisterActivity" />
         <activity android:name=".module.main.view.MainActivity" />
         <activity

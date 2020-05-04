@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.login.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +14,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
@@ -112,6 +115,25 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
                 this,
                 mPetPhone.getPhoneSuffixText());
+    }
+
+    @Override
+    public void showAlreadyRegisterDialog() {
+        mPBtnRegister.startShowAnim();
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("无法注册")
+                .setMessage("该手机账号已经被注册，是否马上去登录?")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("去登录", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LoginActivity.startActivityByTelephoneAccount(
+                                RegisterActivity.this,
+                                mPetPhone.getPhoneSuffixText(),
+                                null);
+                    }
+                })
+                .show();
     }
 
     @Override

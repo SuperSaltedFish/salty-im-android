@@ -21,6 +21,9 @@ public interface BasicView<P> {
     //展示对话框
     void showDialog(String content);
 
+    //展示对话框，含标题
+    void showDialog(String title, String content);
+
     //展示toast
     void showToast(String content, @SaltyToast.ToastType int type, int duration);
 

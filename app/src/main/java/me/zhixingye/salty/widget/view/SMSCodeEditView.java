@@ -147,7 +147,7 @@ public class SMSCodeEditView extends LinearLayout {
             EditText editText = mEditTextList.get(mContent.length());
             editText.requestFocus();
             if (mInputMethodManager != null) {
-                mInputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                mInputMethodManager.showSoftInput(editText, 0);
             }
         }
     };

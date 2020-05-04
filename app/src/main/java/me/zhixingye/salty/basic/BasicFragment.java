@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -23,7 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
 import me.zhixingye.salty.widget.view.SaltyToast;
@@ -186,19 +187,26 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         }
     }
 
-    //显示一个content内容的对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public void showDialog(String content) {
-        showDialog(content, null);
+        showDialog(content, (DialogInterface.OnDismissListener) null);
     }
 
     public void showDialog(String content, DialogInterface.OnDismissListener listener) {
-        new AlertDialog(mContext)
+        showDialog(null, content, listener);
+    }
+
+    public void showDialog(String title, String content) {
+        showDialog(title, content, null);
+    }
+
+    public void showDialog(String title, String content, DialogInterface.OnDismissListener listener) {
+        new MaterialAlertDialogBuilder(mContext)
+                .setTitle(title)
                 .setMessage(content)
                 .setOnDismissListener(listener)
                 .show();
     }
 
-    //显示一个Error错误，默认使用toast实现的，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public void showError(String error) {
         if (TextUtils.isEmpty(error)) {
             return;

@@ -12,7 +12,8 @@ public enum ResponseCode {
     INTERNAL_ILLICIT_RESP_DATA(-3, "非法的响应数据"),
     INTERNAL_IPC_EXCEPTION(-4, "客户端繁忙，请稍后再试：-3"),
 
-    REMOTE_NEED_LOGIN_AUTH(201, "本次登录需要验证码校验");
+    REMOTE_NEED_LOGIN_AUTH(200402, "本次登录需要验证码校验"),
+    REMOTE_USER_ALREADY_REGISTER(200226, "用户已注册");
 
     public static boolean isErrorCode(int errorCode) {
         return errorCode != 200;

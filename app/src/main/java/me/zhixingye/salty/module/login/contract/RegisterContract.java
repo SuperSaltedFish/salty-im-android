@@ -11,6 +11,8 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class RegisterContract {
     public interface View extends BasicView<Presenter> {
+        void showAlreadyRegisterDialog();
+
         void startPhoneVerifyActivity();
     }
 

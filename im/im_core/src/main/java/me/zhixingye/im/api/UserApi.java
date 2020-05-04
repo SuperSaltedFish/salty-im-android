@@ -17,6 +17,8 @@ import com.salty.protos.UpdateUserInfoResp;
 import com.salty.protos.UserProfile;
 import com.salty.protos.UserServiceGrpc;
 
+import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.Nullable;
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
@@ -35,7 +37,8 @@ public class UserApi extends BasicApi {
     private UserServiceGrpc.UserServiceStub mUserServiceStub;
 
     public UserApi(ManagedChannel channel) {
-        mUserServiceStub = UserServiceGrpc.newStub(channel);
+        mUserServiceStub = UserServiceGrpc.newStub(channel)
+                .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
     public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {

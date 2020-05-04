@@ -4,6 +4,8 @@ import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.SMSServiceGrpc;
 
+import java.util.concurrent.TimeUnit;
+
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
@@ -19,7 +21,8 @@ public class SMSApi extends BasicApi {
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
     public SMSApi(ManagedChannel channel) {
-        mSMSServiceStub = SMSServiceGrpc.newStub(channel);
+        mSMSServiceStub = SMSServiceGrpc.newStub(channel)
+                .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
     public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {

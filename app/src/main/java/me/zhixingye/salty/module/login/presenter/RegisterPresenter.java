@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.login.presenter;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 
+import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
@@ -35,6 +36,15 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
                         mRegisterView.startPhoneVerifyActivity();
+                    }
+
+                    @Override
+                    protected boolean onError(int code, String error) {
+                        if (code == ResponseCode.REMOTE_USER_ALREADY_REGISTER.getCode()) {
+                            mRegisterView.showAlreadyRegisterDialog();
+                            return true;
+                        }
+                        return false;
                     }
                 });
     }

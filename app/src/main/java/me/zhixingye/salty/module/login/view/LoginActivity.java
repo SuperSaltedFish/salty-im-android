@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.login.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import me.zhixingye.salty.R;
@@ -73,6 +75,7 @@ public class LoginActivity
         mBtnRegister.setOnClickListener(mOnClickListener);
         mBtnResetPassword.setOnClickListener(mOnClickListener);
         mPBtnLogin.setOnClickListener(mOnClickListener);
+
     }
 
     private void tryLogin() {
@@ -93,7 +96,9 @@ public class LoginActivity
         if (TextUtils.isEmpty(telephone)) {
             return;
         }
+        mPetPhone.setPhoneSuffixText(telephone);
         if (TextUtils.isEmpty(password)) {
+            showSoftKeyboard(mEtPassword);
             return;
         }
         mPetPhone.setPhoneSuffixText(telephone);

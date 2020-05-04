@@ -17,6 +17,8 @@ import com.salty.protos.UpdateConversationTopResp;
 import com.salty.protos.UpdateNotificationStatusReq;
 import com.salty.protos.UpdateNotificationStatusResp;
 
+import java.util.concurrent.TimeUnit;
+
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
@@ -31,7 +33,8 @@ public class ConversationApi extends BasicApi {
     private ConversationServiceGrpc.ConversationServiceStub mConversationServiceStub;
 
     public ConversationApi(ManagedChannel channel) {
-        mConversationServiceStub = ConversationServiceGrpc.newStub(channel);
+        mConversationServiceStub = ConversationServiceGrpc.newStub(channel)
+                .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
     public void getAllConversations(RequestCallback<GetAllConversationResp> callback) {

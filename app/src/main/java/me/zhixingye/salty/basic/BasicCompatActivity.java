@@ -4,8 +4,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -18,6 +20,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.ParameterizedType;
@@ -28,8 +32,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.widget.dialog.AlertDialog;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
 import me.zhixingye.salty.widget.view.SaltyToast;
@@ -280,7 +284,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                 return;
             }
             focusView.requestFocus();
-            mInputManager.showSoftInput(focusView, 0);
+            mInputManager.showSoftInput(focusView,0);
         } else {
             //但如果View没有测量，要等View测量之后才弹出键盘，不然有时候键盘会弹不出
             focusView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -346,19 +350,26 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         }
     }
 
-    //显示一个content内容的对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public void showDialog(String content) {
-        showDialog(content, null);
+        showDialog(content, (DialogInterface.OnDismissListener) null);
     }
 
     public void showDialog(String content, DialogInterface.OnDismissListener listener) {
-        new AlertDialog(this)
+        showDialog(null, content, listener);
+    }
+
+    public void showDialog(String title, String content) {
+        showDialog(title, content, null);
+    }
+
+    public void showDialog(String title, String content, DialogInterface.OnDismissListener listener) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
                 .setMessage(content)
                 .setOnDismissListener(listener)
                 .show();
     }
 
-    //显示一个Error错误，默认使用toast实现的，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public void showError(String error) {
         if (TextUtils.isEmpty(error)) {
             return;

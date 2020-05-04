@@ -19,6 +19,7 @@ import com.salty.protos.UpdateMemberNicknameReq;
 import com.salty.protos.UpdateMemberNicknameResp;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
@@ -34,7 +35,8 @@ public class GroupApi extends BasicApi {
     private GroupServiceGrpc.GroupServiceStub mGroupServiceStub;
 
     public GroupApi(ManagedChannel channel) {
-        mGroupServiceStub = GroupServiceGrpc.newStub(channel);
+        mGroupServiceStub = GroupServiceGrpc.newStub(channel)
+                .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
     public void createGroup(String groupName, List<String> memberUserIdArr, RequestCallback<CreateGroupResp> callback) {

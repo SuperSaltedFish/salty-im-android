@@ -10,6 +10,8 @@ import com.salty.protos.RefusedContactResp;
 import com.salty.protos.RequestContactReq;
 import com.salty.protos.RequestContactResp;
 
+import java.util.concurrent.TimeUnit;
+
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
@@ -24,7 +26,8 @@ public class ContactApi extends BasicApi {
     private ContactServiceGrpc.ContactServiceStub mContactServiceStub;
 
     public ContactApi(ManagedChannel channel) {
-        mContactServiceStub = ContactServiceGrpc.newStub(channel);
+        mContactServiceStub = ContactServiceGrpc.newStub(channel)
+                .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
     public void requestContact(String userId, String reason, RequestCallback<RequestContactResp> callback) {

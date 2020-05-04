@@ -1,5 +1,7 @@
 package me.zhixingye.im.api;
 
+import android.text.TextUtils;
+
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessageLite;
@@ -77,8 +79,19 @@ public class BasicApi {
                 Logger.e(TAG, "Status == null", t);
                 callError(ResponseCode.INTERNAL_UNKNOWN);
             } else {
-                Logger.e(TAG, status.toString());
-                callError(status.getCode().value(), status.getDescription());
+                String error;
+                switch (status.getCode()) {
+                    case DEADLINE_EXCEEDED:
+                        error = "连接超时，请检查当前网络状态是否正常！";
+                        break;
+                    default:
+                        error = status.getDescription();
+                        break;
+                }
+                if (TextUtils.isEmpty(error) && status.getCause() != null) {
+                    error = status.getCause().getMessage();
+                }
+                callError(status.getCode().value(), error);
             }
         }
 

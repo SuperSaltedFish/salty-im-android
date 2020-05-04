@@ -118,15 +118,7 @@ public class TelephoneSMSVerifyActivity
             public void onClick(@NonNull View widget) {
 
             }
-        }, startIndex, startIndex + voiceSMS.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        sStr.setSpan(new UnderlineSpan() {
-            @Override
-            public void updateDrawState(@NonNull TextPaint textPaint) {
-                super.updateDrawState(textPaint);
-                textPaint.setColor(ContextCompat.getColor(TelephoneSMSVerifyActivity.this, R.color.colorPrimary));
-                textPaint.setFlags(Paint.UNDERLINE_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-            }
         }, startIndex, startIndex + voiceSMS.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mTvVoiceSMSHint.setText(sStr);

@@ -13,6 +13,8 @@ public class AppConfig {
     public static final int MIN_TELEPHONE_LENGTH = 8;
     public static final int PHONE_VERIFY_CODE_LENGTH = 6;
 
+    public static final String USER_AGREEMENT_URL = "https://josenspire.github.io/super-im/#/";
+
     private static final String TAG = "AppConfig";
 
     private static SharedPreferences sConfigPreferences;

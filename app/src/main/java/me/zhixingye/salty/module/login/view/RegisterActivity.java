@@ -5,21 +5,28 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
+import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
+import me.zhixingye.salty.module.web.WebActivity;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
 
@@ -69,11 +76,24 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         int startIndex = userAgreement.length();
         SpannableString sStr = new SpannableString(userAgreement + focus);
         sStr.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorAccent)),
+                new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        WebActivity.startActivity(RegisterActivity.this, AppConfig.USER_AGREEMENT_URL);
+                    }
+
+                    @Override
+                    public void updateDrawState(@NonNull TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setUnderlineText(false);
+                    }
+                },
                 startIndex,
                 startIndex + focus.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+        mTvAgreement.setHighlightColor(Color.TRANSPARENT);
+        mTvAgreement.setMovementMethod(LinkMovementMethod.getInstance());
         mTvAgreement.setText(sStr);
     }
 

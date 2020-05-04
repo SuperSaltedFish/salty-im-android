@@ -104,7 +104,7 @@ public class LoginActivity
         mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mPresenter.tryLogin(telephone, password);
+                mPresenter.tryLoginByTelephone(telephone, password);
             }
         });
     }

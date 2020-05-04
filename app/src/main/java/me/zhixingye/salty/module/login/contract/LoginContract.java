@@ -21,7 +21,7 @@ public class LoginContract {
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void tryLogin(String username, String password);
+        void tryLoginByTelephone(String username, String password);
     }
 
 

@@ -2,6 +2,8 @@ package me.zhixingye.salty.module.login.presenter;
 
 
 import com.salty.protos.LoginResp;
+import com.salty.protos.ObtainSMSCodeReq;
+import com.salty.protos.ObtainSMSCodeResp;
 
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
@@ -15,38 +17,51 @@ import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
  */
 public class LoginPresenter implements LoginContract.Presenter {
 
-    private LoginContract.View mLoginView;
+    private LoginContract.View mView;
 
     @Override
     public void attachView(LoginContract.View view) {
-        mLoginView = view;
+        mView = view;
     }
 
     @Override
     public void detachView() {
-        mLoginView = null;
+        mView = null;
     }
 
     @Override
-    public void tryLogin(final String username, String password) {
+    public void tryLoginByTelephone(final String telephone, String password) {
         IMClient.get().getAccountService().loginByTelephone(
-                username,
+                telephone,
                 password,
                 null,
-                new LifecycleMVPRequestCallback<LoginResp>(mLoginView, false) {
+                new LifecycleMVPRequestCallback<LoginResp>(mView, false) {
                     @Override
                     protected void onSuccess(LoginResp result) {
-                        mLoginView.startHomeActivity();
+                        mView.startHomeActivity();
                     }
 
                     @Override
                     protected boolean onError(int code, String error) {
                         if (code == ResponseCode.REMOTE_NEED_LOGIN_AUTH.getCode()) {
-                            mLoginView.startPhoneVerifyActivity();
+                            obtainTelephoneSMS(telephone);
                             return true;
                         }
                         return false;
                     }
                 });
     }
+
+    private void obtainTelephoneSMS(String telephone) {
+        IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
+                telephone,
+                ObtainSMSCodeReq.CodeType.LOGIN,
+                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView) {
+                    @Override
+                    protected void onSuccess(ObtainSMSCodeResp result) {
+                        mView.startPhoneVerifyActivity();
+                    }
+                });
+    }
+
 }

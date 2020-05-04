@@ -71,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/mIvDivider" />
 
-    <ImageView
+    <View
         android:id="@+id/mIvDivider"
         android:layout_width="1px"
         android:layout_height="28dp"
@@ -113,6 +113,26 @@
         app:layout_constraintBottom_toTopOf="@id/mIvWeChat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/mIvDividerLeft"
+        android:layout_width="64dp"
+        android:layout_height="1px"
+        android:layout_marginEnd="12dp"
+        android:background="@color/dividerColor"
+        app:layout_constraintBottom_toBottomOf="@id/mTvThirdPartLogin"
+        app:layout_constraintEnd_toStartOf="@id/mTvThirdPartLogin"
+        app:layout_constraintTop_toTopOf="@id/mTvThirdPartLogin" />
+
+    <View
+        android:id="@+id/mIvDividerRight"
+        android:layout_width="64dp"
+        android:layout_height="1px"
+        android:layout_marginStart="12dp"
+        android:background="@color/dividerColor"
+        app:layout_constraintBottom_toBottomOf="@id/mTvThirdPartLogin"
+        app:layout_constraintStart_toEndOf="@id/mTvThirdPartLogin"
+        app:layout_constraintTop_toTopOf="@id/mTvThirdPartLogin" />
 
     <ImageView
         android:id="@+id/mIvWeChat"

@@ -3,7 +3,6 @@ package me.zhixingye.salty.module.login.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import me.zhixingye.salty.R;
@@ -19,7 +17,7 @@ import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.LoginContract;
 import me.zhixingye.salty.module.login.presenter.LoginPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
-import me.zhixingye.salty.widget.view.PhoneEditText;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
 
 /**
@@ -46,7 +44,7 @@ public class LoginActivity
         context.startActivity(intent);
     }
 
-    private PhoneEditText mPetPhone;
+    private TelephoneEditText mTEtPhone;
     private TextInputLayout mTilPassword;
     private EditText mEtPassword;
     private ProgressButton mPBtnLogin;
@@ -61,7 +59,7 @@ public class LoginActivity
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mPetPhone = findViewById(R.id.mPetPhone);
+        mTEtPhone = findViewById(R.id.mTEtPhone);
         mTilPassword = findViewById(R.id.mTilPassword);
         mEtPassword = findViewById(R.id.mEtPassword);
         mPBtnLogin = findViewById(R.id.mPBtnLogin);
@@ -79,10 +77,10 @@ public class LoginActivity
     }
 
     private void tryLogin() {
-        final String telephone = mPetPhone.getPhoneSuffixText();
+        final String telephone = mTEtPhone.getPhoneSuffixText();
         final String password = mEtPassword.getText().toString();
         if (TextUtils.isEmpty(telephone)) {
-            mPetPhone.setError("请输入一个合法的手机号码");
+            mTEtPhone.setError("请输入一个合法的手机号码");
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -96,12 +94,12 @@ public class LoginActivity
         if (TextUtils.isEmpty(telephone)) {
             return;
         }
-        mPetPhone.setPhoneSuffixText(telephone);
+        mTEtPhone.setPhoneSuffixText(telephone);
         if (TextUtils.isEmpty(password)) {
             showSoftKeyboard(mEtPassword);
             return;
         }
-        mPetPhone.setPhoneSuffixText(telephone);
+        mTEtPhone.setPhoneSuffixText(telephone);
         mEtPassword.setText(password);
         mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
             @Override
@@ -144,7 +142,7 @@ public class LoginActivity
     public void startPhoneVerifyActivity() {
         TelephoneSMSVerifyActivity.startActivityToLogin(
                 this,
-                mPetPhone.getPhoneSuffixText(),
+                mTEtPhone.getPhoneSuffixText(),
                 mEtPassword.getText().toString());
     }
 

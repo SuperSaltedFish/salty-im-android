@@ -38,8 +38,8 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <me.zhixingye.salty.widget.view.PhoneEditText
-        android:id="@+id/mPetPhone"
+    <me.zhixingye.salty.widget.view.TelephoneEditText
+        android:id="@+id/mTEtPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

@@ -6,13 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -20,13 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
-import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
-import me.zhixingye.salty.util.AnimationUtil;
-import me.zhixingye.salty.util.RegexUtil;
-import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
-import me.zhixingye.salty.widget.view.PhoneEditText;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
 
 /**
@@ -42,7 +36,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         context.startActivity(new Intent(context, RegisterActivity.class));
     }
 
-    private PhoneEditText mPetPhone;
+    private TelephoneEditText mTEtPhone;
     private ProgressButton mPBtnRegister;
     private TextView mTvAgreement;
 
@@ -53,7 +47,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mPetPhone = findViewById(R.id.mPetPhone);
+        mTEtPhone = findViewById(R.id.mTEtPhone);
         mPBtnRegister = findViewById(R.id.mPBtnRegister);
         mTvAgreement = findViewById(R.id.mTvAgreement);
     }
@@ -84,9 +78,9 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     }
 
     private void tryNext() {
-        final String telephone = mPetPhone.getPhoneSuffixText();
+        final String telephone = mTEtPhone.getPhoneSuffixText();
         if (TextUtils.isEmpty(telephone)) {
-            mPetPhone.setError("请输入一个合法的手机号码");
+            mTEtPhone.setError("请输入一个合法的手机号码");
             return;
         }
 
@@ -114,7 +108,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         mPBtnRegister.startShowAnim();
         ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
                 this,
-                mPetPhone.getPhoneSuffixText());
+                mTEtPhone.getPhoneSuffixText());
     }
 
     @Override
@@ -129,7 +123,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
                     public void onClick(DialogInterface dialog, int which) {
                         LoginActivity.startActivityByTelephoneAccount(
                                 RegisterActivity.this,
-                                mPetPhone.getPhoneSuffixText(),
+                                mTEtPhone.getPhoneSuffixText(),
                                 null);
                     }
                 })

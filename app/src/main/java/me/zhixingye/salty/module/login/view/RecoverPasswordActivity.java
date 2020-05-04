@@ -4,7 +4,7 @@ import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
 import me.zhixingye.salty.module.login.presenter.RecoverPasswordPresenter;
-import me.zhixingye.salty.widget.view.PhoneEditText;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
 
 import android.animation.Animator;
@@ -24,7 +24,7 @@ public class RecoverPasswordActivity
         context.startActivity(intent);
     }
 
-    private PhoneEditText mPetPhone;
+    private TelephoneEditText mTEtPhone;
     private ProgressButton mPBtnNext;
 
     @Override
@@ -34,7 +34,7 @@ public class RecoverPasswordActivity
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mPetPhone = findViewById(R.id.mPetPhone);
+        mTEtPhone = findViewById(R.id.mTEtPhone);
         mPBtnNext = findViewById(R.id.mPBtnNext);
     }
 
@@ -47,9 +47,9 @@ public class RecoverPasswordActivity
     }
 
     private void next() {
-        final String telephone = mPetPhone.getPhoneSuffixText();
+        final String telephone = mTEtPhone.getPhoneSuffixText();
         if (TextUtils.isEmpty(telephone)) {
-            mPetPhone.setError("请输入一个合法的手机号码");
+            mTEtPhone.setError("请输入一个合法的手机号码");
             return;
         }
 
@@ -76,7 +76,7 @@ public class RecoverPasswordActivity
     public void gotoResetTelephoneLoginPage() {
         ResetLoginPasswordActivity.startActivityToResetTelephoneLoginPasswordBySMS(
                 this,
-                mPetPhone.getPhoneSuffixText());
+                mTEtPhone.getPhoneSuffixText());
         mPBtnNext.startShowAnim();
     }
 

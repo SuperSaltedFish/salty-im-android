@@ -19,22 +19,22 @@ import me.zhixingye.salty.R;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class PhoneEditText extends LinearLayout {
+public class TelephoneEditText extends LinearLayout {
 
     private TextInputLayout mTilPhonePrefix;
     private TextInputLayout mTilPhoneSuffix;
     private EditText mEtPhonePrefix;
     private EditText mEtPhoneSuffix;
 
-    public PhoneEditText(Context context) {
+    public TelephoneEditText(Context context) {
         this(context, null);
     }
 
-    public PhoneEditText(Context context, @Nullable AttributeSet attrs) {
+    public TelephoneEditText(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PhoneEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TelephoneEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }
@@ -48,23 +48,6 @@ public class PhoneEditText extends LinearLayout {
         mEtPhonePrefix = findViewById(R.id.mEtPhonePrefix);
         mTilPhoneSuffix = findViewById(R.id.mTilPhoneSuffix);
         mEtPhoneSuffix = findViewById(R.id.mEtPhoneSuffix);
-
-        mEtPhoneSuffix.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mTilPhoneSuffix.setError(null);
-            }
-        });
     }
 
     @Override
@@ -89,7 +72,7 @@ public class PhoneEditText extends LinearLayout {
         return callPrefix.toString();
     }
 
-    public String getPhoneSuffixText(){
+    public String getPhoneSuffixText() {
         CharSequence callPrefix = mEtPhoneSuffix.getText();
         if (TextUtils.isEmpty(callPrefix)) {
             return "";
@@ -101,7 +84,7 @@ public class PhoneEditText extends LinearLayout {
         mEtPhonePrefix.setText(text);
     }
 
-    public void setPhoneSuffixText(CharSequence text){
+    public void setPhoneSuffixText(CharSequence text) {
         mEtPhoneSuffix.setText(text);
     }
 

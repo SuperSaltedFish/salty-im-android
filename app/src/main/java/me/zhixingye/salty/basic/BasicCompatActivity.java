@@ -4,14 +4,14 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.inputmethodservice.InputMethodService;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -30,13 +30,16 @@ import java.lang.reflect.Type;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import me.zhixingye.im.tool.Logger;
+import androidx.core.view.LayoutInflaterCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
 import me.zhixingye.salty.widget.view.SaltyToast;
+import me.zhixingye.salty.widget.view.TextInputLayoutExtra;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -88,7 +91,6 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
 
         mVibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
 
@@ -108,6 +110,14 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         setup(savedInstanceState);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+        if (TextUtils.equals("com.google.android.material.textfield.TextInputLayout", name)) {
+            return new TextInputLayoutExtra(context, attrs);
+        }
+        return super.onCreateView(parent, name, context, attrs);
+    }
 
     @Override
     protected void onDestroy() {
@@ -134,9 +144,9 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     }
 
     //设置是否显示返回箭头，这个箭头是系统toolbar默认的那个返回箭头样式
-    protected void setDisplayHomeAsUpEnabled(boolean enable) {
+    protected void setDisplayHomeAsUpEnabled(boolean isEnable) {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(enable);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(isEnable);
         }
     }
 
@@ -284,7 +294,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                 return;
             }
             focusView.requestFocus();
-            mInputManager.showSoftInput(focusView,0);
+            mInputManager.showSoftInput(focusView, 0);
         } else {
             //但如果View没有测量，要等View测量之后才弹出键盘，不然有时候键盘会弹不出
             focusView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

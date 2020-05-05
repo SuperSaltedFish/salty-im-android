@@ -168,6 +168,7 @@ public class AccountServiceImpl implements AccountService {
             service.close();
             ServiceAccessor.register(SQLiteService.class, null);
         }
+        isLogged = false;
         mUserId = null;
         mToken = null;
     }

@@ -9,6 +9,7 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.tool.AppUpdateHelper;
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
+        IMClient.get().getAccountService().logout();
         finish();
     }
 }

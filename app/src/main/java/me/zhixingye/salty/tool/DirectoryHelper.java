@@ -21,8 +21,8 @@ public class DirectoryHelper {
 
     private static final String TAG = "DirectoryHelper";
 
-    private static final String EXTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/salty/";
-    private static final String INTERNAL_STORAGE_PATH = SaltyApp.getAppContext().getFilesDir().getAbsolutePath() + "/Internal/";
+    private static final String EXTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/SaltyIM/";
+    private static final String INTERNAL_STORAGE_PATH = SaltyApp.getAppContext().getFilesDir().getAbsolutePath() + "/SaltyIM/";
 
     private static final String PATH_IMAGE = "image/";
     private static final String PATH_LOG = "log/";
@@ -51,15 +51,15 @@ public class DirectoryHelper {
     }
 
     public static String getExternalImagePath() {
-        return createPathIfDoesNotExist(EXTERNAL_STORAGE_PATH + PATH_IMAGE);
+        return createPathIfDoesNotExist(INTERNAL_STORAGE_PATH + PATH_IMAGE);
     }
 
     public static String getExternalLogPath() {
-        return createPathIfDoesNotExist(EXTERNAL_STORAGE_PATH + PATH_LOG);
+        return createPathIfDoesNotExist(INTERNAL_STORAGE_PATH + PATH_LOG);
     }
 
     public static String getExternalDownloadPath() {
-        return createPathIfDoesNotExist(EXTERNAL_STORAGE_PATH + PATH_DOWNLOAD);
+        return createPathIfDoesNotExist(INTERNAL_STORAGE_PATH + PATH_DOWNLOAD);
     }
 
     public static String getInternalWebCachePath() {

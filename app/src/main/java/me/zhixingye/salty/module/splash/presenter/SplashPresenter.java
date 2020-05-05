@@ -44,7 +44,7 @@ public class SplashPresenter implements SplashContract.Presenter {
                     }
                 }
             }
-        }, 300);//延迟是为了防止进程还没起来就调用IMClient
+        }, 1000);//延迟是为了防止进程还没起来就调用IMClient
     }
 
 }

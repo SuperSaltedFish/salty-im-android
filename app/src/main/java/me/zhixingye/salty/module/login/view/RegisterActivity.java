@@ -27,6 +27,7 @@ import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.module.web.WebActivity;
+import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
 
@@ -138,9 +139,9 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
                 .setTitle("无法注册")
                 .setMessage("该手机账号已经被注册，是否马上去登录?")
                 .setNegativeButton("取消", null)
-                .setPositiveButton("去登录", new DialogInterface.OnClickListener() {
+                .setPositiveButton("去登录", new OnDialogOnlySingleClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onSingleClick(DialogInterface dialog, int which) {
                         LoginActivity.startActivityByTelephoneAccount(
                                 RegisterActivity.this,
                                 mTEtPhone.getPhoneSuffixText(),

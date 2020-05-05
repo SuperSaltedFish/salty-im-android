@@ -5,8 +5,9 @@ import android.content.Context;
 import android.text.TextUtils;
 
 
-import androidx.emoji.bundled.BundledEmojiCompatConfig;
-import androidx.emoji.text.EmojiCompat;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+
 import me.jessyan.autosize.AutoSizeConfig;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.im.sdk.util.SystemUtils;
@@ -29,18 +30,27 @@ public class SaltyApp extends Application {
         sAppContext = this;
 
         if (TextUtils.equals(SystemUtils.getCurrentProcessName(this), getPackageName())) {
+            IMClient.init(this);
+
             AppConfig.init(this);
             AndroidHelper.init(this);
             ActivityHelper.init(this);
             setupThirdPart();
 
-            IMClient.init(this);
         }
     }
 
     private void setupThirdPart() {
-        EmojiCompat.init(new BundledEmojiCompatConfig(this));
+//        EmojiCompat.init(new BundledEmojiCompatConfig(this));
         AutoSizeConfig.getInstance().setDesignWidthInDp(420).setBaseOnWidth(true).setExcludeFontScale(true);
+
+        Beta.autoCheckUpgrade = false;
+        Beta.enableHotfix = false;
+        Beta.enableNotification = false;
+        Beta.autoDownloadOnWifi = false;
+        Beta.showInterruptedStrategy = true;
+        Bugly.init(this, AppConfig.BUGLY_APP_ID, BuildConfig.isDebug);
+        Beta.checkAppUpgrade(false, true);
     }
 
     public static Context getAppContext() {

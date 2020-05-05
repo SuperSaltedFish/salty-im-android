@@ -6,6 +6,6 @@
             path="SaltyIM" />
         <files-path
             name="AppInternalStorage"
-            path="Internal" />
+            path="SaltyIM" />
     </paths>
 </resources>

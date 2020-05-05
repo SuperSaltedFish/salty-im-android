@@ -174,7 +174,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean isLogged() {
-        return !TextUtils.isEmpty(mUserId) && TextUtils.isEmpty(mToken);
+        return !TextUtils.isEmpty(mUserId) && !TextUtils.isEmpty(mToken);
     }
 
     @Override

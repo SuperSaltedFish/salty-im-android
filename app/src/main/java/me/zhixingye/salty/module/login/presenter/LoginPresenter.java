@@ -56,7 +56,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
                 ObtainSMSCodeReq.CodeType.LOGIN,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView) {
+                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView, false) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
                         mView.startPhoneVerifyActivity();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.view.LoginActivity;
+import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
 import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
 import me.zhixingye.salty.util.PermissionHelper;
@@ -68,6 +69,7 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
 
     @Override
     public void startHomeActivity() {
+        MainActivity.startActivity(this);
         finish();
     }
 

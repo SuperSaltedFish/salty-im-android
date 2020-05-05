@@ -15,6 +15,8 @@ public class AppConfig {
 
     public static final String USER_AGREEMENT_URL = "https://josenspire.github.io/super-im/#/";
 
+    public static final String BUGLY_APP_ID = "6f156052e5";
+
     private static final String TAG = "AppConfig";
 
     private static SharedPreferences sConfigPreferences;

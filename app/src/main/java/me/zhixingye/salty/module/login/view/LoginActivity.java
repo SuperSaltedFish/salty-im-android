@@ -9,16 +9,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.google.android.material.textfield.TextInputLayout;
-
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.LoginContract;
 import me.zhixingye.salty.module.login.presenter.LoginPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
-import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -37,7 +35,10 @@ public class LoginActivity
         context.startActivity(intent);
     }
 
-    public static void startActivityByTelephoneAccount(Context context, String telephone, String password) {
+    public static void startActivityByTelephoneAccount(
+            Context context,
+            String telephone,
+            String password) {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         intent.putExtra(EXTRA_PASSWORD, password);
@@ -161,8 +162,8 @@ public class LoginActivity
     }
 
     @Override
-    public void showError(String error) {
-        super.showError(error);
+    public void cancelProgressButtonLoadingIfNeed() {
+        super.cancelProgressButtonLoadingIfNeed();
         mPBtnLogin.startShowAnim();
     }
 }

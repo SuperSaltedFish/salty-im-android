@@ -26,6 +26,7 @@ import me.zhixingye.im.sdk.proxy.MessageServiceProxy;
 import me.zhixingye.im.sdk.proxy.StorageServiceProxy;
 import me.zhixingye.im.sdk.proxy.UserServiceProxy;
 import me.zhixingye.im.sdk.util.SystemUtils;
+import me.zhixingye.im.tool.Logger;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -92,6 +93,7 @@ public class IMClient {
                 new ServiceConnection() {
                     @Override
                     public void onServiceConnected(ComponentName name, IBinder service) {
+                        Logger.e("yezhixin","onServiceConnected");
                         mIRemoteService = IRemoteService.Stub.asInterface(service);
 
                         ((RemoteProxy) mAccountServiceProxy).onBindHandle(mIRemoteService);

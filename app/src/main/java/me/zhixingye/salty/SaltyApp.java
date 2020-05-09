@@ -49,7 +49,7 @@ public class SaltyApp extends Application {
         Beta.enableNotification = false;
         Beta.autoDownloadOnWifi = false;
         Beta.showInterruptedStrategy = true;
-        Bugly.init(this, AppConfig.BUGLY_APP_ID, BuildConfig.isDebug);
+        Bugly.init(this, AppConfig.BUGLY_APP_ID, BuildConfig.DEBUG);
         Beta.checkAppUpgrade(false, true);
     }
 

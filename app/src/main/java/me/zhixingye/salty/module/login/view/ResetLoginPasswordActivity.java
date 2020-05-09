@@ -1,15 +1,5 @@
 package me.zhixingye.salty.module.login.view;
 
-import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
-import me.zhixingye.salty.configure.AppConfig;
-import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
-import me.zhixingye.salty.module.login.presenter.ResetLoginPasswordPresenter;
-import me.zhixingye.salty.util.AnimationUtil;
-import me.zhixingye.salty.util.RegexUtil;
-import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
-import me.zhixingye.salty.widget.view.ProgressButton;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
@@ -22,10 +12,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.Locale;
+import me.zhixingye.salty.R;
+import me.zhixingye.salty.basic.BasicCompatActivity;
+import me.zhixingye.salty.configure.AppConfig;
+import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
+import me.zhixingye.salty.module.login.presenter.ResetLoginPasswordPresenter;
+import me.zhixingye.salty.util.AnimationUtil;
+import me.zhixingye.salty.util.RegexUtil;
+import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
+import me.zhixingye.salty.widget.view.ProgressButton;
 
 public class ResetLoginPasswordActivity
         extends BasicCompatActivity<ResetLoginPasswordPresenter>
@@ -45,16 +42,20 @@ public class ResetLoginPasswordActivity
         context.startActivity(intent);
     }
 
-    public static void startActivityToResetTelephoneLoginPasswordByOldPassword(Context context, String telephone) {
+    public static void startActivityToResetTelephoneLoginPasswordByOldPassword(Context context,
+            String telephone) {
         Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD);
+        intent.putExtra(EXTRA_OPERATION_TYPE,
+                OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         context.startActivity(intent);
     }
 
-    public static void startActivityToResetTelephoneLoginPasswordBySMS(Context context, String telephone) {
+    public static void startActivityToResetTelephoneLoginPasswordBySMS(Context context,
+            String telephone) {
         Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS);
+        intent.putExtra(EXTRA_OPERATION_TYPE,
+                OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         context.startActivity(intent);
     }
@@ -157,14 +158,16 @@ public class ResetLoginPasswordActivity
                 mTvRuleCombination.setEnabled(
                         !TextUtils.isEmpty(s)
                                 && RegexUtil.isContainsNumbersOrLettersOrSymbol(s));
-                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtConfirmPassword.getText()));
+                mTvRuleConsistency.setEnabled(
+                        !TextUtils.isEmpty(s) && TextUtils.equals(s, mEtConfirmPassword.getText()));
             }
         });
 
         mEtConfirmPassword.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
+                mTvRuleConsistency.setEnabled(
+                        !TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
             }
         });
     }
@@ -217,10 +220,12 @@ public class ResetLoginPasswordActivity
                         mPresenter.registerByTelephone(mTelephone, newPassword, smsCode);
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
-                        mPresenter.resetTelephoneLoginPasswordByOldPassword(mTelephone, oldPassword, newPassword);
+                        mPresenter.resetTelephoneLoginPasswordByOldPassword(mTelephone, oldPassword,
+                                newPassword);
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-                        mPresenter.resetTelephoneLoginPasswordBySMS(mTelephone, smsCode, newPassword);
+                        mPresenter
+                                .resetTelephoneLoginPasswordBySMS(mTelephone, smsCode, newPassword);
                         break;
                 }
             }
@@ -310,19 +315,13 @@ public class ResetLoginPasswordActivity
         mResendCountDown.cancel();
         mResendCountDown.start();
         setAllowResendSMSCode(false);
-        mPBtnResend.startShowAnim();
     }
 
     @Override
-    public void showConfirmError(String error) {
-        showError(error);
+    public void cancelProgressButtonLoadingIfNeed() {
+        super.cancelProgressButtonLoadingIfNeed();
+        mPBtnResend.startShowAnim();
         mPBtnConfirm.startShowAnim();
-    }
-
-    @Override
-    public void showObtainSMSError(String error) {
-        showError(error);
-        mPBtnResend.startShowAnim();
     }
 
 }

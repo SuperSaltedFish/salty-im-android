@@ -20,7 +20,8 @@ public class SMSApi extends BasicApi {
 
     private SMSServiceGrpc.SMSServiceStub mSMSServiceStub;
 
-    public SMSApi(ManagedChannel channel) {
+    @Override
+    public void onBindManagedChannel(ManagedChannel channel) {
         mSMSServiceStub = SMSServiceGrpc.newStub(channel)
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }

@@ -34,7 +34,8 @@ public class GroupApi extends BasicApi {
 
     private GroupServiceGrpc.GroupServiceStub mGroupServiceStub;
 
-    public GroupApi(ManagedChannel channel) {
+    @Override
+    public void onBindManagedChannel(ManagedChannel channel) {
         mGroupServiceStub = GroupServiceGrpc.newStub(channel)
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }

@@ -4,7 +4,6 @@ package me.zhixingye.salty.module.login.presenter;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
-
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.LoginContract;
@@ -47,6 +46,11 @@ public class LoginPresenter implements LoginContract.Presenter {
                             obtainTelephoneSMS(telephone);
                             return true;
                         }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isEnableCancelProgressButtonLoadingOnSuccessful() {
                         return false;
                     }
                 });

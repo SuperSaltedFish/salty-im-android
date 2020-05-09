@@ -13,17 +13,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
@@ -53,7 +50,6 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
     private InputMethodManager mInputManager;
     private boolean isOnceVisible;
     private ProgressDialog mProgressDialog;
-    private int mCurrentPermissionsRequestCode;
     private Vibrator mVibrator;
 
     @Override
@@ -69,7 +65,8 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
 
     @Nullable
     @Override
-    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         return inflater.inflate(getLayoutID(), container, false);
     }
 
@@ -120,7 +117,8 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
     public void showSoftKeyboard(View focusView) {
         if (mContext != null) {
             if (mInputManager == null) {
-                mInputManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                mInputManager = (InputMethodManager) mContext
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
             }
             focusView.requestFocus();
             mInputManager.showSoftInput(focusView, InputMethodManager.SHOW_IMPLICIT);
@@ -132,11 +130,16 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         if (mContext instanceof Activity) {
             Activity activity = (Activity) mContext;
             if (mInputManager == null) {
-                mInputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                mInputManager = (InputMethodManager) activity
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
             }
-            if (activity.getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-                if (activity.getCurrentFocus() != null)
-                    mInputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (activity.getWindow().getAttributes().softInputMode
+                    != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+                if (activity.getCurrentFocus() != null) {
+                    mInputManager
+                            .hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             }
         }
     }
@@ -157,11 +160,11 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         SaltyToast.showToast(content, type, duration);
     }
 
-    public void setDisplayLoading(boolean isDisplay) {
-        setDisplayLoading(isDisplay, null);
+    public void setDisplayLoadingDialog(boolean isDisplay) {
+        setDisplayLoadingDialog(isDisplay, null);
     }
 
-    public void setDisplayLoading(boolean isDisplay, final Cancelable cancelable) {
+    public void setDisplayLoadingDialog(boolean isDisplay, final Cancelable cancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext, getString(R.string.Hint_Loading));
         }
@@ -199,7 +202,8 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         showDialog(title, content, null);
     }
 
-    public void showDialog(String title, String content, DialogInterface.OnDismissListener listener) {
+    public void showDialog(String title, String content,
+            DialogInterface.OnDismissListener listener) {
         new MaterialAlertDialogBuilder(mContext)
                 .setTitle(title)
                 .setMessage(content)
@@ -211,7 +215,7 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         if (TextUtils.isEmpty(error)) {
             return;
         }
-        showShortToast(error,SaltyToast.TYPE_ERROR);
+        showShortToast(error, SaltyToast.TYPE_ERROR);
         vibrate(50);
     }
 

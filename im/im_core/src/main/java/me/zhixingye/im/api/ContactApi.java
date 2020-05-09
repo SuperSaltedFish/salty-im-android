@@ -25,7 +25,8 @@ public class ContactApi extends BasicApi {
 
     private ContactServiceGrpc.ContactServiceStub mContactServiceStub;
 
-    public ContactApi(ManagedChannel channel) {
+    @Override
+    public void onBindManagedChannel(ManagedChannel channel) {
         mContactServiceStub = ContactServiceGrpc.newStub(channel)
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }

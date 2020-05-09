@@ -33,7 +33,6 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            buildConfigField 'boolean', 'isDebug', 'true'  //是否是debug模式，true的情况下会打印日志，否则不打印
 
         }
         release {
@@ -42,7 +41,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
-            buildConfigField 'boolean', 'isDebug', 'false' //是否是debug模式，true的情况下会打印日志，否则不打印
         }
     }
 
@@ -77,7 +75,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:${depVersions.glide}"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${depVersions.leakcanary}"
 
-    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
 
     annotationProcessor "com.github.bumptech.glide:compiler:${depVersions.glide}"
 }

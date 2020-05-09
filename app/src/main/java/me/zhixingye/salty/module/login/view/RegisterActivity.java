@@ -13,14 +13,10 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
@@ -28,15 +24,16 @@ import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.module.web.WebActivity;
 import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
-import me.zhixingye.salty.widget.view.TelephoneEditText;
 import me.zhixingye.salty.widget.view.ProgressButton;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> implements RegisterContract.View {
+public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> implements
+        RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";
 
@@ -80,7 +77,8 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
                 new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
-                        WebActivity.startActivity(RegisterActivity.this, AppConfig.USER_AGREEMENT_URL);
+                        WebActivity
+                                .startActivity(RegisterActivity.this, AppConfig.USER_AGREEMENT_URL);
                     }
 
                     @Override
@@ -126,7 +124,6 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
 
     @Override
     public void startPhoneVerifyActivity() {
-        mPBtnRegister.startShowAnim();
         ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
                 this,
                 mTEtPhone.getPhoneSuffixText());
@@ -134,7 +131,6 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
 
     @Override
     public void showAlreadyRegisterDialog() {
-        mPBtnRegister.startShowAnim();
         new MaterialAlertDialogBuilder(this)
                 .setTitle("无法注册")
                 .setMessage("该手机账号已经被注册，是否马上去登录?")
@@ -152,8 +148,8 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     }
 
     @Override
-    public void showError(String error) {
-        super.showError(error);
+    public void cancelProgressButtonLoadingIfNeed() {
+        super.cancelProgressButtonLoadingIfNeed();
         mPBtnRegister.startShowAnim();
     }
 }

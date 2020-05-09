@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import me.zhixingye.im.constant.ResponseCode;
@@ -29,16 +30,18 @@ import me.zhixingye.im.util.StringUtil;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class BasicApi {
+public abstract class BasicApi {
 
     private static final String TAG = "BasicApi";
 
+    public abstract void onBindManagedChannel(ManagedChannel channel);
+
     GrpcReq createReq(MessageLite message) {
         Any data = Any.newBuilder()
-                .setTypeUrl("salty/" + message.getClass().getCanonicalName())
+                .setTypeUrl("type.googleapis.com/" + message.getClass().getCanonicalName())
                 .setValue(message.toByteString())
                 .build();
-
+    
         DeviceService deviceService = ServiceAccessor.get(DeviceService.class);
         AccountService accountService = ServiceAccessor.get(AccountService.class);
 

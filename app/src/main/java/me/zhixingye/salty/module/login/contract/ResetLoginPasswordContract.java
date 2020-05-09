@@ -9,20 +9,19 @@ import me.zhixingye.salty.basic.BasicView;
  * @author zhixingye , 2020年05月03日.
  */
 public class ResetLoginPasswordContract {
+
     public interface View extends BasicView<Presenter> {
+
         void showRegisterSuccessfulPage();
 
         void showResetSuccessfulPage();
 
         void starResendCountDown();
-
-        void showConfirmError(String error);
-
-        void showObtainSMSError(String error);
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
+
         void obtainTelephoneRegisterSMS(String telephone);
 
         void obtainResetTelephoneLoginPasswordSMS(String telephone);
@@ -31,6 +30,7 @@ public class ResetLoginPasswordContract {
 
         void resetTelephoneLoginPasswordBySMS(String telephone, String smsCode, String newPassword);
 
-        void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword, String newPassword);
+        void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword,
+                String newPassword);
     }
 }

@@ -1,7 +1,6 @@
 package me.zhixingye.salty.widget.listener;
 
 import java.lang.ref.WeakReference;
-
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.salty.basic.BasicView;
 
@@ -15,22 +14,24 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
 
     private WeakReference<BasicView> mLifecycleView;
     private boolean isEnableLoading;//自动启动和关闭加载对话框
-    private boolean isAutoDismissLoadingInSuccessful;//是否再返回成功的时候关闭加载对话框，用于一些多个接口连续掉用而只启动一个加载对话框的场景
 
     public LifecycleMVPRequestCallback(BasicView lifecycleView) {
         this(lifecycleView, true);
     }
 
     public LifecycleMVPRequestCallback(BasicView lifecycleView, boolean isEnableLoading) {
-        this(lifecycleView, isEnableLoading, true);
+        this(lifecycleView, isEnableLoading, false);
     }
 
-    public LifecycleMVPRequestCallback(BasicView lifecycleView, boolean isEnableLoading, boolean isAutoDismissLoadingInSuccessful) {
+    public LifecycleMVPRequestCallback(
+            BasicView lifecycleView,
+            boolean isEnableLoading,
+            boolean isEnableCancelableDialog) {
         mLifecycleView = new WeakReference<>(lifecycleView);
         this.isEnableLoading = isEnableLoading;
-        this.isAutoDismissLoadingInSuccessful = isAutoDismissLoadingInSuccessful;
         if (isEnableLoading && lifecycleView != null) {
-            lifecycleView.setDisplayLoading(true);
+            lifecycleView.setDisplayLoadingDialog(true,
+                    isEnableCancelableDialog ? DEFAULT_CANCELABLE : null);
         }
     }
 
@@ -44,8 +45,11 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
     public void onCompleted(T response) {
         BasicView view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
-            if (isEnableLoading && isAutoDismissLoadingInSuccessful) {
-                view.setDisplayLoading(false);
+            if (isEnableLoading && isEnableDismissLoadingInSuccessful()) {
+                view.setDisplayLoadingDialog(false);
+            }
+            if (isEnableCancelProgressButtonLoadingOnSuccessful()) {
+                view.cancelProgressButtonLoadingIfNeed();
             }
             onSuccess(response);
         }
@@ -56,12 +60,28 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
         BasicView view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
             if (isEnableLoading) {
-                view.setDisplayLoading(false);
+                view.setDisplayLoadingDialog(false);
             }
+            view.cancelProgressButtonLoadingIfNeed();
             if (!onError(code, error)) {
                 view.showError(error);
             }
             mLifecycleView.clear();
         }
     }
+
+    public boolean isEnableDismissLoadingInSuccessful() {
+        return true;
+    }
+
+    public boolean isEnableCancelProgressButtonLoadingOnSuccessful() {
+        return true;
+    }
+
+    private static final Cancelable DEFAULT_CANCELABLE = new Cancelable() {
+        @Override
+        public void cancel() {
+
+        }
+    };
 }

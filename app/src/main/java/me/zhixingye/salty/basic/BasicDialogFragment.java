@@ -243,11 +243,11 @@ public abstract class BasicDialogFragment<P extends BasicPresenter> extends Dial
     }
 
     //是否显示loading对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
-    public void setDisplayLoading(boolean isDisplay) {
-        setDisplayLoading(isDisplay, null);
+    public void setDisplayLoadingDialog(boolean isDisplay) {
+        setDisplayLoadingDialog(isDisplay, null);
     }
 
-    public void setDisplayLoading(boolean isEnable, final Cancelable cancelable) {
+    public void setDisplayLoadingDialog(boolean isEnable, final Cancelable cancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(mContext, getString(R.string.Hint_Loading));
         }

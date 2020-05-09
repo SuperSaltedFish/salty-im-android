@@ -4,7 +4,6 @@ import com.salty.protos.ObtainSMSCodeReq;
 import com.salty.protos.ObtainSMSCodeResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
-
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
 import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
@@ -42,16 +41,10 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
                 type,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView,false) {
+                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView, false) {
                     @Override
                     protected void onSuccess(ObtainSMSCodeResp result) {
                         mView.starResendCountDown();
-                    }
-
-                    @Override
-                    protected boolean onError(int code, String error) {
-                        mView.showObtainSMSError(error);
-                        return true;
                     }
                 });
     }
@@ -62,22 +55,17 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
                 telephone,
                 password,
                 smsCode,
-                new LifecycleMVPRequestCallback<RegisterResp>(mView,false) {
+                new LifecycleMVPRequestCallback<RegisterResp>(mView, false) {
                     @Override
                     protected void onSuccess(RegisterResp result) {
                         mView.showRegisterSuccessfulPage();
-                    }
-
-                    @Override
-                    protected boolean onError(int code, String error) {
-                        mView.showConfirmError(error);
-                        return true;
                     }
                 });
     }
 
     @Override
-    public void resetTelephoneLoginPasswordBySMS(String telephone, String smsCode, String newPassword) {
+    public void resetTelephoneLoginPasswordBySMS(String telephone, String smsCode,
+            String newPassword) {
         IMClient.get().getAccountService().resetLoginPasswordByTelephoneSMS(
                 telephone,
                 smsCode,
@@ -87,17 +75,12 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
                     protected void onSuccess(ResetPasswordResp result) {
                         mView.showResetSuccessfulPage();
                     }
-
-                    @Override
-                    protected boolean onError(int code, String error) {
-                        mView.showConfirmError(error);
-                        return true;
-                    }
                 });
     }
 
     @Override
-    public void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword, String newPassword) {
+    public void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword,
+            String newPassword) {
         IMClient.get().getAccountService().resetLoginPasswordByTelephoneOldPassword(
                 telephone,
                 oldPassword,
@@ -106,12 +89,6 @@ public class ResetLoginPasswordPresenter implements ResetLoginPasswordContract.P
                     @Override
                     protected void onSuccess(ResetPasswordResp result) {
                         mView.showResetSuccessfulPage();
-                    }
-
-                    @Override
-                    protected boolean onError(int code, String error) {
-                        mView.showConfirmError(error);
-                        return true;
                     }
                 });
     }

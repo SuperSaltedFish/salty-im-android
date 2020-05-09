@@ -11,7 +11,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -19,14 +18,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntDef;
 import androidx.annotation.LayoutRes;
@@ -34,6 +25,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
@@ -68,6 +64,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             , SYSTEM_UI_MODE_LIGHT_BAR})
     @Retention(RetentionPolicy.SOURCE)
     private @interface SystemUiMode {
+
     }
 
     protected P mPresenter;
@@ -93,7 +90,6 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
 
         mVibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
 
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);//就算写了这行代码，app一进来的时候默认还是会横屏，onCreate还是会走两次的，这种情况在打开手机自动旋转，在手机横向的情况下打开APP。要想强制某个方向，只能在manifests中写，没其他方法
         int layoutID = getLayoutID();
         if (layoutID != 0) {
             setContentView(layoutID);
@@ -111,7 +107,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
 
     @Nullable
     @Override
-    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context,
+            @NonNull AttributeSet attrs) {
         if (TextUtils.equals("com.google.android.material.textfield.TextInputLayout", name)) {
             return new TextInputLayoutExtra(context, attrs);
         }
@@ -120,11 +117,13 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
 
     @Override
     protected void onDestroy() {
-        if (mPresenter != null) {//释放mPresenter
+        //释放mPresenter
+        if (mPresenter != null) {
             mPresenter.detachView();
             mPresenter = null;
         }
-        if (mProgressDialog != null) {//关闭加载对话框，如果存在
+        //关闭加载对话框，如果存在
+        if (mProgressDialog != null) {
             mProgressDialog.setOnCancelListener(null);
             mProgressDialog.dismiss();
             mProgressDialog = null;
@@ -134,7 +133,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {//返回键的默认判断
+        //返回键的默认判断
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         } else {
             return super.onOptionsItemSelected(item);
@@ -193,7 +193,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     //设置系统状态栏的样式，比如全屏，或者沉侵式状态栏等等，具体类型可以见每个status的定义，有相关注释
     public void setSystemUiMode(@SystemUiMode int mode) {
         Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         switch (mode) {
             case SYSTEM_UI_MODE_NONE:
                 window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
@@ -205,10 +206,14 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                 break;
             case SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS:
             case SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS:
-                if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS
+                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 } else {
-                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -217,16 +222,31 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                 break;
             case SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION:
             case SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION:
-                if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION
+                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                        window.getDecorView().setSystemUiVisibility(
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                                        | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        window.getDecorView().setSystemUiVisibility(
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                     } else {
-                        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                        window.getDecorView().setSystemUiVisibility(
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                     }
                 } else {
-                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -238,11 +258,17 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                 }
                 break;
             case SYSTEM_UI_MODE_FULLSCREEN:
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                window.getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 break;
             case SYSTEM_UI_MODE_LIGHT_BAR:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    window.getDecorView()
+                            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 }
                 break;
         }
@@ -252,7 +278,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     public void setMinBrightness(@FloatRange(from = 0, to = 1) float paramFloat) {
         int systemBrightness = 0;
         try {
-            systemBrightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+            systemBrightness = Settings.System
+                    .getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
         } catch (Settings.SettingNotFoundException ignored) {
         }
 
@@ -296,19 +323,20 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             mInputManager.showSoftInput(focusView, 0);
         } else {
             //但如果View没有测量，要等View测量之后才弹出键盘，不然有时候键盘会弹不出
-            focusView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (!focusView.isFocusable()) {
-                        focusView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        return;
-                    }
-                    focusView.requestFocus();
-                    if (mInputManager.showSoftInput(focusView, 0)) {
-                        focusView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                }
-            });
+            focusView.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (!focusView.isFocusable()) {
+                                focusView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                return;
+                            }
+                            focusView.requestFocus();
+                            if (mInputManager.showSoftInput(focusView, 0)) {
+                                focusView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            }
+                        }
+                    });
         }
     }
 
@@ -317,7 +345,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         if (mInputManager == null) {
             mInputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         }
-        if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+        if (getWindow().getAttributes().softInputMode
+                != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
             View focusView = getCurrentFocus();
             if (focusView != null) {
                 focusView.clearFocus();
@@ -327,11 +356,11 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     }
 
     //是否显示loading对话框，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
-    public void setDisplayLoading(boolean isDisplay) {
-        setDisplayLoading(isDisplay, null);
+    public void setDisplayLoadingDialog(boolean isDisplay) {
+        setDisplayLoadingDialog(isDisplay, null);
     }
 
-    public void setDisplayLoading(boolean isDisplay, final Cancelable cancelable) {
+    public void setDisplayLoadingDialog(boolean isDisplay, final Cancelable cancelable) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this, getString(R.string.Hint_Loading));
         }
@@ -371,7 +400,8 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         showDialog(title, content, null);
     }
 
-    public void showDialog(String title, String content, DialogInterface.OnDismissListener listener) {
+    public void showDialog(String title, String content,
+            DialogInterface.OnDismissListener listener) {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(content)
@@ -390,5 +420,9 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     //判断mPresenter是否和Contract.View绑定了，这个方法其实是Contract.View的方法，这里先实现一个默认的方法，每个子类就不需要单独实现它，详情见BaseView
     public boolean isAttachedToPresenter() {
         return mPresenter != null;
+    }
+
+    public void cancelProgressButtonLoadingIfNeed() {
+
     }
 }

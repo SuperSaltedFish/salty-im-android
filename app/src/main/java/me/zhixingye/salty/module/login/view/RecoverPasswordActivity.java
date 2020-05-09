@@ -1,12 +1,5 @@
 package me.zhixingye.salty.module.login.view;
 
-import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
-import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
-import me.zhixingye.salty.module.login.presenter.RecoverPasswordPresenter;
-import me.zhixingye.salty.widget.view.TelephoneEditText;
-import me.zhixingye.salty.widget.view.ProgressButton;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
@@ -14,6 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import me.zhixingye.salty.R;
+import me.zhixingye.salty.basic.BasicCompatActivity;
+import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
+import me.zhixingye.salty.module.login.presenter.RecoverPasswordPresenter;
+import me.zhixingye.salty.widget.view.ProgressButton;
+import me.zhixingye.salty.widget.view.TelephoneEditText;
 
 public class RecoverPasswordActivity
         extends BasicCompatActivity<RecoverPasswordPresenter>
@@ -77,12 +76,11 @@ public class RecoverPasswordActivity
         ResetLoginPasswordActivity.startActivityToResetTelephoneLoginPasswordBySMS(
                 this,
                 mTEtPhone.getPhoneSuffixText());
-        mPBtnNext.startShowAnim();
     }
 
     @Override
-    public void showError(String error) {
-        super.showError(error);
+    public void cancelProgressButtonLoadingIfNeed() {
+        super.cancelProgressButtonLoadingIfNeed();
         mPBtnNext.startShowAnim();
     }
 }

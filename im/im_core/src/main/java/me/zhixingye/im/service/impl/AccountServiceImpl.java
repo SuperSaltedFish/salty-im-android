@@ -96,43 +96,45 @@ public class AccountServiceImpl implements AccountService {
             mLoginLock.release();
             throw new RuntimeException("The user has already logged in, please do not log in again！");
         }
-
         RequestCallback<LoginResp> callbackWrapper = new RequestCallback<LoginResp>() {
             @Override
             public void onCompleted(LoginResp loginResp) {
-                UserProfile profile = loginResp.getProfile();
-                String userId = profile.getUserId();
-                String token = loginResp.getToken();
+                try {
+                    UserProfile profile = loginResp.getProfile();
+                    String userId = profile.getUserId();
+                    String token = loginResp.getToken();
 
-                ServiceAccessor
-                        .get(StorageService.class)
-                        .putToConfigurationPreferences(STORAGE_KEY_USER_ID, userId);
+                    ServiceAccessor
+                            .get(StorageService.class)
+                            .putToConfigurationPreferences(STORAGE_KEY_USER_ID, userId);
 
-                ServiceAccessor
-                        .get(StorageService.class)
-                        .putToConfigurationPreferences(STORAGE_KEY_TOKEN, token);
+                    ServiceAccessor
+                            .get(StorageService.class)
+                            .putToConfigurationPreferences(STORAGE_KEY_TOKEN, token);
 
-                SQLiteServiceImpl service = new SQLiteServiceImpl(
-                        IMCore.getAppContext(),
-                        MD5Util.encrypt16(userId),
-                        DATABASE_VERSION);
+                    SQLiteServiceImpl service = new SQLiteServiceImpl(
+                            IMCore.getAppContext(),
+                            MD5Util.encrypt16(userId),
+                            DATABASE_VERSION);
 
-                UserDao dao = service.createDao(UserDao.class);
-                if (!dao.replace(profile)) {
-                    Logger.e(TAG, "login fail:replace fail");
-                    service.close();
-                    onFailure(
-                            ResponseCode.INTERNAL_UNKNOWN.getCode(),
-                            ResponseCode.INTERNAL_UNKNOWN.getMsg());
-                    return;
+                    UserDao dao = service.createDao(UserDao.class);
+                    if (!dao.replace(profile)) {
+                        Logger.e(TAG, "login fail:replace fail");
+                        service.close();
+                        onFailure(
+                                ResponseCode.INTERNAL_UNKNOWN.getCode(),
+                                ResponseCode.INTERNAL_UNKNOWN.getMsg());
+                        return;
+                    }
+                    ServiceAccessor.register(SQLiteService.class, service);
+
+                    mUserId = userId;
+                    mToken = token;
+
+                    isLogged = true;
+                }finally {
+                    mLoginLock.release();
                 }
-                ServiceAccessor.register(SQLiteService.class, service);
-
-                mUserId = userId;
-                mToken = token;
-
-                isLogged = true;
-                mLoginLock.release();
                 if (callback != null) {
                     callback.onCompleted(loginResp);
                 }
@@ -140,6 +142,7 @@ public class AccountServiceImpl implements AccountService {
 
             @Override
             public void onFailure(int code, String error) {
+                Logger.e("yezhixin","onFailure");
                 mLoginLock.release();
                 CallbackHelper.callFailure(code, error, callback);
             }

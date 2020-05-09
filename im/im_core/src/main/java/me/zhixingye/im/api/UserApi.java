@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import io.grpc.ManagedChannel;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
+import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.Sha256Util;
 
 /**
@@ -36,7 +37,8 @@ public class UserApi extends BasicApi {
 
     private UserServiceGrpc.UserServiceStub mUserServiceStub;
 
-    public UserApi(ManagedChannel channel) {
+    @Override
+    public void onBindManagedChannel(ManagedChannel channel) {
         mUserServiceStub = UserServiceGrpc.newStub(channel)
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
@@ -79,7 +81,6 @@ public class UserApi extends BasicApi {
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
                 .setVerificationCode(verificationCode)
                 .build();
-
         mUserServiceStub.login(
                 createReq(req),
                 new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
@@ -200,4 +201,5 @@ public class UserApi extends BasicApi {
                 createReq(req),
                 new DefaultStreamObserver<>(QueryUserInfoResp.getDefaultInstance(), callback));
     }
+
 }

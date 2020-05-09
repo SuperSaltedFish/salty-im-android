@@ -4,7 +4,6 @@ package me.zhixingye.salty.basic;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -233,7 +232,8 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
     }
 
     //由于扩展了局部刷新，ListUpdateCallback也要扩展一下
-    public static class ListUpdateCallback implements androidx.recyclerview.widget.ListUpdateCallback {
+    public static class ListUpdateCallback implements
+            androidx.recyclerview.widget.ListUpdateCallback {
 
         private BasicRecyclerViewAdapter mAdapter;
 

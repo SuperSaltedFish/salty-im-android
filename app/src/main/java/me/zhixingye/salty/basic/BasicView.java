@@ -12,11 +12,12 @@ import me.zhixingye.salty.widget.view.SaltyToast;
 
 //这里都是一些公共的方法，一般baseActivity或者baseFragment等base都已经实现了
 public interface BasicView<P> {
+
     //显示Loading对话框
-    void setDisplayLoading(boolean isEnable);
+    void setDisplayLoadingDialog(boolean isDisplay);
 
     //显示Loading对话框，并且Loading是允许取消的
-    void setDisplayLoading(boolean isEnable, Cancelable cancelableTask);
+    void setDisplayLoadingDialog(boolean isDisplay, Cancelable cancelableTask);
 
     //展示对话框
     void showDialog(String content);
@@ -32,4 +33,6 @@ public interface BasicView<P> {
 
     //判断是否已经attach到presenter
     boolean isAttachedToPresenter();
+
+    void cancelProgressButtonLoadingIfNeed();
 }

@@ -32,7 +32,8 @@ public class ConversationApi extends BasicApi {
 
     private ConversationServiceGrpc.ConversationServiceStub mConversationServiceStub;
 
-    public ConversationApi(ManagedChannel channel) {
+    @Override
+    public void onBindManagedChannel(ManagedChannel channel) {
         mConversationServiceStub = ConversationServiceGrpc.newStub(channel)
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }

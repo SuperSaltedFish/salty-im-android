@@ -26,11 +26,10 @@ public class ResetLoginPasswordContract {
 
         void obtainResetTelephoneLoginPasswordSMS(String telephone);
 
-        void registerByTelephone(String telephone, String password, String smsCode);
+        void registerByTelephone(String telephone, String password);
 
-        void resetTelephoneLoginPasswordBySMS(String telephone, String smsCode, String newPassword);
+        void resetTelephoneLoginPasswordBySMS(String telephone, String newPassword);
 
-        void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword,
-                String newPassword);
+        void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword, String newPassword);
     }
 }

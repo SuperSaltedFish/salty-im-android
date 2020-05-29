@@ -145,7 +145,7 @@ public class TelephoneSMSVerifyActivity
 
         switch (mOperationType) {
             case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
-                mPresenter.loginByTelephone(mTelephone, mPassword, smsCode);
+                mPresenter.loginByTelephone(mTelephone, mPassword);
                 break;
             default:
                 finish();

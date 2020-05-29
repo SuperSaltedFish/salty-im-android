@@ -1,7 +1,12 @@
 package me.zhixingye.im.sdk.handle;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+
+import android.os.RemoteException;
+
+import com.salty.protos.ObtainTelephoneSMSCodeReq;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
+import com.salty.protos.VerifyTelephoneSMSCodeResp;
 
 import me.zhixingye.im.IMCore;
 import me.zhixingye.im.sdk.IRemoteCallback;
@@ -18,7 +23,17 @@ public class SMSServiceHandle extends ISMSServiceHandle.Stub {
         IMCore.get().getSMSService()
                 .obtainVerificationCodeForTelephoneType(
                         telephone,
-                        ObtainSMSCodeReq.CodeType.forNumber(codeType),
-                        new ByteRemoteCallback<ObtainSMSCodeResp>(callback));
+                        SMSOperationType.forNumber(codeType),
+                        new ByteRemoteCallback<ObtainTelephoneSMSCodeResp>(callback));
+    }
+
+    @Override
+    public void verifyTelephoneSMSCode(String telephone, String smsCode, int codeType, IRemoteCallback callback) {
+        IMCore.get().getSMSService()
+                .verifyTelephoneSMSCode(
+                        telephone,
+                        smsCode,
+                        SMSOperationType.forNumber(codeType),
+                        new ByteRemoteCallback<VerifyTelephoneSMSCodeResp>(callback));
     }
 }

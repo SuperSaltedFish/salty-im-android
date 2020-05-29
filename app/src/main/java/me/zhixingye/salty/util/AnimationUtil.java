@@ -1,12 +1,21 @@
 package me.zhixingye.salty.util;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -22,7 +31,8 @@ import androidx.core.view.ViewCompat;
 public class AnimationUtil {
 
     public static void rotateAnim(View view, float degree, int millisecond) {
-        Animation anim = new RotateAnimation(0f, degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        Animation anim = new RotateAnimation(0f, degree, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setFillAfter(true);
         anim.setDuration(millisecond);
         view.startAnimation(anim);
@@ -43,41 +53,50 @@ public class AnimationUtil {
         view.startAnimation(animation);
     }
 
-    public static void circularRevealHideAnim(View view, Animator.AnimatorListener... animListener) {
+    public static void circularRevealHideAnim(View view,
+            Animator.AnimatorListener... animListener) {
         int width = view.getWidth();
         int height = view.getHeight();
         int radius = Math.max(width, height);
-        Animator animator = ViewAnimationUtils.createCircularReveal(view, width / 2, height / 2, radius / 2f, 0);
+        Animator animator = ViewAnimationUtils
+                .createCircularReveal(view, width / 2, height / 2, radius / 2f, 0);
         if (animListener != null) {
-            for (Animator.AnimatorListener listener : animListener)
+            for (Animator.AnimatorListener listener : animListener) {
                 if (listener != null) {
                     animator.addListener(listener);
                 }
+            }
         }
         animator.start();
     }
 
-    public static void circularRevealShowAnim(View view, Animator.AnimatorListener... animListener) {
+    public static void circularRevealShowAnim(View view,
+            Animator.AnimatorListener... animListener) {
         int width = view.getWidth();
         int height = view.getHeight();
         int radius = Math.max(width, height);
-        Animator animator = ViewAnimationUtils.createCircularReveal(view, width / 2, height / 2, 0, radius / 2f);
+        Animator animator = ViewAnimationUtils
+                .createCircularReveal(view, width / 2, height / 2, 0, radius / 2f);
         if (animListener != null) {
-            for (Animator.AnimatorListener listener : animListener)
+            for (Animator.AnimatorListener listener : animListener) {
                 if (listener != null) {
                     animator.addListener(listener);
                 }
+            }
         }
         animator.start();
     }
 
-    public static void circularRevealShowByFullActivityAnim(final Activity activity, View triggerView, Drawable image, final Animator.AnimatorListener animListener) {
+    public static void circularRevealShowByFullActivityAnim(
+            Activity activity,
+            View triggerView,
+            Drawable image,
+            final Animator.AnimatorListener animListener) {
         int[] location = new int[2];
         triggerView.getLocationInWindow(location);
         final int cx = location[0] + triggerView.getWidth() / 2;
         final int cy = location[1] + triggerView.getHeight() / 2;
         final ImageView view = new ImageView(activity);
-        view.setTag(activity.getApplicationContext());
         view.setScaleType(ImageView.ScaleType.CENTER_CROP);
         view.setImageDrawable(image);
         final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
@@ -124,6 +143,64 @@ public class AnimationUtil {
             }
         });
         anim.start();
+    }
+
+    public static void circularRevealHideByFullActivityAnim(Activity activity, Drawable image) {
+        WindowManager manager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+        if (manager == null) {
+            return;
+        }
+        DisplayMetrics dm = new DisplayMetrics();
+        Display display = manager.getDefaultDisplay();
+        display.getRealMetrics(dm);
+        final int width = dm.widthPixels;
+        final int height = dm.heightPixels;
+        final int cx = width / 2;
+        final int cy = height / 2;
+
+        final ImageView view = new ImageView(activity);
+        view.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        view.setImageDrawable(image);
+
+        final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        decorView.addView(view,
+                new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        int maxW = Math.max(cx, width - cx);
+        int maxH = Math.max(cy, height - cy);
+        final int startRadius = (int) Math.sqrt(maxW * maxW + maxH * maxH) + 1;
+        final int endRadius = 0;
+
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                Animator anim = ViewAnimationUtils
+                        .createCircularReveal(view, cx, cy, startRadius, endRadius);
+                int maxRadius = (int) Math.sqrt(width * width + height * height) + 1;
+                double rate = 1d * startRadius / maxRadius;
+                long duration = (long) (618 * Math.sqrt(rate));
+                anim.setDuration((long) (duration * 0.9));
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setImageDrawable(null);
+                        decorView.removeView(view);
+                        animation.removeAllListeners();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+
+                    @Override
+                    public void onAnimationPause(Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+                });
+                anim.start();
+            }
+        });
     }
 
 }

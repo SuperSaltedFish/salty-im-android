@@ -19,6 +19,7 @@ import me.zhixingye.im.service.AccountService;
 import me.zhixingye.im.service.ApiService;
 import me.zhixingye.im.service.SQLiteService;
 import me.zhixingye.im.service.StorageService;
+import me.zhixingye.im.service.ThreadService;
 import me.zhixingye.im.tool.CallbackHelper;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.im.util.MD5Util;
@@ -39,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
 
     private String mUserId;
     private String mToken;
+    private UserProfile mUserProfile;
 
     private Semaphore mLoginLock;
 
@@ -49,17 +51,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void registerByTelephone(String telephone, String password, String smsCode, RequestCallback<RegisterResp> callback) {
+    public void registerByTelephone(String telephone, String password, RequestCallback<RegisterResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .registerByTelephone(telephone, password, smsCode, callback);
+                .registerByTelephone(telephone, password, callback);
     }
 
     @Override
-    public void registerByEmail(String email, String password, String smsCode, RequestCallback<RegisterResp> callback) {
+    public void registerByEmail(String email, String password, RequestCallback<RegisterResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .registerByEmail(email, password, smsCode, callback);
+                .registerByEmail(email, password, callback);
     }
 
     @Override
@@ -70,23 +72,80 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void resetLoginPasswordByTelephoneSMS(String telephone, String smsCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .resetLoginPasswordByTelephoneSMS(telephone, smsCode, newPassword, callback);
+                .resetLoginPasswordByTelephoneSMS(telephone, newPassword, callback);
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
-        login(telephone, null, password, smsCode, callback);
+    public void loginByTelephone(String telephone, String password, RequestCallback<LoginResp> callback) {
+        login(telephone, null, password, callback);
     }
 
     @Override
-    public void loginByEmail(String email, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
-        login(null, email, password, smsCode, callback);
+    public void loginByEmail(String email, String password, RequestCallback<LoginResp> callback) {
+        login(null, email, password, callback);
     }
 
-    private void login(String telephone, String email, String password, @Nullable String verificationCode, final RequestCallback<LoginResp> callback) {
+    @Override
+    public void loginByLastLoginInfo(final RequestCallback<UserProfile> callback) {
+        try {
+            mLoginLock.acquire();
+        } catch (InterruptedException e) {
+            return;
+        }
+        if (isLogged) {
+            mLoginLock.release();
+            throw new RuntimeException("The user has already logged in, please do not log in again！");
+        }
+        ServiceAccessor.get(ThreadService.class)
+                .runOnWorkThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String userId = ServiceAccessor.get(StorageService.class)
+                                    .getFromConfigurationPreferences(STORAGE_KEY_USER_ID);
+
+                            String token = ServiceAccessor.get(StorageService.class)
+                                    .getFromConfigurationPreferences(STORAGE_KEY_TOKEN);
+
+                            if (TextUtils.isEmpty(userId) || TextUtils.isEmpty(token)) {
+                                CallbackHelper.callFailure(ResponseCode.INTERNAL_USER_NOT_LOGGED_IN, callback);
+                                return;
+                            }
+
+                            SQLiteServiceImpl service = new SQLiteServiceImpl(
+                                    IMCore.getAppContext(),
+                                    MD5Util.encrypt16(userId),
+                                    DATABASE_VERSION);
+
+                            UserProfile profile = UserProfile.newBuilder()
+                                    .setUserId(userId)
+                                    .build();
+                            profile = service.createDao(UserDao.class).loadBy(profile);
+
+                            if (profile == null) {
+                                CallbackHelper.callFailure(ResponseCode.INTERNAL_USER_NOT_LOGGED_IN, callback);
+                                return;
+                            }
+
+                            ServiceAccessor.register(SQLiteService.class, service);
+
+                            mUserId = userId;
+                            mToken = token;
+                            mUserProfile = profile;
+
+                            CallbackHelper.callCompleted(profile, callback);
+                        } finally {
+                            mLoginLock.release();
+                        }
+
+                    }
+                });
+    }
+
+    private void login(String telephone, String email, String password, final RequestCallback<LoginResp> callback) {
         try {
             mLoginLock.acquire();
         } catch (InterruptedException e) {
@@ -104,12 +163,10 @@ public class AccountServiceImpl implements AccountService {
                     String userId = profile.getUserId();
                     String token = loginResp.getToken();
 
-                    ServiceAccessor
-                            .get(StorageService.class)
+                    ServiceAccessor.get(StorageService.class)
                             .putToConfigurationPreferences(STORAGE_KEY_USER_ID, userId);
 
-                    ServiceAccessor
-                            .get(StorageService.class)
+                    ServiceAccessor.get(StorageService.class)
                             .putToConfigurationPreferences(STORAGE_KEY_TOKEN, token);
 
                     SQLiteServiceImpl service = new SQLiteServiceImpl(
@@ -130,19 +187,18 @@ public class AccountServiceImpl implements AccountService {
 
                     mUserId = userId;
                     mToken = token;
+                    mUserProfile = profile;
 
                     isLogged = true;
-                }finally {
+                } finally {
                     mLoginLock.release();
                 }
-                if (callback != null) {
-                    callback.onCompleted(loginResp);
-                }
+
+                CallbackHelper.callCompleted(loginResp, callback);
             }
 
             @Override
             public void onFailure(int code, String error) {
-                Logger.e("yezhixin","onFailure");
                 mLoginLock.release();
                 CallbackHelper.callFailure(code, error, callback);
             }
@@ -152,11 +208,11 @@ public class AccountServiceImpl implements AccountService {
         if (!TextUtils.isEmpty(telephone)) {
             ServiceAccessor.get(ApiService.class)
                     .createApi(UserApi.class)
-                    .loginByTelephone(telephone, password, verificationCode, callbackWrapper);
+                    .loginByTelephone(telephone, password, callbackWrapper);
         } else {
             ServiceAccessor.get(ApiService.class)
                     .createApi(UserApi.class)
-                    .loginByEmail(email, password, verificationCode, callbackWrapper);
+                    .loginByEmail(email, password, callbackWrapper);
         }
     }
 
@@ -166,11 +222,18 @@ public class AccountServiceImpl implements AccountService {
                 .createApi(UserApi.class)
                 .logout(null);
 
+        ServiceAccessor.get(StorageService.class)
+                .putToConfigurationPreferences(STORAGE_KEY_USER_ID, null);
+
+        ServiceAccessor.get(StorageService.class)
+                .putToConfigurationPreferences(STORAGE_KEY_TOKEN, null);
+
         SQLiteServiceImpl service = (SQLiteServiceImpl) ServiceAccessor.get(SQLiteService.class);
         if (service != null) {
             service.close();
             ServiceAccessor.register(SQLiteService.class, null);
         }
+
         isLogged = false;
         mUserId = null;
         mToken = null;
@@ -189,5 +252,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String getCurrentUserToken() {
         return mToken;
+    }
+
+    @Override
+    public UserProfile getCurrentUserProfile() {
+        return mUserProfile;
     }
 }

@@ -43,7 +43,7 @@ public class UserApi extends BasicApi {
                 .withDeadlineAfter(30, TimeUnit.SECONDS);
     }
 
-    public void registerByTelephone(String telephone, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+    public void registerByTelephone(String telephone, String password, RequestCallback<RegisterResp> callback) {
         UserProfile profile = UserProfile.newBuilder()
                 .setTelephone(telephone)
                 .build();
@@ -51,7 +51,6 @@ public class UserApi extends BasicApi {
         RegisterReq req = RegisterReq.newBuilder()
                 .setProfile(profile)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
-                .setVerificationCode(verificationCode)
                 .build();
 
         mUserServiceStub.register(
@@ -59,7 +58,7 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
 
-    public void registerByEmail(String email, String password, String verificationCode, RequestCallback<RegisterResp> callback) {
+    public void registerByEmail(String email, String password, RequestCallback<RegisterResp> callback) {
         UserProfile profile = UserProfile.newBuilder()
                 .setEmail(email)
                 .build();
@@ -67,7 +66,6 @@ public class UserApi extends BasicApi {
         RegisterReq req = RegisterReq.newBuilder()
                 .setProfile(profile)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
-                .setVerificationCode(verificationCode)
                 .build();
 
         mUserServiceStub.register(
@@ -75,22 +73,20 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(RegisterResp.getDefaultInstance(), callback));
     }
 
-    public void loginByTelephone(String telephone, String password, String verificationCode, RequestCallback<LoginResp> callback) {
+    public void loginByTelephone(String telephone, String password,  RequestCallback<LoginResp> callback) {
         LoginReq req = LoginReq.newBuilder()
                 .setTelephone(telephone)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
-                .setVerificationCode(verificationCode)
                 .build();
         mUserServiceStub.login(
                 createReq(req),
                 new DefaultStreamObserver<>(LoginResp.getDefaultInstance(), callback));
     }
 
-    public void loginByEmail(String email, String password, String verificationCode, RequestCallback<LoginResp> callback) {
+    public void loginByEmail(String email, String password,  RequestCallback<LoginResp> callback) {
         LoginReq req = LoginReq.newBuilder()
                 .setEmail(email)
                 .setPassword(Sha256Util.sha256WithSalt(password, PASSWORD_SALTY))
-                .setVerificationCode(verificationCode)
                 .build();
 
         mUserServiceStub.login(
@@ -106,10 +102,9 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(LogoutResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneSMS(String telephone,  String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setTelephone(telephone)
-                .setVerificationCode(verificationCode)
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 
@@ -118,10 +113,9 @@ public class UserApi extends BasicApi {
                 new DefaultStreamObserver<>(ResetPasswordResp.getDefaultInstance(), callback));
     }
 
-    public void resetLoginPasswordByEmailSMS(String email, String verificationCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByEmailSMS(String email, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ResetPasswordReq req = ResetPasswordReq.newBuilder()
                 .setEmail(email)
-                .setVerificationCode(verificationCode)
                 .setNewPassword(Sha256Util.sha256WithSalt(newPassword, PASSWORD_SALTY))
                 .build();
 

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import androidx.annotation.FloatRange;
@@ -26,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.ParameterizedType;
@@ -109,7 +113,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     @Override
     public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context,
             @NonNull AttributeSet attrs) {
-        if (TextUtils.equals("com.google.android.material.textfield.TextInputLayout", name)) {
+        if (TextUtils.equals(TextInputLayout.class.getName(), name)) {
             return new TextInputLayoutExtra(context, attrs);
         }
         return super.onCreateView(parent, name, context, attrs);
@@ -193,12 +197,12 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
     //设置系统状态栏的样式，比如全屏，或者沉侵式状态栏等等，具体类型可以见每个status的定义，有相关注释
     public void setSystemUiMode(@SystemUiMode int mode) {
         Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.clearFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS
+                | LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         switch (mode) {
             case SYSTEM_UI_MODE_NONE:
                 window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
                     TypedValue value = new TypedValue();
                     getTheme().resolveAttribute(R.attr.colorPrimary, value, true);
                     window.setStatusBarColor(value.data);
@@ -207,7 +211,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
             case SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS:
             case SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS:
                 if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS
-                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        && VERSION.SDK_INT >= VERSION_CODES.M) {
                     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -215,23 +219,23 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                    window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setStatusBarColor(Color.TRANSPARENT);
                 }
                 break;
             case SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION:
             case SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION:
                 if (mode == SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION
-                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        && VERSION.SDK_INT >= VERSION_CODES.M) {
+                    if (VERSION.SDK_INT >= VERSION_CODES.O) {
                         window.getDecorView().setSystemUiVisibility(
                                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                                         | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                                         | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    } else if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
                         window.getDecorView().setSystemUiVisibility(
                                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -248,12 +252,12 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+                    window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.setNavigationBarColor(Color.TRANSPARENT);
                     window.setStatusBarColor(Color.TRANSPARENT);
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (VERSION.SDK_INT >= VERSION_CODES.Q) {
                     window.setNavigationBarContrastEnforced(false);
                 }
                 break;
@@ -266,7 +270,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
                                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 break;
             case SYSTEM_UI_MODE_LIGHT_BAR:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     window.getDecorView()
                             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 }

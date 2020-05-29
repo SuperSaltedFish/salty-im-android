@@ -1,7 +1,8 @@
 package me.zhixingye.im.sdk.proxy;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
+import com.salty.protos.VerifyTelephoneSMSCodeResp;
 
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.sdk.IRemoteService;
@@ -31,7 +32,17 @@ public class SMSServiceProxy implements SMSService, RemoteProxy {
     }
 
     @Override
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
+    public void verifyTelephoneSMSCode(String telephone, String smsCode, SMSOperationType type, RequestCallback<VerifyTelephoneSMSCodeResp> callback) {
+        try {
+            mISMSHandle.verifyTelephoneSMSCode(telephone, smsCode, type.getNumber(), new RemoteCallbackWrapper<>(callback));
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            ProxyHelper.callRemoteFail(callback);
+        }
+    }
+
+    @Override
+    public void obtainVerificationCodeForTelephoneType(String telephone, SMSOperationType type, RequestCallback<ObtainTelephoneSMSCodeResp> callback) {
         try {
             mISMSHandle.obtainVerificationCodeForTelephoneType(telephone, type.getNumber(), new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {

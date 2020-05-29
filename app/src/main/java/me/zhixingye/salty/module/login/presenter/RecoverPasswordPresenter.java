@@ -1,7 +1,8 @@
 package me.zhixingye.salty.module.login.presenter;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
@@ -30,10 +31,10 @@ public class RecoverPasswordPresenter implements RecoverPasswordContract.Present
     public void obtainResetTelephoneLoginPasswordSMS(String telephone) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
-                ObtainSMSCodeReq.CodeType.RESET_PASSWORD,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView, false) {
+                SMSOperationType.RESET_PASSWORD,
+                new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mView, false) {
                     @Override
-                    protected void onSuccess(ObtainSMSCodeResp result) {
+                    protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
                         mView.gotoResetTelephoneLoginPage();
                     }
                 });

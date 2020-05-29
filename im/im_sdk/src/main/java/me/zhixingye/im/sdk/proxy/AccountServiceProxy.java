@@ -3,6 +3,7 @@ package me.zhixingye.im.sdk.proxy;
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
+import com.salty.protos.UserProfile;
 
 import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
@@ -33,9 +34,9 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     }
 
     @Override
-    public void registerByTelephone(String telephone, String password, String smsCode, RequestCallback<RegisterResp> callback) {
+    public void registerByTelephone(String telephone, String password, RequestCallback<RegisterResp> callback) {
         try {
-            mAccountHandle.registerByTelephone(telephone, password, smsCode, new RemoteCallbackWrapper<>(callback));
+            mAccountHandle.registerByTelephone(telephone, password, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);
@@ -43,9 +44,9 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     }
 
     @Override
-    public void registerByEmail(String email, String password, String smsCode, RequestCallback<RegisterResp> callback) {
+    public void registerByEmail(String email, String password, RequestCallback<RegisterResp> callback) {
         try {
-            mAccountHandle.registerByEmail(email, password, smsCode, new RemoteCallbackWrapper<>(callback));
+            mAccountHandle.registerByEmail(email, password, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);
@@ -63,9 +64,9 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     }
 
     @Override
-    public void resetLoginPasswordByTelephoneSMS(String email, String smsCode, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephoneSMS(String email, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         try {
-            mAccountHandle.resetLoginPasswordByTelephoneSMS(email, smsCode, newPassword, new RemoteCallbackWrapper<>(callback));
+            mAccountHandle.resetLoginPasswordByTelephoneSMS(email, newPassword, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);
@@ -73,9 +74,9 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
+    public void loginByTelephone(String telephone, String password, @Nullable RequestCallback<LoginResp> callback) {
         try {
-            mAccountHandle.loginByTelephone(telephone, password, smsCode, new RemoteCallbackWrapper<>(callback));
+            mAccountHandle.loginByTelephone(telephone, password, new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);
@@ -83,9 +84,19 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
     }
 
     @Override
-    public void loginByEmail(String email, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback) {
+    public void loginByEmail(String email, String password, @Nullable RequestCallback<LoginResp> callback) {
         try {
-            mAccountHandle.loginByEmail(email, password, smsCode, new RemoteCallbackWrapper<>(callback));
+            mAccountHandle.loginByEmail(email, password, new RemoteCallbackWrapper<>(callback));
+        } catch (Exception e) {
+            Logger.e(TAG, "远程调用失败", e);
+            ProxyHelper.callRemoteFail(callback);
+        }
+    }
+
+    @Override
+    public void loginByLastLoginInfo(RequestCallback<UserProfile> callback) {
+        try {
+            mAccountHandle.loginByLastLoginInfo(new RemoteCallbackWrapper<>(callback));
         } catch (Exception e) {
             Logger.e(TAG, "远程调用失败", e);
             ProxyHelper.callRemoteFail(callback);
@@ -129,5 +140,10 @@ public class AccountServiceProxy implements AccountService, RemoteProxy {
             Logger.e(TAG, "远程调用失败", e);
         }
         return "";
+    }
+
+    @Override
+    public UserProfile getCurrentUserProfile() {
+        return null;
     }
 }

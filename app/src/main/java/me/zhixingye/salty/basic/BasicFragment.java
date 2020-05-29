@@ -13,14 +13,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.widget.dialog.ProgressDialog;
 import me.zhixingye.salty.widget.listener.Cancelable;
@@ -65,9 +69,13 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
 
     @Nullable
     @Override
-    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(getLayoutID(), container, false);
+    public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = null;
+        int layoutId = getLayoutID();
+        if (layoutId != 0) {
+            v = inflater.inflate(layoutId, container, false);
+        }
+        return v;
     }
 
     @Override
@@ -77,6 +85,7 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
         init(view);
         setup(savedInstanceState);
         //判断这个Fragment是否第一次显示
+        setUserVisibleHint(true);
         if (getUserVisibleHint() && !isOnceVisible) {
             isOnceVisible = true;
             onFirstVisible();
@@ -203,7 +212,7 @@ public abstract class BasicFragment<P extends BasicPresenter> extends Fragment {
     }
 
     public void showDialog(String title, String content,
-            DialogInterface.OnDismissListener listener) {
+                           DialogInterface.OnDismissListener listener) {
         new MaterialAlertDialogBuilder(mContext)
                 .setTitle(title)
                 .setMessage(content)

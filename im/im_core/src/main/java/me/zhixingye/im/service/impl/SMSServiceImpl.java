@@ -1,7 +1,8 @@
 package me.zhixingye.im.service.impl;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
+import com.salty.protos.VerifyTelephoneSMSCodeResp;
 
 import me.zhixingye.im.api.SMSApi;
 import me.zhixingye.im.listener.RequestCallback;
@@ -19,14 +20,21 @@ public class SMSServiceImpl implements SMSService {
     public SMSServiceImpl() {
     }
 
-    @Override
-    public void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback) {
-        ServiceAccessor.get(ApiService.class)
-                .createApi(SMSApi.class)
-                .obtainVerificationCodeForTelephoneType(telephone, type, callback);
-    }
-
     public void destroy() {
 
+    }
+
+    @Override
+    public void obtainVerificationCodeForTelephoneType(String telephone, SMSOperationType type, RequestCallback<ObtainTelephoneSMSCodeResp> callback) {
+        ServiceAccessor.get(ApiService.class)
+                .createApi(SMSApi.class)
+                .obtainTelephoneSMSCode(telephone, type, callback);
+    }
+
+    @Override
+    public void verifyTelephoneSMSCode(String telephone, String smsCode, SMSOperationType type, RequestCallback<VerifyTelephoneSMSCodeResp> callback) {
+        ServiceAccessor.get(ApiService.class)
+                .createApi(SMSApi.class)
+                .verifyTelephoneSMSCode(telephone, smsCode, type, callback);
     }
 }

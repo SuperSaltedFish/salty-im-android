@@ -3,10 +3,14 @@ package me.zhixingye.salty.module.splash.presenter;
 import android.content.Context;
 import android.os.Handler;
 
+import com.salty.protos.LoginResp;
+import com.salty.protos.UserProfile;
+
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
+import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
 
 
 /**
@@ -17,16 +21,16 @@ import me.zhixingye.salty.module.splash.contract.SplashContract;
 
 public class SplashPresenter implements SplashContract.Presenter {
 
-    private SplashContract.View mSplashView;
+    private SplashContract.View mView;
 
     @Override
     public void attachView(SplashContract.View view) {
-        mSplashView = view;
+        mView = view;
     }
 
     @Override
     public void detachView() {
-        mSplashView = null;
+        mView = null;
     }
 
     @Override
@@ -35,13 +39,24 @@ public class SplashPresenter implements SplashContract.Presenter {
             @Override
             public void run() {
                 if (IMClient.get().getAccountService().isLogged()) {
-                    mSplashView.startHomeActivity();
+                    mView.startHomeActivity();
                 } else {
-                    if (AppConfig.isEverStartedGuide()) {
-                        mSplashView.startLoginActivity();
-                    } else {
-                        mSplashView.startGuideActivity();
-                    }
+                    IMClient.get().getAccountService().loginByLastLoginInfo(new LifecycleMVPRequestCallback<UserProfile>(mView, false) {
+                        @Override
+                        protected void onSuccess(UserProfile result) {
+                            mView.startHomeActivity();
+                        }
+
+                        @Override
+                        protected boolean onError(int code, String error) {
+                            if (AppConfig.isEverStartedGuide()) {
+                                mView.startLoginActivity();
+                            } else {
+                                mView.startGuideActivity();
+                            }
+                            return true;
+                        }
+                    });
                 }
             }
         }, 1000);//延迟是为了防止进程还没起来就调用IMClient

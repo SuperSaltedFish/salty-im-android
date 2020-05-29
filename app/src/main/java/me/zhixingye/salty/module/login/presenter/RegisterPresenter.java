@@ -1,7 +1,7 @@
 package me.zhixingye.salty.module.login.presenter;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
 
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
@@ -31,10 +31,10 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     public void obtainTelephoneRegisterSMS(String telephone) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
-                ObtainSMSCodeReq.CodeType.REGISTER,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mRegisterView, false) {
+                SMSOperationType.REGISTER,
+                new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mRegisterView, false) {
                     @Override
-                    protected void onSuccess(ObtainSMSCodeResp result) {
+                    protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
                         mRegisterView.startPhoneVerifyActivity();
                     }
 

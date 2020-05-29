@@ -6,17 +6,19 @@ package me.zhixingye.im.sdk;
 import me.zhixingye.im.sdk.IRemoteCallback;
 
 interface IAccountServiceHandle {
-   void registerByTelephone(String telephone, String password, String verificationCode, IRemoteCallback callback);
+   void registerByTelephone(String telephone, String password, IRemoteCallback callback);
 
-    void registerByEmail(String email, String password, String verificationCode, IRemoteCallback callback);
+    void registerByEmail(String email, String password, IRemoteCallback callback);
 
     void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, IRemoteCallback callback);
 
-    void resetLoginPasswordByTelephoneSMS(String telephone, String verificationCode, String newPassword, IRemoteCallback callback);
+    void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, IRemoteCallback callback);
 
-    void loginByTelephone(String telephone, String password, String verificationCode, IRemoteCallback callback);
+    void loginByTelephone(String telephone, String password, IRemoteCallback callback);
 
-    void loginByEmail(String email, String password, String verificationCode, IRemoteCallback callback);
+    void loginByEmail(String email, String password, IRemoteCallback callback);
+
+    void loginByLastLoginInfo(IRemoteCallback callback);
 
     void logout();
 
@@ -25,4 +27,6 @@ interface IAccountServiceHandle {
     String getCurrentUserId();
 
     String getCurrentUserToken();
+
+    byte[] getCurrentUserProfile();
 }

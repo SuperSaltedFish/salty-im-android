@@ -217,7 +217,7 @@ public class ResetLoginPasswordActivity
             public void onAnimationEnd(Animator animation) {
                 switch (mOperationType) {
                     case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                        mPresenter.registerByTelephone(mTelephone, newPassword, smsCode);
+                        mPresenter.registerByTelephone(mTelephone, newPassword);
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
                         mPresenter.resetTelephoneLoginPasswordByOldPassword(mTelephone, oldPassword,
@@ -225,7 +225,7 @@ public class ResetLoginPasswordActivity
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
                         mPresenter
-                                .resetTelephoneLoginPasswordBySMS(mTelephone, smsCode, newPassword);
+                                .resetTelephoneLoginPasswordBySMS(mTelephone, newPassword);
                         break;
                 }
             }

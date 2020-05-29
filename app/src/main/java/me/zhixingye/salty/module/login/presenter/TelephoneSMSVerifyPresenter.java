@@ -1,10 +1,8 @@
 package me.zhixingye.salty.module.login.presenter;
 
 import com.salty.protos.LoginResp;
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
-import com.salty.protos.RegisterResp;
-import com.salty.protos.ResetPasswordResp;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
@@ -30,11 +28,10 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password, String smsCode) {
+    public void loginByTelephone(String telephone, String password) {
         IMClient.get().getAccountService().loginByTelephone(
                 telephone,
                 password,
-                smsCode,
                 new LifecycleMVPRequestCallback<LoginResp>(mView) {
                     @Override
                     protected void onSuccess(LoginResp result) {
@@ -45,16 +42,16 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
 
     @Override
     public void obtainLoginTelephoneSMS(String telephone) {
-        obtainTelephoneSMS(telephone, ObtainSMSCodeReq.CodeType.LOGIN);
+        obtainTelephoneSMS(telephone, SMSOperationType.LOGIN);
     }
 
-    private void obtainTelephoneSMS(String telephone, ObtainSMSCodeReq.CodeType type) {
+    private void obtainTelephoneSMS(String telephone, SMSOperationType type) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
                 type,
-                new LifecycleMVPRequestCallback<ObtainSMSCodeResp>(mView) {
+                new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mView) {
                     @Override
-                    protected void onSuccess(ObtainSMSCodeResp result) {
+                    protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
                         mView.showCountDown();
                     }
                 });

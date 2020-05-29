@@ -18,7 +18,7 @@ public class TelephoneSMSVerifyContract {
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void loginByTelephone(String telephone, String password, String smsCode);
+        void loginByTelephone(String telephone, String password);
 
         void obtainLoginTelephoneSMS(String telephone);
     }

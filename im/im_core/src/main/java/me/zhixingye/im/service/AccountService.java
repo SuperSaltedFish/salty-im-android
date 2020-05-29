@@ -3,6 +3,7 @@ package me.zhixingye.im.service;
 import com.salty.protos.LoginResp;
 import com.salty.protos.RegisterResp;
 import com.salty.protos.ResetPasswordResp;
+import com.salty.protos.UserProfile;
 
 import androidx.annotation.Nullable;
 import me.zhixingye.im.listener.RequestCallback;
@@ -13,17 +14,19 @@ import me.zhixingye.im.listener.RequestCallback;
  * @author zhixingye , 2020年05月01日.
  */
 public interface AccountService extends BasicService {
-    void registerByTelephone(String telephone, String password, String smsCode, RequestCallback<RegisterResp> callback);
+    void registerByTelephone(String telephone, String password, RequestCallback<RegisterResp> callback);
 
-    void registerByEmail(String email, String password, String smsCode, RequestCallback<RegisterResp> callback);
+    void registerByEmail(String email, String password, RequestCallback<RegisterResp> callback);
 
     void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
-    void resetLoginPasswordByTelephoneSMS(String telephone, String smsCode, String newPassword, RequestCallback<ResetPasswordResp> callback);
+    void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
-    void loginByTelephone(String telephone, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback);
+    void loginByTelephone(String telephone, String password, RequestCallback<LoginResp> callback);
 
-    void loginByEmail(String email, String password, @Nullable String smsCode, RequestCallback<LoginResp> callback);
+    void loginByEmail(String email, String password, RequestCallback<LoginResp> callback);
+
+    void loginByLastLoginInfo(RequestCallback<UserProfile> callback);
 
     void logout();
 
@@ -32,4 +35,6 @@ public interface AccountService extends BasicService {
     String getCurrentUserId();
 
     String getCurrentUserToken();
+
+    UserProfile getCurrentUserProfile();
 }

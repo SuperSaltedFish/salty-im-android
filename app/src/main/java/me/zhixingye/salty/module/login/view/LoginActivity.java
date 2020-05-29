@@ -4,17 +4,20 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.textfield.TextInputLayout;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.LoginContract;
 import me.zhixingye.salty.module.login.presenter.LoginPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
+import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.view.ProgressButton;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
@@ -157,8 +160,20 @@ public class LoginActivity
 
     @Override
     public void startHomeActivity() {
-        MainActivity.startActivity(this);
-        finish();
+        setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
+        AnimationUtil.circularRevealShowByFullActivityAnim(
+                this,
+                mPBtnLogin,
+                new ColorDrawable(
+                        ContextCompat.getColor(this, R.color.colorAccent)),
+                new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        MainActivity.startActivityByColorTransition(
+                                LoginActivity.this,
+                                R.color.colorAccent);
+                    }
+                });
     }
 
     @Override

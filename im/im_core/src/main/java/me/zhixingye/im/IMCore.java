@@ -6,6 +6,7 @@ import me.zhixingye.im.service.AccountService;
 import me.zhixingye.im.service.ApiService;
 import me.zhixingye.im.service.DeviceService;
 import me.zhixingye.im.service.SMSService;
+import me.zhixingye.im.service.ThreadService;
 import me.zhixingye.im.service.impl.AccountServiceImpl;
 import me.zhixingye.im.service.impl.ApiServiceImpl;
 import me.zhixingye.im.service.ContactService;
@@ -22,6 +23,7 @@ import me.zhixingye.im.service.impl.MessageServiceImpl;
 import me.zhixingye.im.service.impl.SMSServiceImpl;
 import me.zhixingye.im.service.impl.ServiceAccessor;
 import me.zhixingye.im.service.impl.StorageServiceImpl;
+import me.zhixingye.im.service.impl.ThreadServiceImpl;
 import me.zhixingye.im.service.impl.UserServiceImpl;
 
 /**
@@ -69,7 +71,7 @@ public class IMCore {
         ServiceAccessor.register(SMSService.class, new SMSServiceImpl());
         ServiceAccessor.register(StorageService.class, new StorageServiceImpl());
         ServiceAccessor.register(UserService.class, new UserServiceImpl());
-
+        ServiceAccessor.register(ThreadService.class, new ThreadServiceImpl());
     }
 
     public AccountService getAccountService() {

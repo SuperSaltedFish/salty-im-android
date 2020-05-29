@@ -1,7 +1,8 @@
 package me.zhixingye.im.service;
 
-import com.salty.protos.ObtainSMSCodeReq;
-import com.salty.protos.ObtainSMSCodeResp;
+import com.salty.protos.ObtainTelephoneSMSCodeResp;
+import com.salty.protos.SMSOperationType;
+import com.salty.protos.VerifyTelephoneSMSCodeResp;
 
 import me.zhixingye.im.listener.RequestCallback;
 
@@ -11,5 +12,7 @@ import me.zhixingye.im.listener.RequestCallback;
  * @author zhixingye , 2020年05月01日.
  */
 public interface SMSService extends BasicService {
-    void obtainVerificationCodeForTelephoneType(String telephone, ObtainSMSCodeReq.CodeType type, RequestCallback<ObtainSMSCodeResp> callback);
+    void obtainVerificationCodeForTelephoneType(String telephone, SMSOperationType type, RequestCallback<ObtainTelephoneSMSCodeResp> callback);
+
+    void verifyTelephoneSMSCode(String telephone, String smsCode, SMSOperationType type, RequestCallback<VerifyTelephoneSMSCodeResp> callback);
 }

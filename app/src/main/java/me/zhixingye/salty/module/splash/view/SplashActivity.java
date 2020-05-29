@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.view.LoginActivity;
@@ -17,11 +20,14 @@ import me.zhixingye.salty.util.PermissionHelper;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class SplashActivity extends BasicCompatActivity<SplashPresenter> implements SplashContract.View {
+public class SplashActivity extends BasicCompatActivity<SplashPresenter> implements
+        SplashContract.View {
+
+    private ImageView mIvSplash;
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_splash;
+        return 0;
     }
 
     @Override
@@ -34,13 +40,14 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
         if (!isTaskRoot()) {
             final Intent intent = getIntent();
             final String intentAction = intent.getAction();
-            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
+            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction
+                    .equals(Intent.ACTION_MAIN)) {
                 finish();
                 return;
             }
         }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION);
-
+        createSplashView();
         PermissionHelper.requestExternalStoragePermissions(
                 getSupportFragmentManager(),
                 new PermissionHelper.OnPermissionsResult() {
@@ -61,6 +68,15 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
     public void onBackPressed() {
     }
 
+    private void createSplashView() {
+        mIvSplash = new ImageView(this);
+        mIvSplash.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        mIvSplash.setImageResource(R.drawable.src_bg_splash);
+
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+        decorView.addView(mIvSplash, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+    }
+
     @Override
     public void startLoginActivity() {
         LoginActivity.startActivity(this);
@@ -69,7 +85,7 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
 
     @Override
     public void startHomeActivity() {
-        MainActivity.startActivity(this);
+        MainActivity.startActivityByImageTransition(this, R.drawable.src_bg_splash);
         finish();
     }
 

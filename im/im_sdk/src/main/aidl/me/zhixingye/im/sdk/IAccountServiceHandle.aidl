@@ -10,9 +10,9 @@ interface IAccountServiceHandle {
 
     void registerByEmail(String email, String password, IRemoteCallback callback);
 
-    void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, IRemoteCallback callback);
+    void resetLoginPasswordByEmail(String email, String newPassword, IRemoteCallback callback);
 
-    void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, IRemoteCallback callback);
+    void resetLoginPasswordByTelephone(String telephone, String newPassword, IRemoteCallback callback);
 
     void loginByTelephone(String telephone, String password, IRemoteCallback callback);
 

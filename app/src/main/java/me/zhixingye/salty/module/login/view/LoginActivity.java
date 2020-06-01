@@ -10,8 +10,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import com.google.android.material.textfield.TextInputLayout;
+import com.salty.protos.SMSOperationType;
+
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.LoginContract;
@@ -143,15 +148,24 @@ public class LoginActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == TelephoneSMSVerifyActivity.RESULT_CODE_VERIFY_SUCCESSFUL) {
+            tryLogin();
+        }
+    }
+
+    @Override
     public void startPhoneVerifyActivity() {
-        TelephoneSMSVerifyActivity.startActivityToLogin(
+        TelephoneSMSVerifyActivity.startActivityForResult(
                 this,
+                1,
                 mTEtPhone.getPhoneSuffixText(),
-                mEtPassword.getText().toString());
+                SMSOperationType.LOGIN);
     }
 
     private void startRegisterActivity() {
-        RegisterActivity.startActivity(this);
+        RegisterActivity.startActivity(this, null);
     }
 
     private void startRecoverPasswordActivity() {

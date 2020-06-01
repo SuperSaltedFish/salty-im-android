@@ -9,7 +9,6 @@ import com.salty.protos.UserProfile;
 
 import java.util.concurrent.Semaphore;
 
-import androidx.annotation.Nullable;
 import me.zhixingye.im.IMCore;
 import me.zhixingye.im.api.UserApi;
 import me.zhixingye.im.constant.ResponseCode;
@@ -65,17 +64,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByTelephone(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .resetLoginPasswordByTelephoneOldPassword(telephone, oldPassword, newPassword, callback);
+                .resetLoginPasswordByTelephone(telephone, newPassword, callback);
     }
 
     @Override
-    public void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback) {
+    public void resetLoginPasswordByEmail(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback) {
         ServiceAccessor.get(ApiService.class)
                 .createApi(UserApi.class)
-                .resetLoginPasswordByTelephoneSMS(telephone, newPassword, callback);
+                .resetLoginPasswordByTelephone(telephone, newPassword, callback);
     }
 
     @Override

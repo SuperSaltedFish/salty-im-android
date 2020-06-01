@@ -1,5 +1,6 @@
 package me.zhixingye.im.service.impl;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,9 +27,10 @@ public class DeviceServiceImpl implements DeviceService {
         }
     }
 
+    @SuppressLint("HardwareIds")
     @Override
     public String getDeviceId() {
-        return Settings.System.getString(
+        return Settings.Secure.getString(
                 IMCore.getAppContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }

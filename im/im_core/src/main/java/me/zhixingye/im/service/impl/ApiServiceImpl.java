@@ -1,5 +1,8 @@
 package me.zhixingye.im.service.impl;
 
+import android.os.Handler;
+import android.util.Log;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -7,6 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.TimeUnit;
 
+import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.android.AndroidChannelBuilder;
 import io.grpc.okhttp.OkHttpChannelBuilder;
@@ -32,9 +36,19 @@ public class ApiServiceImpl implements ApiService {
                 .usePlaintext();
         mChannel = AndroidChannelBuilder.usingBuilder(builder)
                 .context(IMCore.getAppContext().getApplicationContext())
+                .idleTimeout(5, TimeUnit.SECONDS)
+                .keepAliveTimeout(2, TimeUnit.SECONDS)
                 .build();
-    }
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, mChannel.getState(true).name());
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
+    }
 
     public synchronized void release() {
         if (mChannel != null) {
@@ -53,7 +67,7 @@ public class ApiServiceImpl implements ApiService {
             instance.onBindManagedChannel(mChannel);
             return instance;
         } catch (IllegalAccessException | InstantiationException e) {
-            Logger.e(TAG,"创建api失败",e);
+            Logger.e(TAG, "创建api失败", e);
         }
         return null;
     }

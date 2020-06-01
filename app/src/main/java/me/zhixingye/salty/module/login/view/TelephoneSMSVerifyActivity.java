@@ -1,6 +1,7 @@
 package me.zhixingye.salty.module.login.view;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
@@ -8,11 +9,13 @@ import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
 import me.zhixingye.salty.module.login.presenter.TelephoneSMSVerifyPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
+import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.salty.widget.view.SMSCodeEditView;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.SpannableString;
@@ -21,10 +24,12 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.salty.protos.SMSOperationType;
 
 import java.util.Locale;
 
@@ -32,18 +37,20 @@ public class TelephoneSMSVerifyActivity
         extends BasicCompatActivity<TelephoneSMSVerifyPresenter>
         implements TelephoneSMSVerifyContract.View {
 
-    private static final String EXTRA_OPERATION_TYPE = "OperationType";
+    public static final int RESULT_CODE_VERIFY_SUCCESSFUL = TelephoneSMSVerifyActivity.class.hashCode();
+
+    private static final String EXTRA_SMS_OPERATION_TYPE = "SMSOperationType";
     private static final String EXTRA_TELEPHONE = "Telephone";
-    private static final String EXTRA_PASSWORD = "Password";
 
-    private static final int OPERATION_TYPE_LOGIN_BY_TELEPHONE = 2;
-
-    public static void startActivityToLogin(Context context, String telephone, String password) {
+    public static void startActivityForResult(
+            Activity context,
+            int requestCode,
+            String telephone,
+            SMSOperationType type) {
         Intent intent = new Intent(context, TelephoneSMSVerifyActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_LOGIN_BY_TELEPHONE);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
-        intent.putExtra(EXTRA_PASSWORD, password);
-        context.startActivity(intent);
+        intent.putExtra(EXTRA_SMS_OPERATION_TYPE, type);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -56,9 +63,8 @@ public class TelephoneSMSVerifyActivity
     private SMSCodeEditView mSMSEditView;
     private Button mBtnResend;
 
-    private int mOperationType;
+    private SMSOperationType mSMSOperationType;
     private String mTelephone;
-    private String mPassword;
 
     @Override
     protected void init(Bundle savedInstanceState) {
@@ -67,13 +73,18 @@ public class TelephoneSMSVerifyActivity
         mSMSEditView = findViewById(R.id.mSMSEditView);
         mBtnResend = findViewById(R.id.mBtnResend);
 
-        mOperationType = getIntent().getIntExtra(EXTRA_OPERATION_TYPE, -1);
+        mSMSOperationType = (SMSOperationType) getIntent().getSerializableExtra(EXTRA_SMS_OPERATION_TYPE);
         mTelephone = getIntent().getStringExtra(EXTRA_TELEPHONE);
-        mPassword = getIntent().getStringExtra(EXTRA_PASSWORD);
     }
 
     @Override
     protected void setup(Bundle savedInstanceState) {
+        if (mSMSOperationType == SMSOperationType.UNRECOGNIZED
+                || mSMSOperationType == SMSOperationType.UNDEFINED
+                || TextUtils.isEmpty(mTelephone)) {
+            finish();
+            return;
+        }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
         setDisplayHomeAsUpEnabled(true);
 
@@ -83,13 +94,11 @@ public class TelephoneSMSVerifyActivity
         setupVoiceSMSHint();
         setupAutoConfirm();
 
-        showCountDown();
-
-        showSoftKeyboard(mSMSEditView.getChildAt(0));
+        resendSMS(true);
     }
 
     private void setupTitleHint() {
-        String hintPrefix = "一条手机验证码已发送至 ";
+        String hintPrefix = "一条手机验证码正在发送至 ";
         String telephone = "+86 " + mTelephone;
         int startIndex = hintPrefix.length();
         SpannableString sStr = new SpannableString(hintPrefix + telephone);
@@ -141,25 +150,13 @@ public class TelephoneSMSVerifyActivity
     private void confirm(String smsCode) {
         if (TextUtils.isEmpty(smsCode) || smsCode.length() < AppConfig.PHONE_VERIFY_CODE_LENGTH) {
             showError("请输入完整的验证码");
+            return;
         }
-
-        switch (mOperationType) {
-            case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
-                mPresenter.loginByTelephone(mTelephone, mPassword);
-                break;
-            default:
-                finish();
-        }
+        mPresenter.verifyTelephoneSMS(mTelephone, smsCode, mSMSOperationType);
     }
 
-    private void resendSMS() {
-        switch (mOperationType) {
-            case OPERATION_TYPE_LOGIN_BY_TELEPHONE:
-                mPresenter.obtainLoginTelephoneSMS(mTelephone);
-                break;
-            default:
-                finish();
-        }
+    private void resendSMS(boolean isFirstSend) {
+        mPresenter.obtainTelephoneSMS(mTelephone, mSMSOperationType, isFirstSend);
     }
 
     private void setAllowResendSMSCode(boolean isAllow) {
@@ -172,7 +169,7 @@ public class TelephoneSMSVerifyActivity
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.mBtnResend:
-                    resendSMS();
+                    resendSMS(false);
                     break;
             }
         }
@@ -199,16 +196,73 @@ public class TelephoneSMSVerifyActivity
     }
 
     @Override
-    public void showCountDown() {
+    public void showSendSuccessful() {
         setAllowResendSMSCode(false);
         mResendCountDown.cancel();
         mResendCountDown.start();
+        showSoftKeyboard(mSMSEditView.getChildAt(0));
     }
 
     @Override
-    public void startHomeActivity() {
-        MainActivity.startActivity(this);
+    public void showFirstSendFailure(String error) {
+        showDialog(error, new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void showVerifySuccessful() {
+        setResult(RESULT_CODE_VERIFY_SUCCESSFUL);
         finish();
+    }
+
+    @Override
+    public void showRegisteredHintDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("无法注册")
+                .setMessage("该手机账号已经被注册，是否马上去登录?")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("去登录", new OnDialogOnlySingleClickListener() {
+                    @Override
+                    public void onSingleClick(DialogInterface dialog, int which) {
+                        LoginActivity.startActivityByTelephoneAccount(
+                                TelephoneSMSVerifyActivity.this,
+                                mTelephone,
+                                null);
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void showUnregisteredHintDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("无法重置密码")
+                .setMessage("该手机账号未注册，是否马上去注册?")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("去注册", new OnDialogOnlySingleClickListener() {
+                    @Override
+                    public void onSingleClick(DialogInterface dialog, int which) {
+                        RegisterActivity.startActivity(TelephoneSMSVerifyActivity.this,
+                                mTelephone);
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     @Override

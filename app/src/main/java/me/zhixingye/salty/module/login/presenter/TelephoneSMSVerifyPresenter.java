@@ -1,8 +1,9 @@
 package me.zhixingye.salty.module.login.presenter;
 
-import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainTelephoneSMSCodeResp;
 import com.salty.protos.SMSOperationType;
+import com.salty.protos.StatusCode;
+import com.salty.protos.VerifyTelephoneSMSCodeResp;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
@@ -28,32 +29,61 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
     }
 
     @Override
-    public void loginByTelephone(String telephone, String password) {
-        IMClient.get().getAccountService().loginByTelephone(
-                telephone,
-                password,
-                new LifecycleMVPRequestCallback<LoginResp>(mView) {
-                    @Override
-                    protected void onSuccess(LoginResp result) {
-                        mView.startHomeActivity();
-                    }
-                });
-    }
-
-    @Override
-    public void obtainLoginTelephoneSMS(String telephone) {
-        obtainTelephoneSMS(telephone, SMSOperationType.LOGIN);
-    }
-
-    private void obtainTelephoneSMS(String telephone, SMSOperationType type) {
+    public void obtainTelephoneSMS(String telephone, SMSOperationType type, final boolean firstObtain) {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
                 type,
                 new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mView) {
                     @Override
                     protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
-                        mView.showCountDown();
+                        mView.showSendSuccessful();
+                    }
+
+                    @Override
+                    protected boolean onError(int code, String error) {
+                        boolean isHandled = dispatchErrorLogic(code);
+                        if (isHandled) {
+                            return true;
+                        }
+                        if (firstObtain) {
+                            mView.showFirstSendFailure(error);
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 });
+    }
+
+    @Override
+    public void verifyTelephoneSMS(String telephone, String smsCode, SMSOperationType type) {
+        IMClient.get().getSMSService().verifyTelephoneSMSCode(
+                telephone,
+                smsCode,
+                type,
+                new LifecycleMVPRequestCallback<VerifyTelephoneSMSCodeResp>(mView) {
+                    @Override
+                    protected void onSuccess(VerifyTelephoneSMSCodeResp result) {
+                        mView.showVerifySuccessful();
+                    }
+                });
+    }
+
+    private boolean dispatchErrorLogic(int code) {
+        StatusCode statusCode = StatusCode.forNumber(code);
+        if (statusCode == null) {
+            return false;
+        }
+        switch (statusCode) {
+            case STATUS_ACCOUNT_EXISTS:
+                mView.showRegisteredHintDialog();
+                break;
+            case STATUS_ACCOUNT_NOT_EXISTS:
+                mView.showUnregisteredHintDialog();
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }

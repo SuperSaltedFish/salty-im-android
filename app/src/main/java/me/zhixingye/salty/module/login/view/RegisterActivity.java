@@ -15,8 +15,13 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.salty.protos.SMSOperationType;
+
+import androidx.annotation.Nullable;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
@@ -32,13 +37,18 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> implements
-        RegisterContract.View {
+public class RegisterActivity
+        extends BasicCompatActivity<RegisterPresenter>
+        implements RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";
 
-    public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, RegisterActivity.class));
+    private static final String EXTRA_TELEPHONE = "Telephone";
+
+    public static void startActivity(Context context, String telephone) {
+        Intent intent = new Intent(context, RegisterActivity.class);
+        intent.putExtra(EXTRA_TELEPHONE, telephone);
+        context.startActivity(intent);
     }
 
     private TelephoneEditText mTEtPhone;
@@ -65,6 +75,11 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
         setupUserAgreement();
 
         mPBtnRegister.setOnClickListener(mOnClickListener);
+
+        String telephone = getIntent().getStringExtra(EXTRA_TELEPHONE);
+        if (!TextUtils.isEmpty(telephone)) {
+            mTEtPhone.setPhoneSuffixText(telephone);
+        }
 
     }
 
@@ -103,12 +118,7 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
             return;
         }
 
-        mPBtnRegister.startHideAnim(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mPresenter.obtainTelephoneRegisterSMS(telephone);
-            }
-        });
+        TelephoneSMSVerifyActivity.startActivityForResult(this, 1, telephone, SMSOperationType.REGISTER);
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -123,33 +133,13 @@ public class RegisterActivity extends BasicCompatActivity<RegisterPresenter> imp
     };
 
     @Override
-    public void startPhoneVerifyActivity() {
-        ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
-                this,
-                mTEtPhone.getPhoneSuffixText());
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == TelephoneSMSVerifyActivity.RESULT_CODE_VERIFY_SUCCESSFUL) {
+            ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
+                    this,
+                    mTEtPhone.getPhoneSuffixText());
+        }
     }
 
-    @Override
-    public void showAlreadyRegisterDialog() {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("无法注册")
-                .setMessage("该手机账号已经被注册，是否马上去登录?")
-                .setNegativeButton("取消", null)
-                .setPositiveButton("去登录", new OnDialogOnlySingleClickListener() {
-                    @Override
-                    public void onSingleClick(DialogInterface dialog, int which) {
-                        LoginActivity.startActivityByTelephoneAccount(
-                                RegisterActivity.this,
-                                mTEtPhone.getPhoneSuffixText(),
-                                null);
-                    }
-                })
-                .show();
-    }
-
-    @Override
-    public void cancelProgressButtonLoadingIfNeed() {
-        super.cancelProgressButtonLoadingIfNeed();
-        mPBtnRegister.startShowAnim();
-    }
 }

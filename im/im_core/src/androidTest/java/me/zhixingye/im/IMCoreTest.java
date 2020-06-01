@@ -109,7 +109,7 @@ public class IMCoreTest {
 
     private void testResetLoginPasswordByOldPassword() {
         final String newPassword = "141";
-        IMCore.get().getAccountService().resetLoginPasswordByTelephoneOldPassword(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
+        IMCore.get().getAccountService().resetLoginPasswordByTelephone(mAccount, mPassword, newPassword, new LockRequestCallback<ResetPasswordResp>() {
             @Override
             void onSuccessful(ResetPasswordResp resp) {
                 mPassword = newPassword;
@@ -131,7 +131,7 @@ public class IMCoreTest {
                 });
 
         mPassword = "yezhixing";
-        IMCore.get().getAccountService().resetLoginPasswordByTelephoneOldPassword(
+        IMCore.get().getAccountService().resetLoginPasswordByTelephone(
                 mAccount,
                 "112233",
                 mPassword,

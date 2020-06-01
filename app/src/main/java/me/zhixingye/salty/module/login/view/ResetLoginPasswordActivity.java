@@ -5,15 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.google.android.material.textfield.TextInputLayout;
-import java.util.Locale;
+
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
@@ -32,8 +31,7 @@ public class ResetLoginPasswordActivity
     private static final String EXTRA_TELEPHONE = "Telephone";
 
     private static final int OPERATION_TYPE_REGISTER_BY_TELEPHONE = 1;
-    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD = 2;
-    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS = 3;
+    private static final int OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD = 2;
 
     public static void startActivityToRegisterByTelephone(Context context, String telephone) {
         Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
@@ -42,30 +40,14 @@ public class ResetLoginPasswordActivity
         context.startActivity(intent);
     }
 
-    public static void startActivityToResetTelephoneLoginPasswordByOldPassword(Context context,
-            String telephone) {
-        Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE,
-                OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD);
-        intent.putExtra(EXTRA_TELEPHONE, telephone);
-        context.startActivity(intent);
-    }
-
     public static void startActivityToResetTelephoneLoginPasswordBySMS(Context context,
-            String telephone) {
+                                                                       String telephone) {
         Intent intent = new Intent(context, ResetLoginPasswordActivity.class);
-        intent.putExtra(EXTRA_OPERATION_TYPE,
-                OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS);
+        intent.putExtra(EXTRA_OPERATION_TYPE, OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD);
         intent.putExtra(EXTRA_TELEPHONE, telephone);
         context.startActivity(intent);
     }
 
-    private FrameLayout mFlSMSInputLayout;
-    private EditText mEtSMSCode;
-    private ProgressButton mPBtnResend;
-    private EditText mEtOldPassword;
-    private TextInputLayout mTilOldPassword;
-    private TextInputLayout mTilSMSCode;
     private EditText mEtPassword;
     private TextView mTvRuleLength;
     private TextView mTvRuleRepeatedNumbers;
@@ -87,19 +69,13 @@ public class ResetLoginPasswordActivity
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        mFlSMSInputLayout = findViewById(R.id.mFlSMSInputLayout);
-        mEtSMSCode = findViewById(R.id.mEtSMSCode);
-        mPBtnResend = findViewById(R.id.mPBtnResend);
-        mEtOldPassword = findViewById(R.id.mEtOldPassword);
         mEtPassword = findViewById(R.id.mEtPassword);
         mTvRuleLength = findViewById(R.id.mTvRuleLength);
         mTvRuleRepeatedNumbers = findViewById(R.id.mTvRuleRepeatedNumbers);
         mTvRuleCombination = findViewById(R.id.mTvRuleCombination);
         mEtConfirmPassword = findViewById(R.id.mEtConfirmPassword);
         mTvRuleConsistency = findViewById(R.id.mTvRuleConsistency);
-        mTilOldPassword = findViewById(R.id.mTilOldPassword);
         mPBtnConfirm = findViewById(R.id.mPBtnConfirm);
-        mTilSMSCode = findViewById(R.id.mTilSMSCode);
         mTvTitle = findViewById(R.id.mTvTitle);
         mTvHint = findViewById(R.id.mTvHint);
 
@@ -116,28 +92,15 @@ public class ResetLoginPasswordActivity
         setupMode();
 
         mPBtnConfirm.setOnClickListener(mOnClickListener);
-        mPBtnResend.setOnClickListener(mOnClickListener);
-
-        starResendCountDown();
     }
 
     private void setupMode() {
         switch (mOperationType) {
             case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                mFlSMSInputLayout.setVisibility(View.VISIBLE);
-                mTilOldPassword.setVisibility(View.GONE);
                 mTvTitle.setText("注册，设置登录密码");
                 mTvHint.setText("注册前需要验证您的手机号码\n请在下方输入您收到的手机验证码并设置登录密码");
                 break;
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-                mFlSMSInputLayout.setVisibility(View.VISIBLE);
-                mTilOldPassword.setVisibility(View.GONE);
-                mTvTitle.setText("设置登录密码");
-                mTvHint.setText("设置完成之后您将可以使用新的登录密码进行登录");
-                break;
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
-                mFlSMSInputLayout.setVisibility(View.GONE);
-                mTilOldPassword.setVisibility(View.VISIBLE);
+            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
                 mTvTitle.setText("设置登录密码");
                 mTvHint.setText("设置完成之后您将可以使用新的登录密码进行登录");
                 break;
@@ -173,27 +136,7 @@ public class ResetLoginPasswordActivity
     }
 
     private void confirm() {
-        final String oldPassword = mEtOldPassword.getText().toString();
-        final String smsCode = mEtSMSCode.getText().toString();
         final String newPassword = mEtPassword.getText().toString();
-
-        switch (mOperationType) {
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
-                if (TextUtils.isEmpty(oldPassword)) {
-                    mTilOldPassword.setError("密码不能为空，请输入密码");
-                    return;
-                }
-                break;
-            case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-                if (TextUtils.isEmpty(smsCode)) {
-                    mTilSMSCode.setError("验证码不能为空，请输入手机验证码");
-                    return;
-                }
-                break;
-            default:
-                return;
-        }
 
         if (!mTvRuleLength.isEnabled()) {
             AnimationUtil.shakeAnim(mTvRuleLength);
@@ -219,38 +162,12 @@ public class ResetLoginPasswordActivity
                     case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
                         mPresenter.registerByTelephone(mTelephone, newPassword);
                         break;
-                    case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
-                        mPresenter.resetTelephoneLoginPasswordByOldPassword(mTelephone, oldPassword,
-                                newPassword);
-                        break;
-                    case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-                        mPresenter
-                                .resetTelephoneLoginPasswordBySMS(mTelephone, newPassword);
+                    case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
+                        mPresenter.resetTelephoneLoginPassword(mTelephone, newPassword);
                         break;
                 }
             }
         });
-    }
-
-    private void resendSMSCode() {
-        mPBtnResend.startHideAnim(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                switch (mOperationType) {
-                    case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-                        mPresenter.obtainResetTelephoneLoginPasswordSMS(mTelephone);
-                        break;
-                    case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                        mPresenter.obtainTelephoneRegisterSMS(mTelephone);
-                        break;
-                }
-            }
-        });
-    }
-
-    private void setAllowResendSMSCode(boolean isAllow) {
-        mPBtnResend.setEnabled(isAllow);
-        mPBtnResend.setText("重发");
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -260,35 +177,12 @@ public class ResetLoginPasswordActivity
                 case R.id.mPBtnConfirm:
                     confirm();
                     break;
-                case R.id.mPBtnResend:
-                    resendSMSCode();
-                    break;
             }
         }
     };
 
-    private final CountDownTimer mResendCountDown = new CountDownTimer(60000, 1000) {
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            int time = (int) (millisUntilFinished / 1000);
-            mPBtnResend.setText(String.format(Locale.getDefault(), "%d秒", time));
-        }
-
-        @Override
-        public void onFinish() {
-            setAllowResendSMSCode(true);
-        }
-    };
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mResendCountDown.cancel();
-    }
-
-    @Override
-    public void showRegisterSuccessfulPage() {
+    public void showRegisterSuccessful() {
         SuccessfulActivity.startActivityForTelephoneRegister(
                 this,
                 mTelephone,
@@ -297,10 +191,9 @@ public class ResetLoginPasswordActivity
     }
 
     @Override
-    public void showResetSuccessfulPage() {
+    public void showResetLoginPasswordSuccessful() {
         switch (mOperationType) {
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_SMS:
-            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD_BY_OLD_PASSWORD:
+            case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
                 SuccessfulActivity.startActivityForRecoverTelephoneLoginPassword(
                         this,
                         mTelephone, mEtPassword.getText().toString());
@@ -311,16 +204,8 @@ public class ResetLoginPasswordActivity
     }
 
     @Override
-    public void starResendCountDown() {
-        mResendCountDown.cancel();
-        mResendCountDown.start();
-        setAllowResendSMSCode(false);
-    }
-
-    @Override
     public void cancelProgressButtonLoadingIfNeed() {
         super.cancelProgressButtonLoadingIfNeed();
-        mPBtnResend.startShowAnim();
         mPBtnConfirm.startShowAnim();
     }
 

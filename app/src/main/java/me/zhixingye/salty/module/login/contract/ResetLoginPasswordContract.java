@@ -11,25 +11,16 @@ import me.zhixingye.salty.basic.BasicView;
 public class ResetLoginPasswordContract {
 
     public interface View extends BasicView<Presenter> {
+        void showRegisterSuccessful();
 
-        void showRegisterSuccessfulPage();
-
-        void showResetSuccessfulPage();
-
-        void starResendCountDown();
+        void showResetLoginPasswordSuccessful();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
 
-        void obtainTelephoneRegisterSMS(String telephone);
-
-        void obtainResetTelephoneLoginPasswordSMS(String telephone);
-
         void registerByTelephone(String telephone, String password);
 
-        void resetTelephoneLoginPasswordBySMS(String telephone, String newPassword);
-
-        void resetTelephoneLoginPasswordByOldPassword(String telephone, String oldPassword, String newPassword);
+        void resetTelephoneLoginPassword(String telephone, String newPassword);
     }
 }

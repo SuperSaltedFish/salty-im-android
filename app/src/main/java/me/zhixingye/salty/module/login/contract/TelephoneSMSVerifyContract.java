@@ -1,6 +1,8 @@
 package me.zhixingye.salty.module.login.contract;
 
 
+import com.salty.protos.SMSOperationType;
+
 import me.zhixingye.salty.basic.BasicPresenter;
 import me.zhixingye.salty.basic.BasicView;
 
@@ -11,15 +13,21 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class TelephoneSMSVerifyContract {
     public interface View extends BasicView<Presenter> {
-        void showCountDown();
+        void showSendSuccessful();
 
-        void startHomeActivity();
+        void showFirstSendFailure(String error);
+
+        void showVerifySuccessful();
+
+        void showRegisteredHintDialog();
+
+        void showUnregisteredHintDialog();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void loginByTelephone(String telephone, String password);
+        void obtainTelephoneSMS(String telephone, SMSOperationType type, boolean firstObtain);
 
-        void obtainLoginTelephoneSMS(String telephone);
+        void verifyTelephoneSMS(String telephone, String smsCode, SMSOperationType type);
     }
 }

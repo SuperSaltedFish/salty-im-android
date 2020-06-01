@@ -18,9 +18,9 @@ public interface AccountService extends BasicService {
 
     void registerByEmail(String email, String password, RequestCallback<RegisterResp> callback);
 
-    void resetLoginPasswordByTelephoneOldPassword(String telephone, String oldPassword, String newPassword, RequestCallback<ResetPasswordResp> callback);
+    void resetLoginPasswordByTelephone(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
-    void resetLoginPasswordByTelephoneSMS(String telephone, String newPassword, RequestCallback<ResetPasswordResp> callback);
+    void resetLoginPasswordByEmail(String email, String newPassword, RequestCallback<ResetPasswordResp> callback);
 
     void loginByTelephone(String telephone, String password, RequestCallback<LoginResp> callback);
 

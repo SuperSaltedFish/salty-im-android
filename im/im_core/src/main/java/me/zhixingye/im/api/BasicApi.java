@@ -8,6 +8,7 @@ import com.google.protobuf.GeneratedMessageLite;
 import com.google.protobuf.MessageLite;
 import com.salty.protos.GrpcReq;
 import com.salty.protos.GrpcResp;
+import com.salty.protos.StatusCode;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import me.zhixingye.im.BuildConfig;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.listener.RequestCallback;
 import me.zhixingye.im.service.AccountService;
@@ -41,7 +43,7 @@ public abstract class BasicApi {
                 .setTypeUrl("type.googleapis.com/" + message.getClass().getCanonicalName())
                 .setValue(message.toByteString())
                 .build();
-    
+
         DeviceService deviceService = ServiceAccessor.get(DeviceService.class);
         AccountService accountService = ServiceAccessor.get(AccountService.class);
 
@@ -78,113 +80,107 @@ public abstract class BasicApi {
         @Override
         public void onError(Throwable t) {
             Status status = Status.fromThrowable(t);
-            if (status == null) {
-                Logger.e(TAG, "Status == null", t);
-                callError(ResponseCode.INTERNAL_UNKNOWN);
-            } else {
-                String error;
-                switch (status.getCode()) {
-                    case DEADLINE_EXCEEDED:
-                        error = "连接超时，请检查当前网络状态是否正常！";
-                        break;
-                    default:
-                        error = status.getDescription();
-                        break;
-                }
-                if (TextUtils.isEmpty(error) && status.getCause() != null) {
-                    error = status.getCause().getMessage();
-                }
-                callError(status.getCode().value(), error);
+
+            String error;
+            switch (status.getCode()) {
+                case DEADLINE_EXCEEDED:
+                    error = "连接超时，请检查当前网络状态是否正常！";
+                    break;
+                default:
+                    error = status.getDescription();
+                    break;
             }
+            if (TextUtils.isEmpty(error) && status.getCause() != null) {
+                error = status.getCause().getMessage();
+            }
+            callError(-status.getCode().value(), error);
         }
 
         @Override
         public void onCompleted() {
             if (mResponse == null) {
-                Logger.e(TAG, "GrpcResp == null");
-                callError(ResponseCode.INTERNAL_UNKNOWN);
+                onError(new Throwable("GrpcResp == null"));
                 return;
             }
 
-            if (ResponseCode.isErrorCode(mResponse.getCode())) {
-                callError(mResponse.getCode(), mResponse.getMessage());
-                return;
-            }
-
-            Any anyData = mResponse.getData();
-            if (anyData == null) {
-                Logger.e(TAG, "anyData == null");
-                callError(ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
-                return;
-            }
-
-            ByteString protoData = anyData.getValue();
-            if (protoData == null) {
-                Logger.e(TAG, "protoData == null");
-                callError(ResponseCode.INTERNAL_UNKNOWN_RESP_DATA);
-                return;
-            }
-
-            if (mCallback == null) {
-                return;
-            }
-
+            T resultMessage = null;
             try {
-                T resultMessage = (T) mDefaultInstance.getParserForType().parseFrom(protoData);
+                if (ResponseCode.isErrorCode(mResponse.getCode())) {
+                    callError(mResponse.getCode().getNumber(), mResponse.getMessage());
+                    return;
+                }
+
+                Any anyData = mResponse.getData();
+                if (anyData == null) {
+                    onError(new Throwable("anyData == null"));
+                    return;
+                }
+
+                ByteString protoData = anyData.getValue();
+                if (protoData == null) {
+                    onError(new Throwable("protoData == null"));
+                    return;
+                }
+
+                if (mCallback == null) {
+                    return;
+                }
+
+                resultMessage = (T) mDefaultInstance.getParserForType().parseFrom(protoData);
                 if (resultMessage == null) {
-                    Logger.e(TAG, "resultMessage == null");
-                    callError(ResponseCode.INTERNAL_UNKNOWN);
+                    onError(new Throwable("resultMessage == null"));
                 } else {
-                    callComplete(resultMessage);
+                    mCallback.onCompleted(resultMessage);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                callError(ResponseCode.INTERNAL_UNKNOWN);
+                onError(e);
+            } finally {
+                printResponse(mResponse, resultMessage, mDefaultInstance);
             }
-        }
-
-        private void callError(ResponseCode responseCode) {
-            callError(responseCode.getCode(), responseCode.getMsg());
         }
 
         private void callError(int code, String error) {
-            printErrorResponse(mDefaultInstance, code, error);
             if (mCallback != null) {
                 mCallback.onFailure(code, error);
-            }
-        }
-
-        private void callComplete(T response) {
-            printResponse(mResponse, response);
-            if (mCallback != null) {
-                mCallback.onCompleted(response);
             }
         }
     }
 
 
     private static void printRequest(GrpcReq req, MessageLite data) {
-        printGrpcData("发起请求", req.toString(), data);
+        if (BuildConfig.DEBUG) {
+            String title = "发起请求：" + getRequestName(data);
+            printGrpcData(
+                    title,
+                    req.toString(),
+                    data.toString());
+        }
     }
 
-    private static void printResponse(GrpcResp resp, MessageLite data) {
-        printGrpcData("收到响应", resp.toString(), data);
+    private static void printResponse(GrpcResp resp, MessageLite data, MessageLite defaultDataInstance) {
+        if (BuildConfig.DEBUG) {
+            String title = "收到响应：" + getRequestName(defaultDataInstance);
+            printGrpcData(
+                    title,
+                    resp.toString(),
+                    data == null ? "" : data.toString());
+        }
     }
 
-    private static void printGrpcData(String title, String grpcStr, MessageLite data) {
+    private static void printGrpcData(String title, String grpcStr, String dataContent) {
         Pattern firstLinePattern = Pattern.compile("#.*?\\n");
         String respStr = firstLinePattern.matcher(grpcStr).replaceAll("");
-        String dataStr = data.toString();
         String responseData;
-        if (dataStr.startsWith("#") && dataStr.indexOf("\n") > 0) {
-            dataStr = firstLinePattern.matcher(dataStr).replaceAll("");
-            dataStr = "  " + dataStr;
-            dataStr = dataStr.replace("\n", "\n  ");
+
+        if (!TextUtils.isEmpty(dataContent) && dataContent.startsWith("#") && dataContent.indexOf("\n") > 0) {
+            dataContent = firstLinePattern.matcher(dataContent).replaceAll("");
+            dataContent = "  " + dataContent;
+            dataContent = dataContent.replace("\n", "\n  ");
 
             Pattern dataRegionPattern = Pattern.compile("\\{[\\s\\S]*?\\}");
             Matcher dataRegionMatcher = dataRegionPattern.matcher(respStr);
 
-            responseData = dataRegionMatcher.replaceAll("{\n" + dataStr + "\n}");
+            responseData = dataRegionMatcher.replaceAll("{\n" + dataContent + "\n}");
         } else {
             responseData = respStr;
         }
@@ -193,19 +189,9 @@ public abstract class BasicApi {
         responseData = responseData.replace("\n", "\n  ");
 
         Logger.e(TAG, String.format(Locale.getDefault(),
-                "\n%s：Method = %s\n{\n%s\n}",
+                "\n%s\n{\n%s\n}",
                 title,
-                getRequestName(data),
                 responseData
-        ));
-    }
-
-    private static void printErrorResponse(MessageLite data, int code, String error) {
-        Logger.e(TAG, String.format(Locale.getDefault(),
-                "\n收到响应：Method = %s\n{\n  code：%d\n  error：%s\n}",
-                getRequestName(data),
-                code,
-                error
         ));
     }
 

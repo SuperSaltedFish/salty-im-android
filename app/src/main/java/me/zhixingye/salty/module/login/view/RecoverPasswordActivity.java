@@ -1,12 +1,14 @@
 package me.zhixingye.salty.module.login.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+
+import com.salty.protos.SMSOperationType;
+
+import androidx.annotation.Nullable;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
@@ -52,12 +54,21 @@ public class RecoverPasswordActivity
             return;
         }
 
-        mPBtnNext.startHideAnim(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mPresenter.obtainResetTelephoneLoginPasswordSMS(telephone);
-            }
-        });
+        TelephoneSMSVerifyActivity.startActivityForResult(this, 1, telephone, SMSOperationType.RESET_PASSWORD);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == TelephoneSMSVerifyActivity.RESULT_CODE_VERIFY_SUCCESSFUL) {
+            gotoResetLoginPassword();
+        }
+    }
+
+    private void gotoResetLoginPassword() {
+        ResetLoginPasswordActivity.startActivityToResetTelephoneLoginPasswordBySMS(
+                this,
+                mTEtPhone.getPhoneSuffixText());
     }
 
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -70,13 +81,6 @@ public class RecoverPasswordActivity
             }
         }
     };
-
-    @Override
-    public void gotoResetTelephoneLoginPage() {
-        ResetLoginPasswordActivity.startActivityToResetTelephoneLoginPasswordBySMS(
-                this,
-                mTEtPhone.getPhoneSuffixText());
-    }
 
     @Override
     public void cancelProgressButtonLoadingIfNeed() {

@@ -10,11 +10,9 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class RecoverPasswordContract {
     public interface View extends BasicView<Presenter> {
-        void gotoResetTelephoneLoginPage();
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void obtainResetTelephoneLoginPasswordSMS(String telephone);
     }
 }

@@ -409,6 +409,7 @@ public abstract class BasicCompatActivity<P extends BasicPresenter> extends AppC
         new MaterialAlertDialogBuilder(this)
                 .setTitle(title)
                 .setMessage(content)
+                .setPositiveButton("确认",null)
                 .setOnDismissListener(listener)
                 .show();
     }

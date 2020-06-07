@@ -196,10 +196,12 @@ public class TelephoneSMSVerifyActivity
     }
 
     @Override
-    public void showSendSuccessful() {
+    public void showSMSInputLayout(int smsCodeLength) {
         setAllowResendSMSCode(false);
         mResendCountDown.cancel();
         mResendCountDown.start();
+        mSMSEditView.setVisibility(View.VISIBLE);
+        mSMSEditView.setItemCount(smsCodeLength);
         showSoftKeyboard(mSMSEditView.getChildAt(0));
     }
 

@@ -13,7 +13,7 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class TelephoneSMSVerifyContract {
     public interface View extends BasicView<Presenter> {
-        void showSendSuccessful();
+        void showSMSInputLayout(int smsCodeLength);
 
         void showFirstSendFailure(String error);
 

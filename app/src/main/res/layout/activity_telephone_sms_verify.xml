@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_transparent_light"/>
+    <include layout="@layout/layout_toolbar_transparent_light" />
 
     <TextView
         android:id="@+id/mTvTitle"
@@ -41,6 +41,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/mGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

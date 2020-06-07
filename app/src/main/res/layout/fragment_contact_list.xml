@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include layout="@layout/layout_toolbar_transparent_light" />
+        <include layout="@layout/layout_toolbar_transparent" />
 
     </FrameLayout>
 

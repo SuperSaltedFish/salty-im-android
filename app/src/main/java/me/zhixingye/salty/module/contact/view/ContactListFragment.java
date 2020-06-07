@@ -16,14 +16,12 @@ import java.util.List;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.MergeAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicFragment;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.adapter.ContactAdapter;
-import me.zhixingye.salty.widget.listener.ImageAutoLoadScrollListener;
 import me.zhixingye.salty.widget.view.IndexBarView;
 import me.zhixingye.salty.widget.view.LetterSegmentationItemDecoration;
 

@@ -36,7 +36,7 @@ public class TelephoneSMSVerifyPresenter implements TelephoneSMSVerifyContract.P
                 new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mView) {
                     @Override
                     protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
-                        mView.showSendSuccessful();
+                        mView.showSMSInputLayout(result.getSmsCodeLength());
                     }
 
                     @Override

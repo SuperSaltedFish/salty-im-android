@@ -25,7 +25,7 @@
         android:ellipsize="end"
         android:maxWidth="152dp"
         android:singleLine="true"
-
+        android:textColor="@color/text_color_primary"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/mTvSignature"
         app:layout_constraintStart_toEndOf="@id/mIvAvatar"

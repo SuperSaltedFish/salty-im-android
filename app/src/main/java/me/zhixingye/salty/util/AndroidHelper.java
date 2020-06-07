@@ -213,6 +213,10 @@ public class AndroidHelper {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    public static int getThemeColor(Context context, @AttrRes int attr) {
+        return getThemeColor(context, attr, 0);
+    }
+
     public static int getThemeColor(Context context, @AttrRes int attr, int defaultColor) {
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();

@@ -70,6 +70,7 @@ public class MainActivity extends BasicCompatActivity {
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
+        getWindow().setBackgroundDrawable(null);
 //        UpgradeInfo info = Beta.getUpgradeInfo();
 //        if (info != null) {
 //              AppUpdateHelper.showUpdateDialog(this, upgradeInfo);

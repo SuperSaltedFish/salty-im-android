@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_transparent"/>
+    <include layout="@layout/layout_toolbar_transparent_light"/>
 
     <TextView
         android:id="@+id/mTvTitle"

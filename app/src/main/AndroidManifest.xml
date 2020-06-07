@@ -51,21 +51,21 @@
         <activity
             android:name=".module.splash.view.SplashActivity"
             android:theme="@style/SplashTheme">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
-        <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
-        <activity android:name=".module.login.view.TelephoneSMSVerifyActivity" />
-        <activity android:name=".module.login.view.RegisterActivity" />
-        <activity android:name=".module.main.view.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
+        <activity android:name=".module.login.view.TelephoneSMSVerifyActivity" />
+        <activity android:name=".module.login.view.RegisterActivity" />
+        <activity android:name=".module.main.view.MainActivity" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".module.login.view.LoginActivity"

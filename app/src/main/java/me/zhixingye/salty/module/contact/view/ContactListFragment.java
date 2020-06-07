@@ -6,6 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.salty.protos.ContactProfile;
+import com.salty.protos.ContactRemark;
+import com.salty.protos.UserProfile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -27,10 +33,6 @@ import me.zhixingye.salty.widget.view.LetterSegmentationItemDecoration;
  * @author zhixingye , 2020年05月17日.
  */
 public class ContactListFragment extends BasicFragment {
-    @Override
-    protected int getLayoutID() {
-        return R.layout.fragment_contact_list;
-    }
 
     private Toolbar mDefaultToolbar;
     private RecyclerView mRvContact;
@@ -42,6 +44,11 @@ public class ContactListFragment extends BasicFragment {
 
     private LinearLayoutManager mLinearLayoutManager;
     private LetterSegmentationItemDecoration mLetterSegmentation;
+
+    @Override
+    protected int getLayoutID() {
+        return R.layout.fragment_contact_list;
+    }
 
     @Override
     protected void init(View parentView) {
@@ -69,14 +76,47 @@ public class ContactListFragment extends BasicFragment {
         mRvContact.setAdapter(mContactAdapter);
         mRvContact.setHasFixedSize(true);
         mRvContact.addItemDecoration(mLetterSegmentation);
-        mRvContact.addOnScrollListener(new ImageAutoLoadScrollListener());
 
         setupIndexBar();
+
+
+        List<ContactProfile> profiles = new ArrayList<>();
+        UserProfile user = UserProfile.newBuilder()
+                .setUserId("123")
+                .setNickname("叶智星")
+                .setBirthday(System.currentTimeMillis() / 3 * 2)
+                .setDescription("每个不曾起舞的日子都是对生命的辜负。")
+                .setSex(UserProfile.Sex.MALE)
+                .build();
+        ContactRemark remark = ContactRemark.newBuilder()
+                .addTags("同学")
+                .build();
+        ContactProfile profile = ContactProfile.newBuilder()
+                .setRemarkInfo(remark)
+                .setUserProfile(user)
+                .build();
+
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+        profiles.add(profile);
+
+        mContactAdapter.submitList(profiles);
     }
 
     private void setupIndexBar() {
-        MergeAdapter
-        mIndexBarView.setSelectedTextColor(AndroidHelper.getThemeColor(mContext, android.R.attr.textColorSecondary, Color.GRAY));
+        mIndexBarView.setSelectedTextColor(AndroidHelper.getThemeColor(mContext, android.R.attr.colorAccent));
         mIndexBarView.setOnTouchSelectedListener(new IndexBarView.OnTouchSelectedListener() {
             @Override
             public void onSelected(int position, String text) {

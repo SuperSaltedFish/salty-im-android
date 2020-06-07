@@ -18,6 +18,16 @@ import me.zhixingye.salty.util.PinYinUtil;
  */
 public class UserDataFormatter {
 
+    public static String getContactName(ContactProfile contact) {
+        UserProfile user = contact.getUserProfile();
+        ContactRemark remark = contact.getRemarkInfo();
+        String name = remark.getRemarkName();
+        if (TextUtils.isEmpty(name)) {
+            name = user.getNickname();
+        }
+        return name;
+    }
+
     public static String calculateAge(UserProfile profile) {
         Date destDate = new Date(profile.getBirthday());
         Calendar now = Calendar.getInstance();
@@ -48,12 +58,6 @@ public class UserDataFormatter {
     }
 
     public static String getAbbreviation(ContactProfile contact) {
-        UserProfile user = contact.getUserProfile();
-        ContactRemark remark = contact.getRemarkInfo();
-        String name = remark.getRemarkName();
-        if (TextUtils.isEmpty(name)) {
-            name = user.getNickname();
-        }
-        return PinYinUtil.getPinYinAbbreviation(name, false);
+        return PinYinUtil.getPinYinAbbreviation(getContactName(contact), false);
     }
 }

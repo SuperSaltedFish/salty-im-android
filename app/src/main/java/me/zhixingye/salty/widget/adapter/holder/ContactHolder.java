@@ -53,7 +53,7 @@ public class ContactHolder extends BasicRecyclerViewAdapter.BasicViewHolder<Cont
     protected void onBindData(ContactProfile data) {
         ContactRemark remark = data.getRemarkInfo();
         UserProfile user = data.getUserProfile();
-        mTvName.setText(remark.getRemarkName());
+        mTvName.setText(UserDataFormatter.getContactName(data));
         mIvSex.setSelected(user.getSex() == UserProfile.Sex.FEMALE);
 
         mTvAge.setText(UserDataFormatter.calculateAge(user));

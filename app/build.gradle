@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.buildVersions.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildVersions.buildToolsVersion
+    compileSdkVersion Ver.compileSdkVersion
+    buildToolsVersion Ver.buildToolsVersion
     defaultConfig {
-        minSdkVersion rootProject.ext.buildVersions.minSdkVersion
-        targetSdkVersion rootProject.ext.buildVersions.targetSdkVersion
-        versionCode rootProject.ext.buildVersions.versionCode
-        versionName rootProject.ext.buildVersions.versionName
-        flavorDimensions rootProject.ext.buildVersions.flavorDimensions
+        minSdkVersion Ver.minSdkVersion
+        targetSdkVersion Ver.targetSdkVersion
+        versionCode Ver.versionCode
+        versionName Ver.versionName
+        flavorDimensions Ver.flavorDimensions
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,6 +31,7 @@ android {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
+            ext.enableCrashlytics = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
 
@@ -59,23 +60,20 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':im_sdk')
 
-    implementation "androidx.appcompat:appcompat:${depVersions.appcompat}"
-    implementation "androidx.constraintlayout:constraintlayout:${depVersions.constraintlayout}"
-//    implementation "androidx.emoji:emoji:${depVersions.emoji}"
-//    implementation "androidx.emoji:emoji-bundled:${depVersions.emoji}"
+    implementation Deps.androidx.appcompat
+    implementation Deps.androidx.material
+    implementation Deps.androidx.constraintlayout
+    implementation Deps.androidx.swiperefreshlayout
+    implementation Deps.androidx.recyclerview
 
-    implementation "com.google.android.material:material:${depVersions.material}"
-//    implementation "com.google.zxing:core:${depVersions.zxing}"
-//
-//    implementation "com.amap.api:3dmap:${depVersions.map}"
-//    implementation "com.amap.api:search:${depVersions.map}"
-    implementation "me.jessyan:autosize:${depVersions.autosize}"
-    implementation "com.github.bumptech.glide:glide:${depVersions.glide}"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:${depVersions.leakcanary}"
+    implementation Deps.im.saltyIMSDK
+
+    implementation Deps.thirdparty.autosize
+    implementation Deps.thirdparty.glide
+
+    debugImplementation Deps.thirdparty.leakcanary
 
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
 
-    annotationProcessor "com.github.bumptech.glide:compiler:${depVersions.glide}"
 }

@@ -1,8 +1,3 @@
-rootProject.name='Salty'
+rootProject.name='salty-im-android'
 
 include ':app'
-
-include ':im_core'
-project(':im_core').projectDir = file('im/im_core')
-include ':im_sdk'
-project(':im_sdk').projectDir = file('im/im_sdk')

@@ -16,6 +16,7 @@
         <item name="editTextStyle">@style/EditTextStyle</item>
         <item name="textInputStyle">@style/TextInputLayoutStyle</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
 
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowDisablePreview">true</item>

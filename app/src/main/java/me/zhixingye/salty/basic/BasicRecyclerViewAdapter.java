@@ -2,8 +2,11 @@ package me.zhixingye.salty.basic;
 
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,79 +16,64 @@ import androidx.recyclerview.widget.RecyclerView;
  * @author zhixingye , 2020年05月01日.
  */
 
-//这个Class主要为RecycleView提供了header和footer的能力，由于本质上都是基于getViewHolderType做的，所以onCreateViewHolder等抽象方法和局部刷新功能也要重新包装一下
-@SuppressWarnings("unchecked")
-public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapter.BaseViewHolder>
-        extends RecyclerView.Adapter<BasicRecyclerViewAdapter.BaseViewHolder> {
+public abstract class BasicRecyclerViewAdapter<D, VH extends BasicRecyclerViewAdapter.BasicViewHolder<D>>
+        extends RecyclerView.Adapter<BasicRecyclerViewAdapter.BasicViewHolder<?>> {
 
-    private static final int HOLDER_TYPE_HEADER = -1000;  //header的type
-    private static final int HOLDER_TYPE_FOOTER = -2000;  //footer的type
+    private static final int HOLDER_TYPE_HEADER = -1000;
+    private static final int HOLDER_TYPE_FOOTER = -2000;
 
     protected Context mContext;
-    private View mHeaderView; //headerView
-    private View mFooterView; //footerView
+    private View mHeaderView;
+    private View mFooterView;
 
-    //子类实现，用来获取ViewHolder,类似onCreateViewHolder();
-    public abstract VH getViewHolder(ViewGroup parent, int viewType);
+    protected abstract VH getViewHolder(ViewGroup parent, int viewType);
 
-    //子类实现，用来绑定ViewHolder,类似onBindViewHolder();
-    public abstract void bindDataToViewHolder(VH holder, int position);
+    public abstract int getViewHolderType(int position);
 
-    //子类实现，用来获取ViewHolder数量（不包含header和footer）,类似getItemCount();
     public abstract int getViewHolderCount();
 
-    public void onViewHolderRecycled(VH holder) {
-    }
+    public abstract D getItemData(int position);
 
-    //子类实现，用来获取ViewHolder类型（不包含header和footer）,类似getItemViewType();
-    public int getViewHolderType(int position) {
-        return super.getItemViewType(position);
-    }
-
-    //加了final防止被重写，做了一些header和footer的封装
     @NonNull
     @Override
-    public final BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BasicViewHolder<?> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (mContext == null) {
             mContext = parent.getContext();
         }
-        if (viewType == HOLDER_TYPE_HEADER) {
-            return new HeaderHolder(mHeaderView);
+        switch (viewType) {
+            case HOLDER_TYPE_HEADER:
+            case HOLDER_TYPE_FOOTER:
+                return new HeaderOrFooterHolder(mHeaderView);
+            default:
+                return getViewHolder(parent, viewType);
         }
-        if (viewType == HOLDER_TYPE_FOOTER) {
-            return new FooterHolder(mFooterView);
-        }
-        return getViewHolder(parent, viewType);
     }
 
-    //加了final防止被重写，做了一些header和footer的封装
     @Override
-    public final void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BasicViewHolder holder, int position) {
         if (mContext == null) {
             mContext = holder.itemView.getContext();
         }
 
-        if (holder instanceof HeaderHolder || holder instanceof FooterHolder) {
+        if (holder instanceof BasicRecyclerViewAdapter.HeaderOrFooterHolder) {
             return;
         }
         if (mHeaderView != null) {
-            bindDataToViewHolder((VH) holder, position - 1);
+            holder.onBindData(getItemData(position - 1));
         } else {
-            bindDataToViewHolder((VH) holder, position);
+            holder.onBindData(getItemData(position));
         }
     }
 
-    //加了final防止被重写，做了一些header和footer的封装
     @Override
-    public final void onViewRecycled(@NonNull BaseViewHolder holder) {
+    public void onViewRecycled(@NonNull BasicViewHolder holder) {
         super.onViewRecycled(holder);
-        if (holder instanceof HeaderHolder || holder instanceof FooterHolder) {
+        if (holder instanceof HeaderOrFooterHolder) {
             return;
         }
-        onViewHolderRecycled((VH) holder);
+        holder.onRecycled();
     }
 
-    //加了final防止被重写，做了一些header和footer的封装
     @Override
     public final int getItemCount() {
         int count = getViewHolderCount();
@@ -98,7 +86,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         return count;
     }
 
-    //加了final防止被重写，做了一些header和footer的封装
     @Override
     public final int getItemViewType(int position) {
         if (mHeaderView != null && position == 0) {
@@ -114,7 +101,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //设置headerView
     public void setHeaderView(View headerView) {
         if (mHeaderView != headerView) {
             notifyDataSetChanged();
@@ -122,7 +108,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         mHeaderView = headerView;
     }
 
-    //设置FooterView
     public void setFooterView(View footerView) {
         if (mFooterView != footerView) {
             notifyDataSetChanged();
@@ -138,7 +123,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         return mFooterView != null;
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemRangeInsertedEx(int positionStart, int itemCount) {
         if (mHeaderView == null) {
             this.notifyItemRangeInserted(positionStart, itemCount);
@@ -147,7 +131,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemRangeRemovedEx(int positionStart, int itemCount) {
         if (mHeaderView == null) {
             this.notifyItemRangeRemoved(positionStart, itemCount);
@@ -156,7 +139,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemMovedEx(int fromPosition, int toPosition) {
         if (mHeaderView == null) {
             this.notifyItemMoved(fromPosition, toPosition);
@@ -165,7 +147,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemRangeChangedEx(int positionStart, int itemCount) {
         if (mHeaderView == null) {
             this.notifyItemRangeChanged(positionStart, itemCount);
@@ -174,7 +155,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemRangeChangedEx(int positionStart, int itemCount, Object payload) {
         if (mHeaderView == null) {
             this.notifyItemRangeChanged(positionStart, itemCount, payload);
@@ -183,7 +163,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemInsertedEx(int position) {
         if (mHeaderView == null) {
             this.notifyItemInserted(position);
@@ -192,7 +171,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemChangedEx(int position) {
         if (mHeaderView == null) {
             this.notifyItemChanged(position);
@@ -201,7 +179,6 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    //局部刷新，要根据是否有header或footer来判断，因为加了之后位置可能有变化
     public final void notifyItemRemovedEx(int position) {
         if (mHeaderView == null) {
             this.notifyItemRemoved(position);
@@ -210,24 +187,46 @@ public abstract class BasicRecyclerViewAdapter<VH extends BasicRecyclerViewAdapt
         }
     }
 
-    public static class BaseViewHolder extends RecyclerView.ViewHolder {
+    public abstract static class BasicViewHolder<T> extends RecyclerView.ViewHolder {
 
-        public BaseViewHolder(View itemView) {
+        protected Context mContext;
+
+        public BasicViewHolder(@LayoutRes int layoutRes, ViewGroup parent) {
+            super(LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false));
+            mContext = parent.getContext();
+            onCreateItemView(itemView);
+        }
+
+        public BasicViewHolder(View itemView) {
             super(itemView);
         }
+
+        protected abstract void onCreateItemView(View itemView);
+
+        protected abstract void onBindData(T data);
+
+        protected abstract void onRecycled();
     }
 
-    private static class HeaderHolder extends BaseViewHolder {
+    private static class HeaderOrFooterHolder extends BasicViewHolder<Void> {
 
-        private HeaderHolder(View itemView) {
+        private HeaderOrFooterHolder(View itemView) {
             super(itemView);
         }
-    }
 
-    private static class FooterHolder extends BaseViewHolder {
+        @Override
+        protected void onCreateItemView(View itemView) {
 
-        private FooterHolder(View itemView) {
-            super(itemView);
+        }
+
+        @Override
+        protected void onBindData(Void data) {
+
+        }
+
+        @Override
+        protected void onRecycled() {
+
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
@@ -211,5 +213,19 @@ public class AndroidHelper {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
+    public static int getThemeColor(Context context, @AttrRes int attr, int defaultColor) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        if (theme.resolveAttribute(attr, typedValue, true)) {
+            try {
+                ColorStateList colorStateList = context.getResources().getColorStateList(typedValue.resourceId, theme);
+                return colorStateList.getDefaultColor();
+            } catch (Exception ignored) {
+                return typedValue.data;
+            }
+        } else {
+            return defaultColor;
+        }
+    }
 
 }

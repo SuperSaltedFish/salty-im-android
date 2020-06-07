@@ -6,11 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DecodeFormat;
 
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.configure.GlideApp;
-import me.zhixingye.salty.configure.GlideRequest;
 import me.zhixingye.salty.widget.view.GlideHexagonTransform;
 
 /**
@@ -23,8 +23,7 @@ import me.zhixingye.salty.widget.view.GlideHexagonTransform;
 public class GlideUtil {
 
     public static void clear(Context context, ImageView view) {
-        GlideApp.with(context).clear(view);
-
+        Glide.with(context).clear(view);
     }
 
     public static void loadFromUrl(Context context, ImageView view, Object url) {
@@ -36,8 +35,8 @@ public class GlideUtil {
             return;
         }
 
-        GlideApp.with(context).clear(view);
-        GlideRequest<Drawable> glideRequest = GlideApp.with(context)
+        clear(context, view);
+        RequestBuilder<Drawable> glideRequest = Glide.with(context)
                 .load(url)
                 .dontAnimate()
                 .format(DecodeFormat.PREFER_RGB_565);
@@ -51,12 +50,11 @@ public class GlideUtil {
 
     private static final GlideHexagonTransform HEXAGON_TRANSFORM = new GlideHexagonTransform();
 
-    @SuppressLint("CheckResult")
     public static void loadAvatarFromUrl(Context context, ImageView view, Object url) {
         if (view == null) {
             return;
         }
-        GlideApp.with(context).clear(view);
+        clear(context, view);
 
         if (url == null) {
             url = R.drawable.ic_avatar_default;
@@ -67,7 +65,7 @@ public class GlideUtil {
             }
         }
 
-        GlideRequest<Drawable> glideRequest = GlideApp.with(context)
+        RequestBuilder<Drawable> glideRequest = Glide.with(context)
                 .load(url)
                 .dontAnimate()
                 .format(DecodeFormat.PREFER_ARGB_8888)
@@ -76,9 +74,17 @@ public class GlideUtil {
                 .error(R.drawable.ic_avatar_default);
 
         if (!(url instanceof Integer)) {
-            glideRequest.placeholder(R.drawable.ic_avatar_default);
+            glideRequest = glideRequest.placeholder(R.drawable.ic_avatar_default);
         }
         glideRequest.into(view);
+    }
+
+    public static void resumeRequests(Context context) {
+        Glide.with(context).resumeRequests();
+    }
+
+    public static void pauseRequests(Context context) {
+        Glide.with(context).pauseRequests();
     }
 
 }

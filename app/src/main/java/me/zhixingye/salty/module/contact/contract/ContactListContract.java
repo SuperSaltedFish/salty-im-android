@@ -14,16 +14,16 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public class ContactListContract {
     public interface View extends BasicView<Presenter> {
-        void updateUnreadBadge(int unreadCount);
+        void refreshNotifyMessageUnreadBadge(int unreadCount);
 
-        void showContactList(List<ContactProfile> contactList);
+        void refreshContactList(List<ContactProfile> contactList);
 
-        void showTagCount(int count);
+        void refreshTagCount(int count);
     }
 
 
     public interface Presenter extends BasicPresenter<View> {
-        void loadUnreadCount();
+        void loadNotifyMessageUnreadCount();
 
         void loadAllContact();
 

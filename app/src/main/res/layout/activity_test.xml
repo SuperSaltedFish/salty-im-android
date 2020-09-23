@@ -1,171 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  tools:context="me.zhixingye.salty.TestActivity">
-
-  <View
-    android:id="@+id/ssssss"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
-
-  <LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="me.zhixingye.salty.TestActivity">
 
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="你好sd" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:enabled="false"
-      android:text="你好sd" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Button" />
 
-  </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:enabled="false"
+            android:text="Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Material_Btn" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:enabled="false"
+            android:text="Material_Btn" />
+    </LinearLayout>
 
 
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
-
-    <Button
-      style="@style/TextButtonStyle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:text="你好sd" />
-
-    <Button
-      style="@style/TextButtonStyle"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:enabled="false"
-      android:text="你好sd" />
-
-  </LinearLayout>
-
-  <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:text="我就是一额测i后i为活动i啊的弄恩福" />
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp">
-
-    <EditText
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:maxLength="3" />
-
-    <EditText
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:enabled="false"
-      android:hint="我是提示" />
-  </LinearLayout>
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:orientation="horizontal">
-
-    <!--        <com.google.android.material.textfield.TextInputLayout-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_marginStart="16dp"-->
-    <!--            android:layout_marginEnd="16dp"-->
-    <!--            android:layout_weight="1"-->
-    <!--            app:endIconMode="clear_text"-->
-    <!--            app:helperText="我是helper">-->
-
-    <!--            <com.google.android.material.textfield.TextInputEditText-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:hint="我就是一个提示hint"/>-->
-
-    <!--        </com.google.android.material.textfield.TextInputLayout>-->
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/sss"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_weight="1"
-      app:helperText="我是helper">
-
-      <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="我就是一个提示hint" />
+        android:layout_marginTop="4dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            style="@style/TextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Text_btn" />
 
-    <com.google.android.material.textfield.TextInputLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_weight="1"
-      app:helperText="我是helper">
+        <Button
+            style="@style/TextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:enabled="false"
+            android:text="test_btn" />
 
-      <EditText
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="我就是一个提示hint" />
+        android:layout_marginTop="4dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            style="@style/TextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Text_btn" />
 
-  </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            style="@style/TextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:enabled="false"
+            android:text="test_btn" />
 
-  <RadioButton
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+    </LinearLayout>
 
-  <Switch
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp">
 
-  <ToggleButton
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="普通的TextView" />
 
-  <CheckBox
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="16dp"
+            android:text="普通的MaterialTextView" />
 
-  <ProgressBar
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+    </LinearLayout>
 
-  <SeekBar
-    android:layout_width="300dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLength="3" />
+
+      <Space
+          android:layout_width="40dp"
+          android:layout_height="wrap_content"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:hint="我是提示" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <!--        <com.google.android.material.textfield.TextInputLayout-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:layout_marginEnd="16dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            app:endIconMode="clear_text"-->
+        <!--            app:helperText="我是helper">-->
+
+        <!--            <com.google.android.material.textfield.TextInputEditText-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:hint="我就是一个提示hint"/>-->
+
+        <!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sss"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            app:helperText="我是helper">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="我就是一个提示hint" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            app:helperText="我是helper">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="我就是一个提示hint" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <SeekBar
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
 </LinearLayout>

@@ -20,45 +20,5 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-
-        final View view = findViewById(R.id.ssssss);
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                String s = "s";
-                Log.e("dawdawd", view.toString() + s);
-            }
-        });
-
-        //方法1
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-
-        //方法2
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-
-            }
-        });
-
-        //方法3
-        view.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                return false;
-            }
-        });
-
-        File s = new File(getApplicationInfo().nativeLibraryDir, "libImSDK.so");
-        try {
-            s.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:clickable="true"
-    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:paddingStart="12dp"
     android:paddingEnd="24dp">
@@ -16,6 +15,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/mIvSex"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:padding="2dp"
+        android:src="@drawable/selector_src_sex"
+        app:layout_constraintBottom_toBottomOf="@id/mTvName"
+        app:layout_constraintStart_toEndOf="@id/mTvName"
+        app:layout_constraintTop_toTopOf="@id/mTvName" />
+
+    <TextView
+        android:id="@+id/mTvSignature"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:singleLine="true"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/mIvAvatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/mIvAvatar"
+        app:layout_constraintTop_toBottomOf="@id/mTvName" />
 
     <TextView
         android:id="@+id/mTvName"
@@ -31,32 +55,6 @@
         app:layout_constraintStart_toEndOf="@id/mIvAvatar"
         app:layout_constraintTop_toTopOf="@id/mIvAvatar"
         app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/mTvSignature"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:ellipsize="end"
-        android:gravity="start|center_vertical"
-        android:singleLine="true"
-        android:text="每个不曾起舞的日子，都是对生命的辜负！"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/mIvAvatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/mIvAvatar"
-        app:layout_constraintTop_toBottomOf="@id/mTvName" />
-
-    <ImageView
-        android:id="@+id/mIvSex"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="4dp"
-        android:padding="2dp"
-        android:src="@drawable/selector_src_sex"
-        app:layout_constraintBottom_toBottomOf="@id/mTvName"
-        app:layout_constraintStart_toEndOf="@id/mTvName"
-        app:layout_constraintTop_toTopOf="@id/mTvName" />
 
     <TextView
         android:id="@+id/mTvAge"

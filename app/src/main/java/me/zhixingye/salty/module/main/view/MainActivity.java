@@ -78,6 +78,7 @@ public class MainActivity extends BasicCompatActivity {
         initFragment();
         initBottomTab();
         initEnterTransition();
+
     }
 
     private void initBottomTab() {

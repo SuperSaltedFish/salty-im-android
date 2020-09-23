@@ -1,9 +1,6 @@
 package me.zhixingye.salty.module.login.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
@@ -28,7 +24,6 @@ import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.module.web.WebActivity;
-import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.salty.widget.view.ProgressButton;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 

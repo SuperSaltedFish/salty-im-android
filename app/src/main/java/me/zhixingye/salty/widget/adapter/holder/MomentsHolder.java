@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicRecyclerViewAdapter;
+import me.zhixingye.salty.basic.BasicListAdapterAdapter;
 import me.zhixingye.salty.util.GlideUtil;
 import me.zhixingye.salty.widget.adapter.MomentsNineGridAdapter;
 import me.zhixingye.salty.widget.view.NineGridView;
@@ -18,7 +18,7 @@ import me.zhixingye.salty.widget.view.NineGridView;
  *
  * @author zhixingye , 2020年06月06日.
  */
-public class MomentsHolder extends BasicRecyclerViewAdapter.BasicViewHolder<Integer> {
+public class MomentsHolder extends BasicListAdapterAdapter.BasicViewHolder<Integer> {
     private NineGridView mNineGridView;
     private ImageView mIvAvatar;
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mClRootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingStart="16dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="12dp">
+
+    <me.zhixingye.salty.widget.view.HexagonAvatarView
+        android:id="@+id/mIvAvatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/mTvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/mIvAvatar"
+        app:layout_constraintTop_toTopOf="@id/mIvAvatar" />
+
+    <ImageView
+        android:id="@+id/mIvSex"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:padding="2dp"
+        android:src="@drawable/selector_src_sex"
+        app:layout_constraintBottom_toBottomOf="@id/mTvName"
+        app:layout_constraintStart_toEndOf="@id/mTvName"
+        app:layout_constraintTop_toTopOf="@id/mTvName" />
+
+    <TextView
+        android:id="@+id/mTvAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/mTvName"
+        app:layout_constraintStart_toEndOf="@id/mIvSex"
+        app:layout_constraintTop_toTopOf="@id/mTvName" />
+
+    <TextView
+        android:id="@+id/mTvReason"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:gravity="start|center_vertical"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/mTvName"
+        app:layout_constraintTop_toBottomOf="@id/mTvName" />
+
+    <Button
+        android:id="@+id/mTvPositive"
+        android:layout_width="104dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/mTvReason"
+        app:layout_constraintTop_toBottomOf="@id/mTvReason"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/mTvNegative"
+        android:layout_width="104dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/btn_background_tint_error"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/mTvPositive"
+        app:layout_constraintStart_toEndOf="@id/mTvPositive"
+        app:layout_constraintTop_toTopOf="@id/mTvPositive"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,8 @@ package me.zhixingye.salty;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.Display;
+import android.view.WindowManager;
 
 
 import com.tencent.bugly.Bugly;
@@ -36,7 +38,6 @@ public class SaltyApp extends Application {
             AndroidHelper.init(this);
             ActivityHelper.init(this);
             setupThirdPart();
-
         }
     }
 

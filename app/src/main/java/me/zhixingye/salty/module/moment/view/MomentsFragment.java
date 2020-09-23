@@ -35,29 +35,29 @@ public class MomentsFragment extends BasicFragment {
     protected void init(View parentView) {
         mRecyclerView = parentView.findViewById(R.id.MomentsFragment_mRecyclerView);
         mSwipeRefreshLayout = parentView.findViewById(R.id.MomentsFragment_mSwipeRefreshLayout);
-        mAdapter = new MomentsAdapter();
+//        mAdapter = new MomentsAdapter();
     }
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2000);
-            }
-        });
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration((int) AndroidHelper.dip2px(12), SpacesItemDecoration.VERTICAL, true, true));
+//        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mSwipeRefreshLayout.setRefreshing(false);
+//                    }
+//                }, 2000);
+//            }
+//        });
+//
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView.setAdapter(mAdapter);
+//        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.addItemDecoration(new SpacesItemDecoration((int) AndroidHelper.dip2px(12), SpacesItemDecoration.VERTICAL, true, true));
     }
 }

@@ -4,13 +4,22 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextPaint;
-import android.util.TypedValue;
+import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.View;
+
+import com.salty.protos.ContactProfile;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 import androidx.annotation.ColorInt;
+import androidx.recyclerview.widget.ConcatAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.zhixingye.salty.widget.adapter.ContactListAdapter;
+import me.zhixingye.salty.widget.adapter.holder.ContactListHolder;
 
 
 /**
@@ -20,113 +29,132 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LetterSegmentationItemDecoration extends RecyclerView.ItemDecoration {
 
-    private float mTextSize;
-    private float mLineWidth;
-    private int mTextColor;
-    private int mLineColor;
-
     private float mTextHeight;
-    private int mSpace;
+    private int mSpaceHeight;
     private float mStartDrawX;
-    private float mWidth;
 
     private TextPaint mTextPaint;
-    private Paint mLinePaint;
+    private Paint mBackgroundPaint;
 
-    private boolean isUninitialized;
-
+    private SparseArray<String> mDrawPositionMap;
 
     public LetterSegmentationItemDecoration() {
         super();
-        isUninitialized = true;
-    }
 
-    private void init() {
-        isUninitialized = false;
-        mSpace = (int) (mTextSize * 1.4);
+        mDrawPositionMap = new SparseArray<>();
 
-        mLinePaint = new Paint();
-        mLinePaint.setColor(mLineColor);
-        mLinePaint.setStrokeWidth(mLineWidth);
-        mLinePaint.setAntiAlias(true);
+        mBackgroundPaint = new Paint();
+        mBackgroundPaint.setAntiAlias(true);
 
         mTextPaint = new TextPaint();
         mTextPaint.setAntiAlias(true);
-        mTextPaint.setTextSize(mTextSize);
-        mTextPaint.setColor(mTextColor);
-
-        mTextHeight = Math.abs(mTextPaint.getFontMetrics().ascent);
     }
-
 
     @Override
     public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        if (isUninitialized) {
-            mStartDrawX = parent.getPaddingLeft() + (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, view.getResources().getDisplayMetrics());
-            mWidth = parent.getWidth() - mStartDrawX - parent.getPaddingRight();
-            init();
+        LinearLayoutManager manager = (LinearLayoutManager) parent.getLayoutManager();
+        RecyclerView.ViewHolder currHolder = parent.getChildViewHolder(view);
+        if (manager == null || !(currHolder instanceof ContactListHolder)) {
+            return;
         }
-        if (view.getTag() != null) {
-            outRect.top = mSpace;
+        ConcatAdapter concatAdapter = (ConcatAdapter) parent.getAdapter();
+        if (concatAdapter == null || concatAdapter.getItemCount() == 0) {
+            return;
         }
+        ContactListAdapter contactListAdapter = null;
+        for (RecyclerView.Adapter<?> adapter : concatAdapter.getAdapters()) {
+            if (adapter instanceof ContactListAdapter) {
+                contactListAdapter = (ContactListAdapter) adapter;
+                break;
+            }
+        }
+        if (contactListAdapter == null) {
+            return;
+        }
+        List<ContactProfile> list = contactListAdapter.getCurrentList();
+        if (list.isEmpty()) {
+            return;
+        }
+
+        int currAbsolutePosition = currHolder.getAbsoluteAdapterPosition();
+        int currBindingAdapterPosition = currHolder.getBindingAdapterPosition();
+        int prevPosition = currBindingAdapterPosition - 1;
+        outRect.top = 0;
+        mDrawPositionMap.delete(currAbsolutePosition);
+        if (currBindingAdapterPosition != 0 && isIdenticalDrawContent(contactListAdapter.getCurrentList(), currBindingAdapterPosition, prevPosition)) {
+            return;
+        }
+
+        outRect.top = mSpaceHeight;
+        mDrawPositionMap.put(currAbsolutePosition, getDrawLetter(list, currBindingAdapterPosition));
     }
 
     @Override
-    public void onDraw(Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
+    public void onDraw(@NotNull Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
-        float top;
-        View view;
-        String letter;
-        float textWidth;
-        for (int i = 0, childCount = parent.getChildCount(); i < childCount; i++) {
-            view = parent.getChildAt(i);
-            letter = (String) view.getTag();
-            if (letter != null) {
-                if ("~".equals(letter)) {
-                    letter = "#";
-                }
-                top = view.getTop() - mSpace;
-                textWidth = mTextPaint.measureText(letter);
-                c.drawLine(mStartDrawX + textWidth, top + mSpace / 2f, mStartDrawX + mWidth, top + mSpace / 2f, mLinePaint);
-                c.drawText(letter, mStartDrawX - textWidth / 2f, top + mSpace - (mSpace - mTextHeight) / 2, mTextPaint);
+        LinearLayoutManager manager = (LinearLayoutManager) parent.getLayoutManager();
+        if (manager == null) {
+            return;
+        }
+        int startIndex = manager.findFirstVisibleItemPosition();
+        int endIndex = manager.findLastVisibleItemPosition();
+        for (int i = startIndex; i <= endIndex; i++) {
+            String drawLetter = mDrawPositionMap.get(i);
+            if (TextUtils.isEmpty(drawLetter)) {
+                continue;
             }
+            View view = manager.findViewByPosition(i);
+            if (view == null) {
+                continue;
+            }
+            float top;
+            float textWidth;
+            top = view.getTop() - mSpaceHeight;
+            textWidth = mTextPaint.measureText(drawLetter);
+            c.drawRect(0, top, parent.getWidth(), top + mSpaceHeight, mBackgroundPaint);
+            c.drawText(drawLetter, mStartDrawX - textWidth / 2f, top + mSpaceHeight - (mSpaceHeight - mTextHeight) / 2, mTextPaint);
         }
     }
 
-    public float getTextSize() {
-        return mTextSize;
+    public int findPositionByLetter(String letter) {
+        int index = mDrawPositionMap.indexOfValue(letter);
+        if (index >= 0) {
+            return mDrawPositionMap.keyAt(index);
+        }
+        return -1;
     }
 
     public void setTextSize(float textSize) {
-        mTextSize = textSize;
-    }
-
-    public int getTextColor() {
-        return mTextColor;
+        mTextPaint.setTextSize(textSize);
+        mTextHeight = Math.abs(mTextPaint.getFontMetrics().ascent);
+        mSpaceHeight = (int) (textSize * 1.4);
     }
 
     public void setTextColor(@ColorInt int textColor) {
-        mTextColor = textColor;
+        mTextPaint.setColor(textColor);
     }
 
-    public int getLineColor() {
-        return mLineColor;
+    public void setBackgroundColor(int backgroundColor) {
+        mBackgroundPaint.setColor(backgroundColor);
     }
 
-    public void setLineColor(@ColorInt int lineColor) {
-        mLineColor = lineColor;
+    public void setStartDrawX(float startDrawX) {
+        mStartDrawX = startDrawX;
     }
 
-    public float getLineWidth() {
-        return mLineWidth;
+    private static String getDrawLetter(List<ContactProfile> list, int position) {
+        if (list.size() <= position) {
+            return "#";
+        }
+        ContactProfile profile = list.get(position);
+        if (profile == null || TextUtils.isEmpty(profile.getSortKey())) {
+            return "#";
+        }
+        return profile.getSortKey().substring(0, 1);
     }
 
-    public void setLineWidth(float lineWidth) {
-        mLineWidth = lineWidth;
-    }
-
-    public int getSpace() {
-        return mSpace;
+    private static boolean isIdenticalDrawContent(List<ContactProfile> list, int i1, int i2) {
+        return TextUtils.equals(getDrawLetter(list, i1), getDrawLetter(list, i2));
     }
 }

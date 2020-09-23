@@ -8,6 +8,11 @@
 
     <string name="Hint_Loading">加载中…</string>
 
+    <string-array name="NotificationMessageActivity_Subtitle">
+        <item name="Information">好友通知</item>
+        <item name="Moments">系统信息</item>
+    </string-array>
+
     <string-array name="SplashActivity_Titles">
         <item name="Splash_1">Easy to find events</item>
         <item name="Splash_2">Fixed a Date for Event</item>

@@ -14,7 +14,7 @@ import com.salty.protos.UserProfile;
 import java.util.List;
 
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicRecyclerViewAdapter;
+import me.zhixingye.salty.basic.BasicListAdapterAdapter;
 import me.zhixingye.salty.tool.UserDataFormatter;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.GlideUtil;
@@ -25,7 +25,7 @@ import me.zhixingye.salty.widget.view.FlowLayout;
  *
  * @author zhixingye , 2020年06月06日.
  */
-public class ContactHolder extends BasicRecyclerViewAdapter.BasicViewHolder<ContactProfile> {
+public class ContactListHolder extends BasicListAdapterAdapter.BasicViewHolder<ContactProfile> {
 
     private TextView mTvName;
     private ImageView mIvAvatar;
@@ -34,8 +34,8 @@ public class ContactHolder extends BasicRecyclerViewAdapter.BasicViewHolder<Cont
     private TextView mTvAge;
     private FlowLayout mTagsFlowLayout;
 
-    public ContactHolder(ViewGroup parent) {
-        super(R.layout.item_contact, parent);
+    public ContactListHolder(ViewGroup parent) {
+        super(R.layout.item_contact_list, parent);
     }
 
     @Override

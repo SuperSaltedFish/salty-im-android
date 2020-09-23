@@ -33,4 +33,4 @@
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 #protobuf
--keep public class * extends com.google.protobuf.GeneratedMessageLite{*;}
+-keep class * extends com.google.protobuf.GeneratedMessageLite { *; }

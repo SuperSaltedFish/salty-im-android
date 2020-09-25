@@ -1,0 +1,141 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".module.contact.view.StrangerProfileActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.61" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/mVpBanner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/mGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <me.zhixingye.salty.widget.view.PageIndicator
+        android:id="@+id/mPageIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/mVpBanner"
+        app:layout_constraintStart_toStartOf="@id/mVpBanner" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/layout_toolbar_transparent"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/mTvNickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:paddingEnd="160dp"
+        android:paddingStart="16dp"
+        android:singleLine="true"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mGuideline" />
+
+    <ImageView
+        android:id="@+id/mIvSexIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="1dp"
+        android:padding="1dp"
+        android:src="@drawable/selector_src_sex"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mTvNickname" />
+
+    <TextView
+        android:id="@+id/mTvLocationAndAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:gravity="center_vertical"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@id/mIvSexIcon"
+        app:layout_constraintStart_toEndOf="@id/mIvSexIcon"
+        app:layout_constraintTop_toTopOf="@id/mIvSexIcon" />
+
+    <TextView
+        android:id="@+id/mTvSignature"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:gravity="start|center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mIvSexIcon" />
+
+    <EditText
+        android:id="@+id/mEtReason"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_selector_edit_dashed_round"
+        android:gravity="start|top"
+        android:hint="您需要填写验证申请,等待对方验证通过！"
+        android:paddingBottom="8dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mTvSignature" />
+
+    <Button
+        android:id="@+id/mBtnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="请求添加好友"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mEtReason" />
+
+
+    <me.zhixingye.salty.widget.view.HexagonAvatarView
+        android:id="@+id/mIvAvatar"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginEnd="32dp"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/mGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mGuideline" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

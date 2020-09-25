@@ -15,6 +15,7 @@ import com.salty.protos.UserProfile;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ConcatAdapter;
@@ -49,6 +50,11 @@ public class ContactListFragment extends BasicFragment {
     private LinearLayoutManager mLinearLayoutManager;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected int getLayoutID() {
         return R.layout.fragment_contact_list;
     }
@@ -73,6 +79,8 @@ public class ContactListFragment extends BasicFragment {
         setupIndexBar();
 
         setMockData();
+
+        mFBtnAdd.setOnClickListener(mOnClickListener);
     }
 
     private void setMockData() {
@@ -90,61 +98,61 @@ public class ContactListFragment extends BasicFragment {
         ContactProfile profile1 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("A")
+                .setSortId("A")
                 .build();
 
         ContactProfile profile2 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("B")
+                .setSortId("B")
                 .build();
 
         ContactProfile profile3 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("C")
+                .setSortId("C")
                 .build();
 
         ContactProfile profile4 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("D")
+                .setSortId("D")
                 .build();
 
         ContactProfile profile5 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("E")
+                .setSortId("E")
                 .build();
 
         ContactProfile profile6 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("F")
+                .setSortId("F")
                 .build();
 
         ContactProfile profile7 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("G")
+                .setSortId("G")
                 .build();
 
         ContactProfile profile8 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("H")
+                .setSortId("H")
                 .build();
 
         ContactProfile profile9 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("I")
+                .setSortId("I")
                 .build();
 
         ContactProfile profile10 = ContactProfile.newBuilder()
                 .setRemarkInfo(remark)
                 .setUserProfile(user)
-                .setSortKey("J")
+                .setSortId("J")
                 .build();
 
 
@@ -224,10 +232,19 @@ public class ContactListFragment extends BasicFragment {
         });
     }
 
+    private void startFindNewContactActivity() {
+        FindNewContactActivity.startActivity(mContext);
+    }
+
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            switch (v.getId()) {
+                case R.id.mFBtnAdd:
+                    startFindNewContactActivity();
+                    break;
+            }
         }
     };
+
 }

@@ -62,6 +62,8 @@
         <activity android:name=".module.login.view.RegisterActivity" />
         <activity android:name=".module.main.view.MainActivity" />
         <activity android:name=".module.contact.view.PushMessageActivity" />
+        <activity android:name=".module.contact.view.FindNewContactActivity" />
+        <activity android:name=".module.contact.view.StrangerProfileActivity" />
         <activity
             android:name=".module.login.view.LoginActivity"
             android:launchMode="singleTask" />

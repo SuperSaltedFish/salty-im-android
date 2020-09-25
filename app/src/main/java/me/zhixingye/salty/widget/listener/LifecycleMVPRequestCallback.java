@@ -12,22 +12,22 @@ import me.zhixingye.salty.basic.BasicView;
  */
 public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<T> {
 
-    private WeakReference<BasicView> mLifecycleView;
+    private WeakReference<BasicView<?>> mLifecycleView;
     private boolean isEnableLoading;//自动启动和关闭加载对话框
 
-    public LifecycleMVPRequestCallback(BasicView lifecycleView) {
+    public LifecycleMVPRequestCallback(BasicView<?> lifecycleView) {
         this(lifecycleView, true);
     }
 
-    public LifecycleMVPRequestCallback(BasicView lifecycleView, boolean isEnableLoading) {
+    public LifecycleMVPRequestCallback(BasicView<?> lifecycleView, boolean isEnableLoading) {
         this(lifecycleView, isEnableLoading, false);
     }
 
     public LifecycleMVPRequestCallback(
-            BasicView lifecycleView,
+            BasicView<?> lifecycleView,
             boolean isEnableLoading,
             boolean isEnableCancelableDialog) {
-        mLifecycleView = new WeakReference<>(lifecycleView);
+        mLifecycleView = new WeakReference<BasicView<?>>(lifecycleView);
         this.isEnableLoading = isEnableLoading;
         if (isEnableLoading && lifecycleView != null) {
             lifecycleView.setDisplayLoadingDialog(true,
@@ -43,7 +43,7 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
 
     @Override
     public void onCompleted(T response) {
-        BasicView view = mLifecycleView.get();
+        BasicView<?> view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
             if (isEnableLoading && isEnableDismissLoadingInSuccessful()) {
                 view.setDisplayLoadingDialog(false);
@@ -57,7 +57,7 @@ public abstract class LifecycleMVPRequestCallback<T> implements RequestCallback<
 
     @Override
     public void onFailure(int code, String error) {
-        BasicView view = mLifecycleView.get();
+        BasicView<?> view = mLifecycleView.get();
         if (view != null && view.isAttachedToPresenter()) {
             if (isEnableLoading) {
                 view.setDisplayLoadingDialog(false);

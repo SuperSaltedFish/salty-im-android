@@ -21,13 +21,11 @@ public class PushMessageActivity extends BasicCompatActivity {
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, PushMessageActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
     }
 
     private SegmentedControlView mSegmentedControlView;
-    private ContactPushMessageFragment mContactPushMessageFragment;
+    private ContactOperationMessageFragment mContactOperationMessageFragment;
     private SystemMessageFragment mSystemMessageFragment;
     private FragmentManager mFragmentManager;
 
@@ -39,7 +37,7 @@ public class PushMessageActivity extends BasicCompatActivity {
     @Override
     protected void init(Bundle savedInstanceState) {
         mSegmentedControlView = new SegmentedControlView(this);
-        mContactPushMessageFragment = new ContactPushMessageFragment();
+        mContactOperationMessageFragment = new ContactOperationMessageFragment();
         mSystemMessageFragment = new SystemMessageFragment();
         mFragmentManager = getSupportFragmentManager();
     }
@@ -64,7 +62,7 @@ public class PushMessageActivity extends BasicCompatActivity {
         mDefaultToolbar.addView(mSegmentedControlView, new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 
         mFragmentManager.beginTransaction()
-                .add(R.id.mFlContent, mContactPushMessageFragment)
+                .add(R.id.mFlContent, mContactOperationMessageFragment)
                 .add(R.id.mFlContent, mSystemMessageFragment)
                 .hide(mSystemMessageFragment)
                 .commit();
@@ -76,14 +74,14 @@ public class PushMessageActivity extends BasicCompatActivity {
             switch (position) {
                 case 0:
                     mFragmentManager.beginTransaction()
-                            .show(mContactPushMessageFragment)
+                            .show(mContactOperationMessageFragment)
                             .hide(mSystemMessageFragment)
                             .commit();
                     break;
                 case 1:
                     mFragmentManager.beginTransaction()
                             .show(mSystemMessageFragment)
-                            .hide(mContactPushMessageFragment)
+                            .hide(mContactOperationMessageFragment)
                             .commit();
                     break;
             }

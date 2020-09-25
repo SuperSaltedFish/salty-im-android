@@ -148,10 +148,10 @@ public class LetterSegmentationItemDecoration extends RecyclerView.ItemDecoratio
             return "#";
         }
         ContactProfile profile = list.get(position);
-        if (profile == null || TextUtils.isEmpty(profile.getSortKey())) {
+        if (profile == null || TextUtils.isEmpty(profile.getSortId())) {
             return "#";
         }
-        return profile.getSortKey().substring(0, 1);
+        return profile.getSortId().substring(0, 1);
     }
 
     private static boolean isIdenticalDrawContent(List<ContactProfile> list, int i1, int i2) {

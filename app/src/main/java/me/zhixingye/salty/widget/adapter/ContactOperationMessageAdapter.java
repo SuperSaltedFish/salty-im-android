@@ -3,12 +3,12 @@ package me.zhixingye.salty.widget.adapter;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 
-import com.salty.protos.ContactPushMessage;
+import com.salty.protos.ContactOperationMessage;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import me.zhixingye.salty.basic.BasicListAdapterAdapter;
-import me.zhixingye.salty.widget.adapter.holder.ContactPushMessageHolder;
+import me.zhixingye.salty.widget.adapter.holder.ContactOperationMessageHolder;
 
 /**
  * Created by YZX on 2018年01月18日.
@@ -16,41 +16,41 @@ import me.zhixingye.salty.widget.adapter.holder.ContactPushMessageHolder;
  */
 
 
-public class ContactPushMessageAdapter extends BasicListAdapterAdapter<ContactPushMessage, ContactPushMessageHolder> {
+public class ContactOperationMessageAdapter extends BasicListAdapterAdapter<ContactOperationMessage, ContactOperationMessageHolder> {
 
-    private ContactPushMessageHolder.OnClickListener mOnClickListener;
+    private ContactOperationMessageHolder.OnClickListener mOnClickListener;
 
-    public ContactPushMessageAdapter() {
+    public ContactOperationMessageAdapter() {
         super(generateComparatorsCallback());
     }
 
     @NonNull
     @Override
-    public ContactPushMessageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ContactPushMessageHolder holder = new ContactPushMessageHolder(parent);
+    public ContactOperationMessageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ContactOperationMessageHolder holder = new ContactOperationMessageHolder(parent);
         holder.setOnClickListener(mProxyClickListener);
         return holder;
     }
 
-    public void setOnClickListener(ContactPushMessageHolder.OnClickListener listener) {
+    public void setOnClickListener(ContactOperationMessageHolder.OnClickListener listener) {
         mOnClickListener = listener;
     }
 
-    private static DiffUtil.ItemCallback<ContactPushMessage> generateComparatorsCallback() {
-        return new DiffUtil.ItemCallback<ContactPushMessage>() {
+    private static DiffUtil.ItemCallback<ContactOperationMessage> generateComparatorsCallback() {
+        return new DiffUtil.ItemCallback<ContactOperationMessage>() {
             @Override
-            public boolean areItemsTheSame(@NonNull ContactPushMessage oldItem, @NonNull ContactPushMessage newItem) {
+            public boolean areItemsTheSame(@NonNull ContactOperationMessage oldItem, @NonNull ContactOperationMessage newItem) {
                 return TextUtils.equals(oldItem.getCommon().getMessageID(), newItem.getCommon().getMessageID());
             }
 
             @Override
-            public boolean areContentsTheSame(@NonNull ContactPushMessage oldItem, @NonNull ContactPushMessage newItem) {
+            public boolean areContentsTheSame(@NonNull ContactOperationMessage oldItem, @NonNull ContactOperationMessage newItem) {
                 return true;
             }
         };
     }
 
-    private final ContactPushMessageHolder.OnClickListener mProxyClickListener = new ContactPushMessageHolder.OnClickListener() {
+    private final ContactOperationMessageHolder.OnClickListener mProxyClickListener = new ContactOperationMessageHolder.OnClickListener() {
         @Override
         public void onClickAccept(int position) {
             if (mOnClickListener != null) {

@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.salty.protos.ContactPushMessage;
+import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.salty.R;
@@ -22,7 +22,7 @@ import me.zhixingye.salty.widget.view.HexagonAvatarView;
  *
  * @author zhixingye , 2020年09月23日.
  */
-public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewHolder<ContactPushMessage> {
+public class ContactOperationMessageHolder extends BasicListAdapterAdapter.BasicViewHolder<ContactOperationMessage> {
 
     private ViewGroup mClRootView;
     private HexagonAvatarView mIvAvatar;
@@ -36,7 +36,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
 
     private OnClickListener mOnClickListener;
 
-    public ContactPushMessageHolder(ViewGroup parent) {
+    public ContactOperationMessageHolder(ViewGroup parent) {
         super(R.layout.item_contact_operation, parent);
     }
 
@@ -57,7 +57,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
     }
 
     @Override
-    protected void onBindData(ContactPushMessage data) {
+    protected void onBindData(ContactOperationMessage data) {
         resetState();
 
         UserProfile userInfo = data.getTriggerProfile();
@@ -100,7 +100,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
         mClRootView.setEnabled(true);
     }
 
-    private void setupAcceptState(ContactPushMessage data) {
+    private void setupAcceptState(ContactOperationMessage data) {
         mTvPositive.setText("已添加好友");
         mTvPositive.setVisibility(View.VISIBLE);
         mTvPositive.setEnabled(false);
@@ -108,7 +108,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
     }
 
 
-    private void setupRequestState(ContactPushMessage data) {
+    private void setupRequestState(ContactOperationMessage data) {
         String reason = data.getAddReason();
         if (TextUtils.isEmpty(reason)) {
             reason = "无";
@@ -130,7 +130,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
         }
     }
 
-    private void setupRejectState(ContactPushMessage data) {
+    private void setupRejectState(ContactOperationMessage data) {
         String reason = data.getRejectReason();
         if (TextUtils.isEmpty(reason)) {
             reason = "无";
@@ -151,7 +151,7 @@ public class ContactPushMessageHolder extends BasicListAdapterAdapter.BasicViewH
         }
     }
 
-    private void setupDeleteState(ContactPushMessage data) {
+    private void setupDeleteState(ContactOperationMessage data) {
         String reason = data.getAddReason();
         if (TextUtils.isEmpty(reason)) {
             reason = "无";

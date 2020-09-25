@@ -20,6 +20,6 @@
         android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:background="@android:color/white"
-        android:elevation="24dp" />
+        />
 
 </merge>

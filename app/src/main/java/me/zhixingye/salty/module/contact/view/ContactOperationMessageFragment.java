@@ -5,7 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 
-import com.salty.protos.ContactPushMessage;
+import com.salty.protos.ContactOperationMessage;
 
 import java.util.Objects;
 
@@ -17,8 +17,8 @@ import me.zhixingye.salty.R;
 import me.zhixingye.salty.basic.BasicFragment;
 import me.zhixingye.salty.tool.OverflowMenuShowHelper;
 import me.zhixingye.salty.util.AndroidHelper;
-import me.zhixingye.salty.widget.adapter.ContactPushMessageAdapter;
-import me.zhixingye.salty.widget.adapter.holder.ContactPushMessageHolder;
+import me.zhixingye.salty.widget.adapter.ContactOperationMessageAdapter;
+import me.zhixingye.salty.widget.adapter.holder.ContactOperationMessageHolder;
 import me.zhixingye.salty.widget.listener.OnRecyclerViewItemClickListener;
 import me.zhixingye.salty.widget.view.DividerItemDecoration;
 import me.zhixingye.salty.widget.view.OverflowPopupMenu;
@@ -28,11 +28,11 @@ import me.zhixingye.salty.widget.view.OverflowPopupMenu;
  * 优秀的代码是它自己最好的文档,当你考虑要添加一个注释时,问问自己:"如何能改进这段代码，以让它不需要注释？"
  */
 
-public class ContactPushMessageFragment extends BasicFragment {
+public class ContactOperationMessageFragment extends BasicFragment {
 
     private RecyclerView mRecyclerView;
     private OverflowPopupMenu mContactOperationMenu;
-    private ContactPushMessageAdapter mAdapter;
+    private ContactOperationMessageAdapter mAdapter;
 
     @Override
     protected int getLayoutID() {
@@ -41,9 +41,9 @@ public class ContactPushMessageFragment extends BasicFragment {
 
     @Override
     protected void init(View parentView) {
-        mRecyclerView = parentView.findViewById(R.id.mRvContactPushMessage);
+        mRecyclerView = parentView.findViewById(R.id.mRvContactOperationMessage);
         mContactOperationMenu = new OverflowPopupMenu(mContext);
-        mAdapter = new ContactPushMessageAdapter();
+        mAdapter = new ContactOperationMessageAdapter();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ContactPushMessageFragment extends BasicFragment {
         mRecyclerView.addOnItemTouchListener(mOnRecyclerViewItemClickListener);
         ((DefaultItemAnimator) (Objects.requireNonNull(mRecyclerView.getItemAnimator()))).setSupportsChangeAnimations(false);
 
-        mAdapter.setOnClickListener(new ContactPushMessageHolder.OnClickListener() {
+        mAdapter.setOnClickListener(new ContactOperationMessageHolder.OnClickListener() {
             @Override
             public void onClickAccept(int position) {
 
@@ -87,7 +87,7 @@ public class ContactPushMessageFragment extends BasicFragment {
         mContactOperationMenu.setOnMenuItemClickListener(new OverflowPopupMenu.OnMenuItemClickListener() {
             @Override
             public void onMenuItemClick(int position, int menuID) {
-                ContactPushMessage message = (ContactPushMessage) mContactOperationMenu.getParam();
+                ContactOperationMessage message = (ContactOperationMessage) mContactOperationMenu.getParam();
                 if (message == null) {
                     return;
                 }

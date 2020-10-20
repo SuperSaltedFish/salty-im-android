@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import java.util.List;
 
 import androidx.core.content.ContextCompat;
+import me.zhixingye.base.view.RoundImageView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.GlideUtil;
 import me.zhixingye.salty.widget.view.NineGridView;
-import me.zhixingye.salty.widget.view.RoundImageView;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”

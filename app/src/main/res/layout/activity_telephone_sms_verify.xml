@@ -33,7 +33,7 @@
         android:textSize="14sp" />
 
 
-    <me.zhixingye.salty.widget.view.SMSCodeEditView
+    <me.zhixingye.base.view.SMSCodeEditView
         android:id="@+id/mSMSEditView"
         android:layout_width="wrap_content"
         android:layout_height="48dp"

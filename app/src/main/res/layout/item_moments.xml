@@ -22,7 +22,7 @@
         app:layout_constraintStart_toEndOf="@id/mGuideline"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <me.zhixingye.salty.widget.view.HexagonAvatarView
+    <me.zhixingye.base.view.HexagonAvatarView
         android:id="@+id/mIvAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"

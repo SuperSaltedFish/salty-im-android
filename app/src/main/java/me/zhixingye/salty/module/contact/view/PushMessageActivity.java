@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.view.SegmentedControlView;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.util.AndroidHelper;
-import me.zhixingye.salty.widget.view.SegmentedControlView;
 
-public class PushMessageActivity extends BasicCompatActivity {
+public class PushMessageActivity extends BasicActivity {
 
     private static final String[] TITLE = {"好友通知", "系统消息"};
 
@@ -25,7 +25,7 @@ public class PushMessageActivity extends BasicCompatActivity {
     }
 
     private SegmentedControlView mSegmentedControlView;
-    private ContactOperationMessageFragment mContactOperationMessageFragment;
+    private ContactOperationListFragment mContactOperationListFragment;
     private SystemMessageFragment mSystemMessageFragment;
     private FragmentManager mFragmentManager;
 
@@ -37,14 +37,14 @@ public class PushMessageActivity extends BasicCompatActivity {
     @Override
     protected void init(Bundle savedInstanceState) {
         mSegmentedControlView = new SegmentedControlView(this);
-        mContactOperationMessageFragment = new ContactOperationMessageFragment();
+        mContactOperationListFragment = new ContactOperationListFragment();
         mSystemMessageFragment = new SystemMessageFragment();
         mFragmentManager = getSupportFragmentManager();
     }
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar,true);
         setTitle(null);
 
         int paddingLeftRight = (int) AndroidHelper.dip2px(10);
@@ -59,10 +59,10 @@ public class PushMessageActivity extends BasicCompatActivity {
                 .setOnSelectionChangedListener(mOnSelectedChangedListener)
                 .update();
 
-        mDefaultToolbar.addView(mSegmentedControlView, new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        getToolbar().addView(mSegmentedControlView, new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
 
         mFragmentManager.beginTransaction()
-                .add(R.id.mFlContent, mContactOperationMessageFragment)
+                .add(R.id.mFlContent, mContactOperationListFragment)
                 .add(R.id.mFlContent, mSystemMessageFragment)
                 .hide(mSystemMessageFragment)
                 .commit();
@@ -74,14 +74,14 @@ public class PushMessageActivity extends BasicCompatActivity {
             switch (position) {
                 case 0:
                     mFragmentManager.beginTransaction()
-                            .show(mContactOperationMessageFragment)
+                            .show(mContactOperationListFragment)
                             .hide(mSystemMessageFragment)
                             .commit();
                     break;
                 case 1:
                     mFragmentManager.beginTransaction()
                             .show(mSystemMessageFragment)
-                            .hide(mContactOperationMessageFragment)
+                            .hide(mContactOperationListFragment)
                             .commit();
                     break;
             }

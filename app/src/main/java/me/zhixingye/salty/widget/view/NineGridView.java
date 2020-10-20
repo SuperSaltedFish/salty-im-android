@@ -5,10 +5,8 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
-import androidx.annotation.Nullable;
-import me.zhixingye.salty.widget.listener.OnOnlySingleClickListener;
+import me.zhixingye.base.listener.OnOnlySingleClickListener;
 
 /**
  * Created by YZX on 2017年08月26日.

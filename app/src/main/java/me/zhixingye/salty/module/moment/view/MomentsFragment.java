@@ -1,18 +1,13 @@
 package me.zhixingye.salty.module.moment.view;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import me.zhixingye.base.component.BasicFragment;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicFragment;
-import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.widget.adapter.MomentsAdapter;
-import me.zhixingye.salty.widget.listener.ImageAutoLoadScrollListener;
-import me.zhixingye.salty.widget.view.SpacesItemDecoration;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -32,9 +27,9 @@ public class MomentsFragment extends BasicFragment {
     }
 
     @Override
-    protected void init(View parentView) {
-        mRecyclerView = parentView.findViewById(R.id.MomentsFragment_mRecyclerView);
-        mSwipeRefreshLayout = parentView.findViewById(R.id.MomentsFragment_mSwipeRefreshLayout);
+    protected void init(View rootView) {
+        mRecyclerView = rootView.findViewById(R.id.MomentsFragment_mRecyclerView);
+        mSwipeRefreshLayout = rootView.findViewById(R.id.MomentsFragment_mSwipeRefreshLayout);
 //        mAdapter = new MomentsAdapter();
     }
 

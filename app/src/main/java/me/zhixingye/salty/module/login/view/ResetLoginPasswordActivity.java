@@ -11,20 +11,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputLayout;
-
+import androidx.annotation.NonNull;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.listener.SimpleTextWatcher;
+import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
 import me.zhixingye.salty.module.login.presenter.ResetLoginPasswordPresenter;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.util.RegexUtil;
-import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
-import me.zhixingye.salty.widget.view.ProgressButton;
 
 public class ResetLoginPasswordActivity
-        extends BasicCompatActivity<ResetLoginPasswordPresenter>
+        extends BasicActivity
         implements ResetLoginPasswordContract.View {
 
     private static final String EXTRA_OPERATION_TYPE = "OperationType";
@@ -86,7 +85,7 @@ public class ResetLoginPasswordActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar, true);
 
         setupPasswordRuleVerificationAnimation();
         setupMode();
@@ -160,10 +159,10 @@ public class ResetLoginPasswordActivity
             public void onAnimationEnd(Animator animation) {
                 switch (mOperationType) {
                     case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                        mPresenter.registerByTelephone(mTelephone, newPassword);
+                        getPresenter().registerByTelephone(mTelephone, newPassword);
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
-                        mPresenter.resetTelephoneLoginPassword(mTelephone, newPassword);
+                        getPresenter().resetTelephoneLoginPassword(mTelephone, newPassword);
                         break;
                 }
             }
@@ -180,6 +179,17 @@ public class ResetLoginPasswordActivity
             }
         }
     };
+
+    @NonNull
+    @Override
+    public ResetLoginPasswordContract.Presenter createPresenterImpl() {
+        return new ResetLoginPasswordPresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
+
+    }
 
     @Override
     public void showRegisterSuccessful() {
@@ -205,7 +215,6 @@ public class ResetLoginPasswordActivity
 
     @Override
     public void cancelProgressButtonLoadingIfNeed() {
-        super.cancelProgressButtonLoadingIfNeed();
         mPBtnConfirm.startShowAnim();
     }
 

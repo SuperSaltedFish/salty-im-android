@@ -3,8 +3,9 @@ package me.zhixingye.salty.module.contact.contract;
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.UserProfile;
 
-import me.zhixingye.salty.basic.BasicPresenter;
-import me.zhixingye.salty.basic.BasicView;
+import me.zhixingye.base.component.mvp.IPresenter;
+import me.zhixingye.base.component.mvp.IView;
+
 
 /**
  * Created by YZX on 2018年01月29日.
@@ -14,13 +15,13 @@ import me.zhixingye.salty.basic.BasicView;
 
 public class StrangerProfileContract {
 
-    public interface View extends BasicView<Presenter> {
+    public interface View extends IView<Presenter> {
         void goBack();
     }
 
-    public interface Presenter extends BasicPresenter<View> {
+    public interface Presenter extends IPresenter<View> {
 
-        UserProfile getUserProfile(String userId);
+        UserProfile getLocalCacheUserProfile(String userId);
 
         ContactOperationMessage getContactOperationMessage(String messageId);
 

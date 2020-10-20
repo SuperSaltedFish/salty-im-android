@@ -11,8 +11,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import me.zhixingye.base.component.BasicFragment;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicFragment;
 import me.zhixingye.salty.tool.DirectoryHelper;
 
 /**
@@ -45,9 +45,9 @@ public class WebFragment extends BasicFragment {
     }
 
     @Override
-    protected void init(View parentView) {
-        mWebView = parentView.findViewById(R.id.mWebView);
-        mProgressBar = parentView.findViewById(R.id.mProgressBar);
+    protected void init(View rootView) {
+        mWebView = rootView.findViewById(R.id.mWebView);
+        mProgressBar = rootView.findViewById(R.id.mProgressBar);
 
         Bundle bundle = getArguments();
         if (bundle != null) {

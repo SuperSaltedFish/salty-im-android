@@ -22,7 +22,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <me.zhixingye.salty.widget.view.ProgressButton
+    <me.zhixingye.base.view.ProgressButton
         android:id="@+id/mPBtnResend"
         android:layout_width="80dp"
         android:layout_height="44dp"

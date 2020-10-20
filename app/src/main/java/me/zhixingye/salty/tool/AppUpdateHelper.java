@@ -26,7 +26,7 @@
 //
 //import me.zhixingye.im.tool.Logger;
 //import me.zhixingye.salty.util.AndroidHelper;
-//import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
+//import me.zhixingye.base.listener.OnDialogOnlySingleClickListener;
 //import okio.Buffer;
 //import okio.BufferedSink;
 //import okio.BufferedSource;

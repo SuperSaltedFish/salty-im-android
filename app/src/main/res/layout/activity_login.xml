@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@id/mTEtPhone" />
 
 
-    <me.zhixingye.salty.widget.view.ProgressButton
+    <me.zhixingye.base.view.ProgressButton
         android:id="@+id/mPBtnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

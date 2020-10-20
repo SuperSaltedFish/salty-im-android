@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import me.zhixingye.salty.basic.BasicListAdapterAdapter;
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.salty.widget.adapter.holder.ContactListHeaderHolder;
 
 import static me.zhixingye.salty.widget.adapter.holder.ContactListHeaderHolder.*;

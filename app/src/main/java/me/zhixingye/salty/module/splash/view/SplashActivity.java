@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import me.zhixingye.base.component.BasicActivity;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.login.view.LoginActivity;
 import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
@@ -20,14 +20,14 @@ import me.zhixingye.salty.util.PermissionHelper;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class SplashActivity extends BasicCompatActivity<SplashPresenter> implements
+public class SplashActivity extends BasicActivity implements
         SplashContract.View {
 
     private ImageView mIvSplash;
 
     @Override
     protected int getLayoutID() {
-        return 0;
+        return R.layout.activity_splash;
     }
 
     @Override
@@ -47,34 +47,10 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
             }
         }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION);
-        createSplashView();
-        PermissionHelper.requestExternalStoragePermissions(
-                getSupportFragmentManager(),
-                new PermissionHelper.OnPermissionsResult() {
-                    @Override
-                    public void onGranted() {
-                        mPresenter.checkLoginState(getApplicationContext());
-                    }
-
-                    @Override
-                    public void onDenied(String[] deniedPermissions) {
-                        finish();
-                    }
-                },
-                true);
     }
 
     @Override
     public void onBackPressed() {
-    }
-
-    private void createSplashView() {
-        mIvSplash = new ImageView(this);
-        mIvSplash.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        mIvSplash.setImageResource(R.drawable.src_bg_splash);
-
-        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-        decorView.addView(mIvSplash, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
     @Override
@@ -97,11 +73,35 @@ public class SplashActivity extends BasicCompatActivity<SplashPresenter> impleme
 
     @Override
     public void showLoginError(String error) {
-        showDialog(error, new DialogInterface.OnDismissListener() {
+        showHintDialog(error, new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 SplashActivity.this.finish();
             }
         });
+    }
+
+    @NonNull
+    @Override
+    public SplashContract.Presenter createPresenterImpl() {
+        return new SplashPresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
+        PermissionHelper.requestExternalStoragePermissions(
+                getSupportFragmentManager(),
+                new PermissionHelper.OnPermissionsResult() {
+                    @Override
+                    public void onGranted() {
+                        getPresenter().checkLoginState(getApplicationContext());
+                    }
+
+                    @Override
+                    public void onDenied(String[] deniedPermissions) {
+                        finish();
+                    }
+                },
+                true);
     }
 }

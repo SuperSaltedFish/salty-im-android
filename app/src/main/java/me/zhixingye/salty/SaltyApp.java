@@ -3,12 +3,6 @@ package me.zhixingye.salty;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Display;
-import android.view.WindowManager;
-
-
-import com.tencent.bugly.Bugly;
-import com.tencent.bugly.beta.Beta;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.zhixingye.im.sdk.IMClient;
@@ -44,14 +38,6 @@ public class SaltyApp extends Application {
     private void setupThirdPart() {
 //        EmojiCompat.init(new BundledEmojiCompatConfig(this));
         AutoSizeConfig.getInstance().setDesignWidthInDp(420).setBaseOnWidth(true).setExcludeFontScale(true);
-
-        Beta.autoCheckUpgrade = false;
-        Beta.enableHotfix = false;
-        Beta.enableNotification = false;
-        Beta.autoDownloadOnWifi = false;
-        Beta.showInterruptedStrategy = true;
-        Bugly.init(this, AppConfig.BUGLY_APP_ID, BuildConfig.DEBUG);
-        Beta.checkAppUpgrade(false, true);
     }
 
     public static Context getAppContext() {

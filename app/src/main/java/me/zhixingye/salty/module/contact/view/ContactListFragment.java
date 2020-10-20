@@ -1,10 +1,8 @@
 package me.zhixingye.salty.module.contact.view;
 
 import android.graphics.Color;
-import android.graphics.Outline;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,13 +19,13 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.zhixingye.base.component.BasicFragment;
+import me.zhixingye.base.view.IndexBarView;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicFragment;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.adapter.ContactListAdapter;
 import me.zhixingye.salty.widget.adapter.ContactListHeaderAdapter;
-import me.zhixingye.salty.widget.view.IndexBarView;
 import me.zhixingye.salty.widget.view.LetterSegmentationItemDecoration;
 
 /**
@@ -60,12 +58,12 @@ public class ContactListFragment extends BasicFragment {
     }
 
     @Override
-    protected void init(View parentView) {
-        mDefaultToolbar = parentView.findViewById(R.id.mDefaultToolbar);
-        mRvContact = parentView.findViewById(R.id.mRvContact);
-        mIndexBarView = parentView.findViewById(R.id.mIndexBarView);
-        mTvIndexBarHint = parentView.findViewById(R.id.mTvIndexBarHint);
-        mFBtnAdd = parentView.findViewById(R.id.mFBtnAdd);
+    protected void init(View rootView) {
+        mDefaultToolbar = rootView.findViewById(R.id.mDefaultToolbar);
+        mRvContact = rootView.findViewById(R.id.mRvContact);
+        mIndexBarView = rootView.findViewById(R.id.mIndexBarView);
+        mTvIndexBarHint = rootView.findViewById(R.id.mTvIndexBarHint);
+        mFBtnAdd = rootView.findViewById(R.id.mFBtnAdd);
 
         mContactListAdapter = new ContactListAdapter();
         mContactListHeaderAdapter = new ContactListHeaderAdapter();

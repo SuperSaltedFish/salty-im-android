@@ -1,7 +1,6 @@
 package me.zhixingye.salty.module.contact.view;
 
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -23,22 +22,23 @@ import com.salty.protos.UserProfile;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.listener.SimpleTextWatcher;
+import me.zhixingye.base.view.SpacesItemDecoration;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.contact.contract.FindNewContactContract;
 import me.zhixingye.salty.module.contact.presenter.FindNewContactPresenter;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.widget.adapter.MaybeKnowAdapter;
-import me.zhixingye.salty.widget.listener.SimpleTextWatcher;
-import me.zhixingye.salty.widget.view.SpacesItemDecoration;
 
 
 public class FindNewContactActivity
-        extends BasicCompatActivity<FindNewContactPresenter>
+        extends BasicActivity
         implements FindNewContactContract.View {
 
     public static void startActivity(Context context) {
@@ -75,7 +75,7 @@ public class FindNewContactActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorAccent)));
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar,true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -100,7 +100,7 @@ public class FindNewContactActivity
                     hideSoftKeyboard();
                     String searchText = mEtSearch.getText().toString();
                     if (!TextUtils.isEmpty(searchText)) {
-                        mPresenter.searchUser(searchText);
+                        getPresenter().searchUser(searchText);
                     }
                 }
                 return true;
@@ -152,7 +152,7 @@ public class FindNewContactActivity
 
     @Override
     public void showStrangerProfile(UserProfile user) {
-
+        StrangerProfileActivity.startActivityByUserId(this, user.getUserId());
     }
 
     @Override
@@ -162,6 +162,17 @@ public class FindNewContactActivity
 
     @Override
     public void showSearchNotExist() {
+
+    }
+
+    @NonNull
+    @Override
+    public FindNewContactContract.Presenter createPresenterImpl() {
+        return new FindNewContactPresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
 
     }
 

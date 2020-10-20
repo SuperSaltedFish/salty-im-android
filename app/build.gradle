@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion Ver.compileSdkVersion
     buildToolsVersion Ver.buildToolsVersion
+
     defaultConfig {
         minSdkVersion Ver.minSdkVersion
         targetSdkVersion Ver.targetSdkVersion
@@ -50,6 +51,11 @@ android {
         disable 'GoogleAppIndexingWarning'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "SaltyIM_${variant.buildType.name}_${variant.versionName}" + ".apk"
@@ -60,6 +66,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':base')
 
     implementation Deps.androidx.appcompat
     implementation Deps.androidx.material
@@ -73,7 +81,4 @@ dependencies {
     implementation Deps.thirdparty.glide
 
     debugImplementation Deps.thirdparty.leakcanary
-
-    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
-
 }

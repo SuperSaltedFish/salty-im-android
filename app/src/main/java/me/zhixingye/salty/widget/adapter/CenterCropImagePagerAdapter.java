@@ -8,8 +8,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+import me.zhixingye.base.view.MaskImageView;
 import me.zhixingye.salty.util.GlideUtil;
-import me.zhixingye.salty.widget.view.MaskImageView;
 
 /**
  * Created by YZX on 2018年07月15日.

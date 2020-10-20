@@ -28,7 +28,7 @@
         app:layout_constraintStart_toEndOf="@id/mIvIcon"
         app:layout_constraintTop_toTopOf="@id/mIvIcon" />
 
-    <me.zhixingye.salty.widget.view.BadgeView
+    <me.zhixingye.base.view.BadgeView
         android:id="@+id/mBadgeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

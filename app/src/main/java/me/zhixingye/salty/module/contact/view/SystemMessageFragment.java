@@ -7,10 +7,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.zhixingye.base.component.BasicFragment;
+import me.zhixingye.base.view.DividerItemDecoration;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicFragment;
 import me.zhixingye.salty.widget.adapter.SystemMessageAdapter;
-import me.zhixingye.salty.widget.view.DividerItemDecoration;
 
 /**
  * Created by YZX on 2018年05月25日.
@@ -27,8 +27,8 @@ public class SystemMessageFragment extends BasicFragment {
     }
 
     @Override
-    protected void init(View parentView) {
-        mRecyclerView = parentView.findViewById(R.id.SystemMessageFragment_mRecyclerView);
+    protected void init(View rootView) {
+        mRecyclerView = rootView.findViewById(R.id.SystemMessageFragment_mRecyclerView);
         mAdapter = new SystemMessageAdapter();
     }
 

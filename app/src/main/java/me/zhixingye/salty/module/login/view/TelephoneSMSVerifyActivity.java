@@ -1,19 +1,16 @@
 package me.zhixingye.salty.module.login.view;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.listener.OnDialogOnlySingleClickListener;
+import me.zhixingye.base.view.SMSCodeEditView;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
 import me.zhixingye.salty.module.login.presenter.TelephoneSMSVerifyPresenter;
-import me.zhixingye.salty.module.main.view.MainActivity;
-import me.zhixingye.salty.widget.listener.OnDialogOnlySingleClickListener;
-import me.zhixingye.salty.widget.view.SMSCodeEditView;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +31,7 @@ import com.salty.protos.SMSOperationType;
 import java.util.Locale;
 
 public class TelephoneSMSVerifyActivity
-        extends BasicCompatActivity<TelephoneSMSVerifyPresenter>
+        extends BasicActivity
         implements TelephoneSMSVerifyContract.View {
 
     public static final int RESULT_CODE_VERIFY_SUCCESSFUL = TelephoneSMSVerifyActivity.class.hashCode();
@@ -86,15 +83,13 @@ public class TelephoneSMSVerifyActivity
             return;
         }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar, true);
 
         mBtnResend.setOnClickListener(mOnClickListener);
 
         setupTitleHint();
         setupVoiceSMSHint();
         setupAutoConfirm();
-
-        resendSMS(true);
     }
 
     private void setupTitleHint() {
@@ -152,11 +147,11 @@ public class TelephoneSMSVerifyActivity
             showError("请输入完整的验证码");
             return;
         }
-        mPresenter.verifyTelephoneSMS(mTelephone, smsCode, mSMSOperationType);
+        getPresenter().verifyTelephoneSMS(mTelephone, smsCode, mSMSOperationType);
     }
 
     private void resendSMS(boolean isFirstSend) {
-        mPresenter.obtainTelephoneSMS(mTelephone, mSMSOperationType, isFirstSend);
+        getPresenter().obtainTelephoneSMS(mTelephone, mSMSOperationType, isFirstSend);
     }
 
     private void setAllowResendSMSCode(boolean isAllow) {
@@ -195,6 +190,17 @@ public class TelephoneSMSVerifyActivity
         mResendCountDown.cancel();
     }
 
+    @NonNull
+    @Override
+    public TelephoneSMSVerifyContract.Presenter createPresenterImpl() {
+        return new TelephoneSMSVerifyPresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
+        resendSMS(true);
+    }
+
     @Override
     public void showSMSInputLayout(int smsCodeLength) {
         setAllowResendSMSCode(false);
@@ -207,7 +213,7 @@ public class TelephoneSMSVerifyActivity
 
     @Override
     public void showFirstSendFailure(String error) {
-        showDialog(error, new DialogInterface.OnDismissListener() {
+        showHintDialog(error, new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 finish();

@@ -1,6 +1,5 @@
 package me.zhixingye.salty.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;

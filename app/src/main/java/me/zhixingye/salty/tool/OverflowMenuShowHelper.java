@@ -3,9 +3,9 @@ package me.zhixingye.salty.tool;
 import android.view.View;
 
 
+import me.zhixingye.base.view.OverflowPopupMenu;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.util.AndroidHelper;
-import me.zhixingye.salty.widget.view.OverflowPopupMenu;
 
 /**
  * Created by YZX on 2018年01月14日.

@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicListAdapterAdapter;
 import me.zhixingye.salty.util.GlideUtil;
 import me.zhixingye.salty.widget.adapter.MomentsNineGridAdapter;
 import me.zhixingye.salty.widget.view.NineGridView;

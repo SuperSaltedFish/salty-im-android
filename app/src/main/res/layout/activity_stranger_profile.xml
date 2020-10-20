@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <me.zhixingye.salty.widget.view.PageIndicator
+    <me.zhixingye.base.view.PageIndicator
         android:id="@+id/mPageIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
         app:layout_constraintTop_toBottomOf="@id/mEtReason" />
 
 
-    <me.zhixingye.salty.widget.view.HexagonAvatarView
+    <me.zhixingye.base.view.HexagonAvatarView
         android:id="@+id/mIvAvatar"
         android:layout_width="76dp"
         android:layout_height="76dp"

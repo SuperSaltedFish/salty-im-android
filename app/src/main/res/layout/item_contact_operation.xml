@@ -13,7 +13,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="12dp">
 
-    <me.zhixingye.salty.widget.view.HexagonAvatarView
+    <me.zhixingye.base.view.HexagonAvatarView
         android:id="@+id/mIvAvatar"
         android:layout_width="48dp"
         android:layout_height="48dp"

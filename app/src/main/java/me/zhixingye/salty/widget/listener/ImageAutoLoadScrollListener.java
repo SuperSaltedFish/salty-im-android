@@ -1,5 +1,7 @@
 package me.zhixingye.salty.widget.listener;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.recyclerview.widget.RecyclerView;
 import me.zhixingye.salty.util.GlideUtil;
 
@@ -8,12 +10,10 @@ import me.zhixingye.salty.util.GlideUtil;
  * Created by YZX on 2017年08月16日.
  * 生命太短暂,不要去做一些根本没有人想要的东西
  */
-
-
 public class ImageAutoLoadScrollListener extends RecyclerView.OnScrollListener {
 
     @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    public void onScrollStateChanged(@NotNull RecyclerView recyclerView, int newState) {
         switch (newState) {
             case RecyclerView.SCROLL_STATE_IDLE:
                 //当屏幕停止滚动

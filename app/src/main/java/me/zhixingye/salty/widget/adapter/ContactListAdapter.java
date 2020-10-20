@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback;
 import com.salty.protos.ContactProfile;
 
 import androidx.annotation.NonNull;
-import me.zhixingye.salty.basic.BasicListAdapterAdapter;
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.salty.widget.adapter.holder.ContactListHolder;
 
 

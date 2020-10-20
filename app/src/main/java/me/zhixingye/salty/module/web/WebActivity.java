@@ -1,7 +1,7 @@
 package me.zhixingye.salty.module.web;
 
+import me.zhixingye.base.component.BasicActivity;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 public class WebActivity
-        extends BasicCompatActivity
+        extends BasicActivity
         implements WebFragment.OnWebClientListener {
 
 
@@ -30,7 +30,7 @@ public class WebActivity
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar,true);
 
         String url = getIntent().getStringExtra(WebFragment.EXTRA_URL);
         if (TextUtils.isEmpty(url)) {

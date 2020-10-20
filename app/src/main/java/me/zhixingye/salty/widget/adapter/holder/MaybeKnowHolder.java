@@ -4,8 +4,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicListAdapterAdapter;
 import me.zhixingye.salty.util.GlideUtil;
 
 /**

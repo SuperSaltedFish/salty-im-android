@@ -6,7 +6,7 @@
     tools:context=".module.main.view.MainActivity">
 
 
-    <me.zhixingye.salty.widget.view.WindowInsetsFrameLayout
+    <me.zhixingye.base.view.WindowInsetsFrameLayout
         android:id="@+id/mClContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,7 +14,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true" />
 
-    <me.zhixingye.salty.widget.view.BottomTabLayout
+    <me.zhixingye.base.view.BottomTabLayout
         android:id="@+id/mBottomTabLayout"
         android:layout_width="match_parent"
         android:layout_height="56dp"

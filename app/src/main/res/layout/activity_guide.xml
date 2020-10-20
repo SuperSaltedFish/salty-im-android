@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <me.zhixingye.salty.widget.view.PageIndicator
+        <me.zhixingye.base.view.PageIndicator
             android:id="@+id/mPageIndicator"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />

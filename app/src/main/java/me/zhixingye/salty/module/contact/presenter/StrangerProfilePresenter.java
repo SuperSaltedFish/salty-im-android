@@ -30,8 +30,8 @@ public class StrangerProfilePresenter implements StrangerProfileContract.Present
     }
 
     @Override
-    public UserProfile getUserProfile(String userId) {
-        return IMClient.get().getUserService().;
+    public UserProfile getLocalCacheUserProfile(String userId) {
+        return IMClient.get().getUserService().getLocalCacheUserProfile(userId);
     }
 
     @Override

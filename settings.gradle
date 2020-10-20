@@ -1,3 +1,3 @@
 rootProject.name='salty-im-android'
-
 include ':app'
+include ':base'

@@ -18,13 +18,13 @@ import androidx.annotation.NonNull;
 import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.module.web.WebActivity;
-import me.zhixingye.salty.widget.view.ProgressButton;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
 /**
@@ -33,7 +33,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  * @author zhixingye , 2020年05月01日.
  */
 public class RegisterActivity
-        extends BasicCompatActivity<RegisterPresenter>
+        extends BasicActivity
         implements RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";
@@ -65,7 +65,7 @@ public class RegisterActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar,true);
 
         setupUserAgreement();
 
@@ -137,4 +137,14 @@ public class RegisterActivity
         }
     }
 
+    @NonNull
+    @Override
+    public RegisterContract.Presenter createPresenterImpl() {
+        return new RegisterPresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
+
+    }
 }

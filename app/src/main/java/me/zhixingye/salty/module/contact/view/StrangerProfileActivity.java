@@ -17,25 +17,26 @@ import com.salty.protos.UserProfile;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
+import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.listener.OnOnlySingleClickListener;
+import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.basic.BasicCompatActivity;
 import me.zhixingye.salty.module.contact.contract.StrangerProfileContract;
 import me.zhixingye.salty.module.contact.presenter.StrangerProfilePresenter;
 import me.zhixingye.salty.tool.UserDataFormatter;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.GlideUtil;
 import me.zhixingye.salty.widget.adapter.CenterCropImagePagerAdapter;
-import me.zhixingye.salty.widget.listener.OnOnlySingleClickListener;
-import me.zhixingye.salty.widget.view.PageIndicator;
 
 /**
  * Created by YZX on 2018年01月29日.
  * 优秀的代码是它自己最好的文档,当你考虑要添加一个注释时,问问自己:"如何能改进这段代码，以让它不需要注释？"
  */
 public class StrangerProfileActivity
-        extends BasicCompatActivity<StrangerProfilePresenter>
+        extends BasicActivity
         implements StrangerProfileContract.View {
 
     private static final String INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID = "ContactOperationMessageId";
@@ -92,7 +93,7 @@ public class StrangerProfileActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
-        setDisplayHomeAsUpEnabled(true);
+        setToolbarId(R.id.mDefaultToolbar,true);
         setTitle(null);
 
         fillTestData();
@@ -121,13 +122,13 @@ public class StrangerProfileActivity
         String contactOperationMessageId = getIntent().getStringExtra(INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID);
         String userId = getIntent().getStringExtra(INTENT_EXTRA_USER_ID);
         if (!TextUtils.isEmpty(contactOperationMessageId)) {
-            mContactOperationMessage = mPresenter.getContactOperationMessage(contactOperationMessageId);
+            mContactOperationMessage = getPresenter().getContactOperationMessage(contactOperationMessageId);
         }
         if (mContactOperationMessage != null) {
             mUserProfile = mContactOperationMessage.getTriggerProfile();
         }
         if (mUserProfile == null && !TextUtils.isEmpty(userId)) {
-            mUserProfile = mPresenter.getUserProfile(userId);
+            mUserProfile = getPresenter().getLocalCacheUserProfile(userId);
         }
         if (mUserProfile == null) {
             finish();
@@ -210,14 +211,14 @@ public class StrangerProfileActivity
         public void onSingleClick(View v) {
             String reason = mEtReason.getText().toString();
             if (mContactOperationMessage == null) {
-                mPresenter.requestAddContact(mUserProfile.getUserId(), reason);
+                getPresenter().requestAddContact(mUserProfile.getUserId(), reason);
             } else {
                 switch (mContactOperationMessage.getType()) {
                     case REQUEST_PASSIVE:
-                        mPresenter.acceptAddContact(mUserProfile.getUserId());
+                        getPresenter().acceptAddContact(mUserProfile.getUserId());
                         break;
                     case REJECT_PASSIVE:
-                        mPresenter.refusedAddContact(mUserProfile.getUserId(), reason);
+                        getPresenter().refusedAddContact(mUserProfile.getUserId(), reason);
                         break;
                 }
             }
@@ -229,4 +230,14 @@ public class StrangerProfileActivity
         finish();
     }
 
+    @NonNull
+    @Override
+    public StrangerProfileContract.Presenter createPresenterImpl() {
+        return new StrangerProfilePresenter();
+    }
+
+    @Override
+    public void onPresenterBound() {
+
+    }
 }

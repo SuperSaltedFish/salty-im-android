@@ -36,29 +36,6 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <!--全局DialogFragment样式-->
-    <style name="DialogFragmentStyle" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowNoTitle">true</item><!--除去title-->
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-        <item name="android:windowElevation">0dp</item>
-        <item name="android:backgroundDimAmount">0.3</item>
-        <item name="android:windowMinWidthMajor">100%</item>
-        <item name="android:windowMinWidthMinor">100%</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:windowAnimationStyle">@style/BottomDialogFragmentAnimStyle</item>
-    </style>
-
-    <style name="BottomDialogFragmentAnimStyle" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/dialog_slide_in_bottom</item>
-        <item name="android:windowExitAnimation">@anim/dialog_slide_out_bottom</item>
-    </style>
 
 </resources>
 

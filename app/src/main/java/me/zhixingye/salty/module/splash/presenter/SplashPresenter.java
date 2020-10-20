@@ -3,11 +3,9 @@ package me.zhixingye.salty.module.splash.presenter;
 import android.content.Context;
 import android.os.Handler;
 
-import com.salty.protos.LoginResp;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.sdk.IMClient;
-import me.zhixingye.im.tool.Logger;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
 import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;

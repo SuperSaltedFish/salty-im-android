@@ -1,10 +1,13 @@
 package me.zhixingye.base.component.mvp;
 
 
-import androidx.annotation.NonNull;
+import android.content.Context;
+import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
+
 import me.zhixingye.base.component.UIComponent;
 
 /**
@@ -14,34 +17,41 @@ import me.zhixingye.base.component.UIComponent;
  */
 
 //这里都是一些公共的方法，一般baseActivity或者baseFragment等base都已经实现了
-public interface IView<P extends IPresenter>
-        extends UIComponent, LifecycleObserver {
+public interface IView<P extends IPresenter> extends UIComponent {
 
-    @NonNull
-    P createPresenterImpl();
-
-    void onPresenterBound();
-
+    //绑定Presenter
+    @SuppressWarnings("unchecked")
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     default void bindPresenter() {
-        P presenter = createPresenterImpl();
-        presenter.attachView(this);
-        PresenterCache.savePresenter(hashCode(), presenter);
-        onPresenterBound();
-    }
+        if (isAttachedToPresenter()) {
+            throw new RuntimeException("cannot bind Presenter repeatedly");
+        }
 
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    default void unBindPresenter() {
-        P presenter = getPresenter();
-        if (presenter != null) {
-            PresenterCache.removePresenterFromCache(hashCode());
-            presenter.detachView();
+        try {
+            P presenter = PresenterManager.createPresenterFromInterfaceGeneric(this);
+            presenter.attachView(this);
+            Log.e("yezhixing", presenter.getClass().getSimpleName());
+            PresenterManager.savePresenter(this, presenter);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to create presenter", e);
         }
     }
 
+    //解除绑定Presenter
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    default void unbindPresenter() {
+        P presenter = PresenterManager.getPresenter(this);
+        if (presenter != null) {
+            PresenterManager.removePresenterFromCache(this);
+            presenter.detachView();
+        }
+
+
+    }
+
+    //获取一个已经绑定好的Presenter
     default P getPresenter() {
-        return PresenterCache.getPresenter(hashCode());
+        return PresenterManager.getPresenter(this);
     }
 
     //    //判断是否已经attach到presenter
@@ -49,8 +59,23 @@ public interface IView<P extends IPresenter>
         return getPresenter() != null;
     }
 
+
     default void cancelProgressButtonLoadingIfNeed() {
 
+    }
+
+    static void tryBindPresenter(Object mvpView) {
+        if (mvpView instanceof IView) {
+            IView<?> view = (IView<?>) mvpView;
+            view.bindPresenter();
+        }
+    }
+
+    static void tryUnbindPresenter(Object mvpView) {
+        if (mvpView instanceof IView) {
+            IView<?> view = (IView<?>) mvpView;
+            view.unbindPresenter();
+        }
     }
 
 }

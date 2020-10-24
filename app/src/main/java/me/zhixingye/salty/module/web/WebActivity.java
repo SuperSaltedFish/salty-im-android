@@ -1,6 +1,7 @@
 package me.zhixingye.salty.module.web;
 
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.salty.R;
 
 import android.content.Context;
@@ -9,7 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 public class WebActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements WebFragment.OnWebClientListener {
 
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 import me.zhixingye.base.component.mvp.IPresenter;
 import me.zhixingye.base.component.mvp.IView;
+import me.zhixingye.salty.module.contact.presenter.ContactOperationListPresenter;
 
 
 /**
@@ -16,7 +17,7 @@ import me.zhixingye.base.component.mvp.IView;
  */
 public class ContactOperationListContract {
 
-    public interface View extends IView<Presenter> {
+    public interface View extends IView<ContactOperationListPresenter> {
         void showContactOperation(List<ContactOperationMessage> messageList);
     }
 

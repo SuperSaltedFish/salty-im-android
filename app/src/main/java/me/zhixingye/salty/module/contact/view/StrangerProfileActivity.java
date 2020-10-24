@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.OnOnlySingleClickListener;
 import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
@@ -36,7 +37,7 @@ import me.zhixingye.salty.widget.adapter.CenterCropImagePagerAdapter;
  * 优秀的代码是它自己最好的文档,当你考虑要添加一个注释时,问问自己:"如何能改进这段代码，以让它不需要注释？"
  */
 public class StrangerProfileActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements StrangerProfileContract.View {
 
     private static final String INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID = "ContactOperationMessageId";
@@ -228,16 +229,5 @@ public class StrangerProfileActivity
     @Override
     public void goBack() {
         finish();
-    }
-
-    @NonNull
-    @Override
-    public StrangerProfileContract.Presenter createPresenterImpl() {
-        return new StrangerProfilePresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-
     }
 }

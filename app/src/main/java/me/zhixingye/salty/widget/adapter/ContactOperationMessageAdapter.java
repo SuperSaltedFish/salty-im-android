@@ -40,7 +40,7 @@ public class ContactOperationMessageAdapter extends BasicListAdapterAdapter<Cont
         return new DiffUtil.ItemCallback<ContactOperationMessage>() {
             @Override
             public boolean areItemsTheSame(@NonNull ContactOperationMessage oldItem, @NonNull ContactOperationMessage newItem) {
-                return TextUtils.equals(oldItem.getCommon().getMessageID(), newItem.getCommon().getMessageID());
+                return TextUtils.equals(oldItem.getCommon().getMessageId(), newItem.getCommon().getMessageId());
             }
 
             @Override

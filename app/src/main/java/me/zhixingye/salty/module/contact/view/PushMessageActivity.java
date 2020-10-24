@@ -11,11 +11,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.view.SegmentedControlView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.util.AndroidHelper;
 
-public class PushMessageActivity extends BasicActivity {
+public class PushMessageActivity extends MVPBasicActivity {
 
     private static final String[] TITLE = {"好友通知", "系统消息"};
 

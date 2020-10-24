@@ -3,6 +3,7 @@ package me.zhixingye.salty.module.login.view;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.base.view.SMSCodeEditView;
 import me.zhixingye.salty.R;
@@ -31,7 +32,7 @@ import com.salty.protos.SMSOperationType;
 import java.util.Locale;
 
 public class TelephoneSMSVerifyActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements TelephoneSMSVerifyContract.View {
 
     public static final int RESULT_CODE_VERIFY_SUCCESSFUL = TelephoneSMSVerifyActivity.class.hashCode();
@@ -90,6 +91,7 @@ public class TelephoneSMSVerifyActivity
         setupTitleHint();
         setupVoiceSMSHint();
         setupAutoConfirm();
+        resendSMS(true);
     }
 
     private void setupTitleHint() {
@@ -188,17 +190,6 @@ public class TelephoneSMSVerifyActivity
     protected void onDestroy() {
         super.onDestroy();
         mResendCountDown.cancel();
-    }
-
-    @NonNull
-    @Override
-    public TelephoneSMSVerifyContract.Presenter createPresenterImpl() {
-        return new TelephoneSMSVerifyPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-        resendSMS(true);
     }
 
     @Override

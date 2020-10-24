@@ -12,7 +12,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import me.zhixingye.base.component.BasicActivity;
+
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.view.BottomTabLayout;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.R;
@@ -28,7 +29,7 @@ import me.zhixingye.salty.util.AnimationUtil;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class MainActivity extends BasicActivity {
+public class MainActivity extends MVPBasicActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -71,10 +72,7 @@ public class MainActivity extends BasicActivity {
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
         getWindow().setBackgroundDrawable(null);
-//        UpgradeInfo info = Beta.getUpgradeInfo();
-//        if (info != null) {
-//              AppUpdateHelper.showUpdateDialog(this, upgradeInfo);
-//        }
+
         initFragment();
         initBottomTab();
         initEnterTransition();
@@ -99,26 +97,28 @@ public class MainActivity extends BasicActivity {
 
                     }
                 })
-                .setSelectPosition(0, false, true);
-        mBottomTabLayout.setSelectPosition(0, false, true);
+                .setSelectPosition(0, false, false);
+        mBottomTabLayout.setSelectPosition(0, false, false);
     }
 
     private void initFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        addFragment(transaction, new ConversationFragment(), "0");
-        addFragment(transaction, new ContactListFragment(), "1");
-        addFragment(transaction, new MomentsFragment(), "2");
-        addFragment(transaction, new ProfileFragment(), "3");
-        transaction.commit();
+        addFragment(transaction, new ConversationFragment(), "0", true);
+        addFragment(transaction, new ContactListFragment(), "1", false);
+        addFragment(transaction, new MomentsFragment(), "2", false);
+        addFragment(transaction, new ProfileFragment(), "3", false);
+        transaction.commitNowAllowingStateLoss();
     }
 
-    private void addFragment(FragmentTransaction transaction, Fragment fragment, String tag) {
+    private void addFragment(FragmentTransaction transaction, Fragment fragment, String tag, boolean isShow) {
         Fragment old = getSupportFragmentManager().findFragmentByTag(tag);
         if (old == null) {
             old = fragment;
             transaction.add(R.id.mClContent, fragment, tag);
         }
-        transaction.hide(old);
+        if (!isShow) {
+            transaction.hide(old);
+        }
     }
 
     private void selectFragment(int index) {

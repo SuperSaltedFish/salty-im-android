@@ -5,6 +5,7 @@ import com.salty.protos.SMSOperationType;
 
 import me.zhixingye.base.component.mvp.IPresenter;
 import me.zhixingye.base.component.mvp.IView;
+import me.zhixingye.salty.module.login.presenter.TelephoneSMSVerifyPresenter;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -12,7 +13,7 @@ import me.zhixingye.base.component.mvp.IView;
  * @author zhixingye , 2020年05月01日.
  */
 public class TelephoneSMSVerifyContract {
-    public interface View extends IView<Presenter> {
+    public interface View extends IView<TelephoneSMSVerifyPresenter> {
         void showSMSInputLayout(int smsCodeLength);
 
         void showFirstSendFailure(String error);

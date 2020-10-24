@@ -10,6 +10,7 @@ import android.widget.TextSwitcher;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.OnOnlySingleClickListener;
 import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
@@ -22,7 +23,7 @@ import me.zhixingye.salty.widget.adapter.GuidePagerAdapter;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class GuideActivity extends BasicActivity {
+public class GuideActivity extends MVPBasicActivity {
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, GuideActivity.class));

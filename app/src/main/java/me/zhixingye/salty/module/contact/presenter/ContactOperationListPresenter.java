@@ -51,8 +51,8 @@ public class ContactOperationListPresenter implements ContactOperationListContra
 
         MessageCommon common = MessageCommon.newBuilder()
                 .setCreatedTime(System.currentTimeMillis())
-                .setMessageID("123123")
-                .setSortID("1")
+                .setMessageId("123123")
+                .setSortId("1")
                 .setIsNeedRemind(true)
                 .build();
 

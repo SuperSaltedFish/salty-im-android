@@ -40,12 +40,14 @@ public class BottomTabLayout extends LinearLayout {
 
     private final static int MAX_BADGE_NUMBER = 99;
 
-    private Context mContext;
-    private ViewPager mViewPager;
-    private LinkedList<OnTabItemSelectedListener> mOnTabItemSelectedListeners;
-    private int mCurrentSelectedPosition = -1;
+    private final Context mContext;
 
+    private final LinkedList<OnTabItemSelectedListener> mOnTabItemSelectedListeners;
+
+    private int mCurrentSelectedPosition = -1;
     private boolean isClicked;
+
+    private ViewPager mViewPager;
 
     public BottomTabLayout(Context context) {
         this(context, null);

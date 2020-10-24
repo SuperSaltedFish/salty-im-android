@@ -4,26 +4,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.login.view.LoginActivity;
 import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
 import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
-import me.zhixingye.salty.util.PermissionHelper;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class SplashActivity extends BasicActivity implements
-        SplashContract.View {
-
-    private ImageView mIvSplash;
+public class SplashActivity
+        extends MVPBasicActivity
+        implements SplashContract.View {
 
     @Override
     protected int getLayoutID() {
@@ -40,13 +35,14 @@ public class SplashActivity extends BasicActivity implements
         if (!isTaskRoot()) {
             final Intent intent = getIntent();
             final String intentAction = intent.getAction();
-            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction
-                    .equals(Intent.ACTION_MAIN)) {
+            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intentAction != null && intentAction.equals(Intent.ACTION_MAIN)) {
                 finish();
                 return;
             }
         }
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS_AND_NAVIGATION);
+
+        getPresenter().checkLoginState(getApplicationContext());
     }
 
     @Override
@@ -79,29 +75,5 @@ public class SplashActivity extends BasicActivity implements
                 SplashActivity.this.finish();
             }
         });
-    }
-
-    @NonNull
-    @Override
-    public SplashContract.Presenter createPresenterImpl() {
-        return new SplashPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-        PermissionHelper.requestExternalStoragePermissions(
-                getSupportFragmentManager(),
-                new PermissionHelper.OnPermissionsResult() {
-                    @Override
-                    public void onGranted() {
-                        getPresenter().checkLoginState(getApplicationContext());
-                    }
-
-                    @Override
-                    public void onDenied(String[] deniedPermissions) {
-                        finish();
-                    }
-                },
-                true);
     }
 }

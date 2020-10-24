@@ -6,6 +6,7 @@ import java.util.List;
 
 import me.zhixingye.base.component.mvp.IPresenter;
 import me.zhixingye.base.component.mvp.IView;
+import me.zhixingye.salty.module.contact.presenter.ContactListPresenter;
 
 
 /**
@@ -14,7 +15,7 @@ import me.zhixingye.base.component.mvp.IView;
  * @author zhixingye , 2020年06月07日.
  */
 public class ContactListContract {
-    public interface View extends IView<Presenter> {
+    public interface View extends IView<ContactListPresenter> {
         void refreshNotifyMessageUnreadBadge(int unreadCount);
 
         void refreshContactList(List<ContactProfile> contactList);

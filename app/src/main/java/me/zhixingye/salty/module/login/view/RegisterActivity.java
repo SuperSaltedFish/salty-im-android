@@ -19,6 +19,7 @@ import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
@@ -33,7 +34,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  * @author zhixingye , 2020年05月01日.
  */
 public class RegisterActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";
@@ -135,16 +136,5 @@ public class RegisterActivity
                     this,
                     mTEtPhone.getPhoneSuffixText());
         }
-    }
-
-    @NonNull
-    @Override
-    public RegisterContract.Presenter createPresenterImpl() {
-        return new RegisterPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-
     }
 }

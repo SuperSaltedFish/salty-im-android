@@ -5,6 +5,7 @@ import com.salty.protos.UserProfile;
 
 import me.zhixingye.base.component.mvp.IPresenter;
 import me.zhixingye.base.component.mvp.IView;
+import me.zhixingye.salty.module.contact.presenter.StrangerProfilePresenter;
 
 
 /**
@@ -15,7 +16,7 @@ import me.zhixingye.base.component.mvp.IView;
 
 public class StrangerProfileContract {
 
-    public interface View extends IView<Presenter> {
+    public interface View extends IView<StrangerProfilePresenter> {
         void goBack();
     }
 

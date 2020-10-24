@@ -116,17 +116,6 @@ public class ContactOperationListFragment
         }
     };
 
-    @NonNull
-    @Override
-    public ContactOperationListContract.Presenter createPresenterImpl() {
-        return new ContactOperationListPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-
-    }
-
     @Override
     public void cancelProgressButtonLoadingIfNeed() {
 

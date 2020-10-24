@@ -1,6 +1,7 @@
 package me.zhixingye.base.component.mvp;
 
 import android.os.Bundle;
+
 import me.zhixingye.base.component.BasicActivity;
 
 /**
@@ -10,11 +11,17 @@ import me.zhixingye.base.component.BasicActivity;
  */
 public abstract class MVPBasicActivity extends BasicActivity {
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        IView.tryBindPresenter(this);
         super.onCreate(savedInstanceState);
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
+        IView.tryUnbindPresenter(this);
     }
+
+
 }

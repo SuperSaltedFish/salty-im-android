@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.SpacesItemDecoration;
 import me.zhixingye.salty.R;
@@ -38,7 +39,7 @@ import me.zhixingye.salty.widget.adapter.MaybeKnowAdapter;
 
 
 public class FindNewContactActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements FindNewContactContract.View {
 
     public static void startActivity(Context context) {
@@ -162,17 +163,6 @@ public class FindNewContactActivity
 
     @Override
     public void showSearchNotExist() {
-
-    }
-
-    @NonNull
-    @Override
-    public FindNewContactContract.Presenter createPresenterImpl() {
-        return new FindNewContactPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
 
     }
 

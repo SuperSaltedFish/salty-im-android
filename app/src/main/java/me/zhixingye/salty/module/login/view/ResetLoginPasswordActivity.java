@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import me.zhixingye.base.component.BasicActivity;
+import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
@@ -23,7 +24,7 @@ import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.util.RegexUtil;
 
 public class ResetLoginPasswordActivity
-        extends BasicActivity
+        extends MVPBasicActivity
         implements ResetLoginPasswordContract.View {
 
     private static final String EXTRA_OPERATION_TYPE = "OperationType";
@@ -179,17 +180,6 @@ public class ResetLoginPasswordActivity
             }
         }
     };
-
-    @NonNull
-    @Override
-    public ResetLoginPasswordContract.Presenter createPresenterImpl() {
-        return new ResetLoginPasswordPresenter();
-    }
-
-    @Override
-    public void onPresenterBound() {
-
-    }
 
     @Override
     public void showRegisterSuccessful() {

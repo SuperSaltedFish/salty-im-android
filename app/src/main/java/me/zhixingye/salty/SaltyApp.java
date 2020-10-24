@@ -26,7 +26,6 @@ public class SaltyApp extends Application {
         sAppContext = this;
 
         if (TextUtils.equals(SystemUtils.getCurrentProcessName(this), getPackageName())) {
-            IMClient.init(this);
 
             AppConfig.init(this);
             AndroidHelper.init(this);

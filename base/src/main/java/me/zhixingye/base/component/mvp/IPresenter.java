@@ -8,7 +8,6 @@ package me.zhixingye.base.component.mvp;
  */
 public interface IPresenter<V extends IView<?>> {
 
-
     //Presenter绑定View，一般在activity的onCreated()会调用
     void attachView(V v);
 

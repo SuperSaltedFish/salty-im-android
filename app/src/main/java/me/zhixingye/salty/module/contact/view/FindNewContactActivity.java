@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,18 +21,14 @@ import com.salty.protos.UserProfile;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.zhixingye.base.component.BasicActivity;
 import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.SpacesItemDecoration;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.contact.contract.FindNewContactContract;
-import me.zhixingye.salty.module.contact.presenter.FindNewContactPresenter;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.widget.adapter.MaybeKnowAdapter;
 
@@ -48,10 +43,8 @@ public class FindNewContactActivity
     }
 
     private ConstraintLayout mClScan;
-
     private EditText mEtSearch;
     private RecyclerView mRecyclerView;
-    private TextView mTvMyPhoneNumber;
     private ImageView mIvSearchIcon;
     private ImageView mIvEnterIcon;
     private ConstraintLayout mClCreateGroup;
@@ -66,7 +59,6 @@ public class FindNewContactActivity
         mClScan = findViewById(R.id.mClScan);
         mRecyclerView = findViewById(R.id.mRecyclerView);
         mEtSearch = findViewById(R.id.mEtSearch);
-        mTvMyPhoneNumber = findViewById(R.id.mTvMyPhoneNumber);
         mClCreateGroup = findViewById(R.id.mClCreateGroup);
         mIvSearchIcon = findViewById(R.id.mIvSearchIcon);
         mIvEnterIcon = findViewById(R.id.mIvEnterIcon);
@@ -75,8 +67,9 @@ public class FindNewContactActivity
 
     @Override
     protected void setup(Bundle savedInstanceState) {
-        getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.colorAccent)));
+        getWindow().setBackgroundDrawableResource(R.color.backgroundColorWhiteLight);
         setToolbarId(R.id.mDefaultToolbar,true);
+        getToolbar().setElevation(0);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -87,7 +80,6 @@ public class FindNewContactActivity
 
         mClScan.setOnClickListener(mOnClickListener);
         mClCreateGroup.setOnClickListener(mOnClickListener);
-        mTvMyPhoneNumber.setOnClickListener(mOnClickListener);
 
         setInputListener();
         setData();

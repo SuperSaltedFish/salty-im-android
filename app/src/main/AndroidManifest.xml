@@ -27,9 +27,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".module.web.WebActivity"></activity>
-        <activity android:name=".module.login.view.RecoverPasswordActivity" />
-        <activity android:name=".module.login.view.SuccessfulActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -57,6 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".module.login.view.LoginActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".module.login.view.ResetLoginPasswordActivity" />
         <activity android:name=".module.login.view.TelephoneSMSVerifyActivity" />
         <activity android:name=".module.login.view.RegisterActivity" />
@@ -64,10 +64,11 @@
         <activity android:name=".module.contact.view.PushMessageActivity" />
         <activity android:name=".module.contact.view.FindNewContactActivity" />
         <activity android:name=".module.contact.view.StrangerProfileActivity" />
-        <activity
-            android:name=".module.login.view.LoginActivity"
-            android:launchMode="singleTask" />
         <activity android:name=".module.splash.view.GuideActivity" />
+        <activity android:name=".module.web.WebActivity"/>
+        <activity android:name=".module.login.view.RecoverPasswordActivity" />
+        <activity android:name=".module.login.view.SuccessfulActivity" />
+        <activity android:name=".module.contact.view.ContactProfileActivity" />
     </application>
 
 </manifest>

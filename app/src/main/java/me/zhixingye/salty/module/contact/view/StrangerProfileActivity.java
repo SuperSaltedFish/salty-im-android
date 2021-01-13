@@ -17,16 +17,14 @@ import com.salty.protos.UserProfile;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
-import me.zhixingye.base.component.BasicActivity;
+
 import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.OnOnlySingleClickListener;
 import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.contact.contract.StrangerProfileContract;
-import me.zhixingye.salty.module.contact.presenter.StrangerProfilePresenter;
 import me.zhixingye.salty.tool.UserDataFormatter;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.GlideUtil;
@@ -40,14 +38,7 @@ public class StrangerProfileActivity
         extends MVPBasicActivity
         implements StrangerProfileContract.View {
 
-    private static final String INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID = "ContactOperationMessageId";
     private static final String INTENT_EXTRA_USER_ID = "UserId";
-
-    public static void startActivityByContactOperationMessageId(Context context, String contactOperationMessageId) {
-        Intent intent = new Intent(context, StrangerProfileActivity.class);
-        intent.putExtra(StrangerProfileActivity.INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID, contactOperationMessageId);
-        context.startActivity(intent);
-    }
 
     public static void startActivityByUserId(Context context, String userId) {
         Intent intent = new Intent(context, StrangerProfileActivity.class);
@@ -94,7 +85,7 @@ public class StrangerProfileActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
-        setToolbarId(R.id.mDefaultToolbar,true);
+        setToolbarId(R.id.mDefaultToolbar, true);
         setTitle(null);
 
         fillTestData();
@@ -120,17 +111,9 @@ public class StrangerProfileActivity
 
 
     private void setupData() {
-        String contactOperationMessageId = getIntent().getStringExtra(INTENT_EXTRA_CONTENT_OPERATION_MESSAGE_ID);
         String userId = getIntent().getStringExtra(INTENT_EXTRA_USER_ID);
-        if (!TextUtils.isEmpty(contactOperationMessageId)) {
-            mContactOperationMessage = getPresenter().getContactOperationMessage(contactOperationMessageId);
-        }
-        if (mContactOperationMessage != null) {
-            mUserProfile = mContactOperationMessage.getTriggerProfile();
-        }
-        if (mUserProfile == null && !TextUtils.isEmpty(userId)) {
-            mUserProfile = getPresenter().getLocalCacheUserProfile(userId);
-        }
+        mUserProfile = getPresenter().getUserProfileFromLocal(userId);
+        mContactOperationMessage = getPresenter().getContactOperationFromLocal(userId);
         if (mUserProfile == null) {
             finish();
             return;

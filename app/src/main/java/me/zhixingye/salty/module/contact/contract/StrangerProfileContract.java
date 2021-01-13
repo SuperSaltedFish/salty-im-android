@@ -22,9 +22,9 @@ public class StrangerProfileContract {
 
     public interface Presenter extends IPresenter<View> {
 
-        UserProfile getLocalCacheUserProfile(String userId);
+        UserProfile getUserProfileFromLocal(String userId);
 
-        ContactOperationMessage getContactOperationMessage(String messageId);
+        ContactOperationMessage getContactOperationFromLocal(String targetUserId);
 
         void requestAddContact(String userId, String addReason);
 

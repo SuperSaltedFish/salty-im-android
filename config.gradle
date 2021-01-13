@@ -13,8 +13,8 @@ def im_dependencies = [
 ]
 
 def androidx_dependencies = [
-        appcompat         : "androidx.appcompat:appcompat:1.1.0",
-        constraintlayout  : "androidx.constraintlayout:constraintlayout:2.0.2",
+        appcompat         : "androidx.appcompat:appcompat:1.2.0",
+        constraintlayout  : "androidx.constraintlayout:constraintlayout:2.0.4",
         recyclerview      : "androidx.recyclerview:recyclerview:1.2.0-alpha05",
         swiperefreshlayout: "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0",
         emoji             : "androidx.emoji:emoji:1.1.0",
@@ -24,13 +24,13 @@ def androidx_dependencies = [
 
 def thirdParty_dependencies = [
         gson      : "com.google.code.gson:gson:2.8.6",
-        zxing     : "com.google.zxing:core:3.4.0",
+        zxing     : "com.google.zxing:core:3.4.1",
         autosize  : "me.jessyan:autosize:1.2.1",
         map3D     : "com.amap.api:3dmap:latest.integration",
         mapSearch : "com.amap.api:search:latest.integration",
         glide     : "com.github.bumptech.glide:glide:4.11.0",
 //        glideAnnotation: "com.github.bumptech.glide:compiler:4.11.0",
-        leakcanary: "com.squareup.leakcanary:leakcanary-android:2.4"
+        leakcanary: "com.squareup.leakcanary:leakcanary-android:2.6"
 ]
 
 def test_dependencies = [

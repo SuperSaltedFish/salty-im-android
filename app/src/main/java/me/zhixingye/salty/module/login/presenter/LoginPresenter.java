@@ -4,6 +4,7 @@ package me.zhixingye.salty.module.login.presenter;
 import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainTelephoneSMSCodeResp;
 import com.salty.protos.SMSOperationType;
+import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
@@ -34,9 +35,9 @@ public class LoginPresenter implements LoginContract.Presenter {
         IMClient.get().getAccountService().loginByTelephone(
                 telephone,
                 password,
-                new LifecycleMVPRequestCallback<LoginResp>(mView, false) {
+                new LifecycleMVPRequestCallback<UserProfile>(mView, false) {
                     @Override
-                    protected void onSuccess(LoginResp result) {
+                    protected void onSuccess(UserProfile result) {
                         mView.startHomeActivity();
                     }
 

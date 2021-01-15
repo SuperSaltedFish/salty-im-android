@@ -23,6 +23,8 @@ import androidx.viewpager.widget.ViewPager;
 import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.listener.OnOnlySingleClickListener;
 import me.zhixingye.base.view.PageIndicator;
+import me.zhixingye.im.IMCore;
+import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.contact.contract.StrangerProfileContract;
 import me.zhixingye.salty.tool.UserDataFormatter;

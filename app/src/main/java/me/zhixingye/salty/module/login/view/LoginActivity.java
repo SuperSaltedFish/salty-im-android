@@ -17,12 +17,10 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.textfield.TextInputLayout;
 import com.salty.protos.SMSOperationType;
 
-import me.zhixingye.base.component.BasicActivity;
 import me.zhixingye.base.component.mvp.MVPBasicActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.login.contract.LoginContract;
-import me.zhixingye.salty.module.login.presenter.LoginPresenter;
 import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.view.TelephoneEditText;

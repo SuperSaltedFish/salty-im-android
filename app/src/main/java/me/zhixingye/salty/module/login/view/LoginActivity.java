@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputLayout;
 import com.salty.protos.SMSOperationType;
 
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.login.contract.LoginContract;
@@ -32,7 +32,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  * @author zhixingye , 2020年05月01日.
  */
 public class LoginActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements LoginContract.View {
 
     private static final String EXTRA_TELEPHONE = "Telephone";
@@ -74,8 +74,6 @@ public class LoginActivity
         mPBtnLogin = findViewById(R.id.mPBtnLogin);
         mBtnRegister = findViewById(R.id.mBtnRegister);
         mBtnResetPassword = findViewById(R.id.mBtnResetPassword);
-
-        new ViewModelProvider(this).get(MyViewModel.class);
     }
 
     @Override

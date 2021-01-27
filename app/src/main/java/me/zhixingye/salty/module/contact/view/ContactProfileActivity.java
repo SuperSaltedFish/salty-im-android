@@ -2,17 +2,10 @@ package me.zhixingye.salty.module.contact.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -21,18 +14,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.view.FlowLayout;
 import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.widget.adapter.CenterCropImagePagerAdapter;
 
 
 public class ContactProfileActivity
-        extends MVPBasicActivity {
+        extends MVPActivity {
 
     private static final String INTENT_EXTRA_CONTACT_ID = "ContactID";
 

@@ -18,13 +18,12 @@ import androidx.annotation.NonNull;
 import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
-import me.zhixingye.base.component.BasicActivity;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.RegisterContract;
-import me.zhixingye.salty.module.login.presenter.RegisterPresenter;
 import me.zhixingye.salty.module.web.WebActivity;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
@@ -34,7 +33,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  * @author zhixingye , 2020年05月01日.
  */
 public class RegisterActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements RegisterContract.View {
 
     private static final String TAG = "RegisterActivity";

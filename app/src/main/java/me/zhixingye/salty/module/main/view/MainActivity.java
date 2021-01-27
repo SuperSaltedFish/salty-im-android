@@ -6,16 +6,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.view.BottomTabLayout;
-import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.chat.view.ConversationFragment;
 import me.zhixingye.salty.module.contact.view.ContactListFragment;
@@ -29,7 +27,7 @@ import me.zhixingye.salty.util.AnimationUtil;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class MainActivity extends MVPBasicActivity {
+public class MainActivity extends MVPActivity {
 
     private static final String TAG = "MainActivity";
 

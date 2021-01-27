@@ -4,12 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.login.view.LoginActivity;
 import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
-import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -17,7 +16,7 @@ import me.zhixingye.salty.module.splash.presenter.SplashPresenter;
  * @author zhixingye , 2020年05月01日.
  */
 public class SplashActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements SplashContract.View {
 
     @Override

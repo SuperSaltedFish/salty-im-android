@@ -9,7 +9,7 @@ import me.zhixingye.base.component.BasicActivity;
  *
  * @author zhixingye , 2020年10月10日.
  */
-public abstract class MVPBasicActivity extends BasicActivity {
+public abstract class MVPActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

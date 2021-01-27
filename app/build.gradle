@@ -52,8 +52,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility Ver.java
+        targetCompatibility Ver.java
     }
 
     android.applicationVariants.all { variant ->

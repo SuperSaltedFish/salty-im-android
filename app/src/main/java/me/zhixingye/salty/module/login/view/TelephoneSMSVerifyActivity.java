@@ -2,14 +2,13 @@ package me.zhixingye.salty.module.login.view;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import me.zhixingye.base.component.BasicActivity;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.base.view.SMSCodeEditView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
-import me.zhixingye.salty.module.login.presenter.TelephoneSMSVerifyPresenter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -32,7 +31,7 @@ import com.salty.protos.SMSOperationType;
 import java.util.Locale;
 
 public class TelephoneSMSVerifyActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements TelephoneSMSVerifyContract.View {
 
     public static final int RESULT_CODE_VERIFY_SUCCESSFUL = TelephoneSMSVerifyActivity.class.hashCode();

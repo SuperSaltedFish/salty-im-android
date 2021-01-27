@@ -8,18 +8,16 @@ import android.view.View;
 
 import com.salty.protos.SMSOperationType;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import me.zhixingye.base.component.BasicActivity;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
-import me.zhixingye.salty.module.login.presenter.RecoverPasswordPresenter;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
 public class RecoverPasswordActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements RecoverPasswordContract.View {
 
     public static void startActivity(Context context) {

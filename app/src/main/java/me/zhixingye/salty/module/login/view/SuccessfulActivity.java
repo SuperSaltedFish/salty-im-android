@@ -1,8 +1,8 @@
 package me.zhixingye.salty.module.login.view;
 
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
-import me.zhixingye.base.component.BasicActivity;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.salty.R;
 
 import android.content.Context;
@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SuccessfulActivity extends MVPBasicActivity {
+public class SuccessfulActivity extends MVPActivity {
 
     private static final String EXTRA_OPERATION_TYPE = "OperationType";
     private static final String EXTRA_TELEPHONE = "Telephone";

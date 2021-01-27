@@ -11,20 +11,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import me.zhixingye.base.component.BasicActivity;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
-import me.zhixingye.salty.module.login.presenter.ResetLoginPasswordPresenter;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.util.RegexUtil;
 
 public class ResetLoginPasswordActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements ResetLoginPasswordContract.View {
 
     private static final String EXTRA_OPERATION_TYPE = "OperationType";

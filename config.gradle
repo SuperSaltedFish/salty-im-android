@@ -5,7 +5,8 @@ ext.Ver = [
         targetSdkVersion : 29,
         versionCode      : 1,
         versionName      : "1.0",
-        flavorDimensions : "stage"
+        flavorDimensions : "stage",
+        java             : JavaVersion.VERSION_1_8
 ]
 
 def im_dependencies = [

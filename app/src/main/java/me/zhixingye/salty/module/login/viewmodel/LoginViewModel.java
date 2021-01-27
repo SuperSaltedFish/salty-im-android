@@ -19,4 +19,8 @@ public class LoginViewModel extends ViewModel {
         }
         return mLoginSuccessState;
     }
+
+    public void login(){
+
+    }
 }

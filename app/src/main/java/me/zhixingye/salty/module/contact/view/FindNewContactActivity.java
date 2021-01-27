@@ -24,7 +24,7 @@ import java.util.List;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.zhixingye.base.component.mvp.MVPBasicActivity;
+import me.zhixingye.base.component.mvp.MVPActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.SpacesItemDecoration;
 import me.zhixingye.salty.R;
@@ -34,7 +34,7 @@ import me.zhixingye.salty.widget.adapter.MaybeKnowAdapter;
 
 
 public class FindNewContactActivity
-        extends MVPBasicActivity
+        extends MVPActivity
         implements FindNewContactContract.View {
 
     public static void startActivity(Context context) {

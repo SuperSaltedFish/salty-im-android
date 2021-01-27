@@ -1,5 +1,6 @@
 package me.zhixingye.base.component;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build.VERSION;
@@ -124,6 +125,7 @@ public abstract class BasicActivity
     }
 
     //设置系统状态栏的样式，比如全屏，或者沉侵式状态栏等等，具体类型可以见每个status的定义，有相关注释
+    @SuppressLint("ObsoleteSdkInt")
     public void setSystemUiMode(@SystemUiMode int mode) {
         Window window = getWindow();
         window.clearFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS

@@ -15,7 +15,7 @@ import me.zhixingye.base.component.BasicDialogFragment;
  *
  * @author zhixingye , 2020年10月21日.
  */
-public abstract class MVPBasicDialogFragment extends BasicDialogFragment {
+public abstract class MVPDialogFragment extends BasicDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

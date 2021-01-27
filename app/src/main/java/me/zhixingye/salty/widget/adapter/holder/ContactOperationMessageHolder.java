@@ -1,16 +1,22 @@
 package me.zhixingye.salty.widget.adapter.holder;
 
 import android.text.TextUtils;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GestureDetectorCompat;
+
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.base.adapter.BasicListAdapterAdapter;
+import me.zhixingye.base.listener.OnViewTouchClickListener;
 import me.zhixingye.base.view.HexagonAvatarView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.tool.UserDataFormatter;
@@ -32,11 +38,13 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
     private Button mTvPositive;
     private Button mTvNegative;
 
+    private final DataAdapter mDataAdapter;
 
     private OnClickListener mOnClickListener;
 
-    public ContactOperationMessageHolder(ViewGroup parent) {
+    public ContactOperationMessageHolder(ViewGroup parent, @NonNull DataAdapter dataAdapter) {
         super(R.layout.item_contact_operation, parent);
+        mDataAdapter = dataAdapter;
     }
 
     @Override
@@ -50,9 +58,33 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvPositive = itemView.findViewById(R.id.mTvPositive);
         mTvNegative = itemView.findViewById(R.id.mTvNegative);
 
-        mTvPositive.setOnClickListener(mOnViewClickListener);
-        mTvNegative.setOnClickListener(mOnViewClickListener);
-        mClRootView.setOnClickListener(mOnViewClickListener);
+        mTvPositive.setOnClickListener(v -> {
+            if (mOnClickListener != null) {
+                mOnClickListener.onClickAccept(getBindingAdapterPosition());
+            }
+        });
+
+        mTvNegative.setOnClickListener(v -> {
+            if (mOnClickListener != null) {
+                mOnClickListener.onClickRefused(getBindingAdapterPosition());
+            }
+        });
+
+        mClRootView.setOnTouchListener(new OnViewTouchClickListener() {
+            @Override
+            protected void onClick(View v, int touchX, int touchY) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onClickItem(getBindingAdapterPosition());
+                }
+            }
+
+            @Override
+            protected void onLongClick(View v, int touchX, int touchY) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onLongClickItem(getBindingAdapterPosition(), v, touchX, touchY);
+                }
+            }
+        });
     }
 
     @Override
@@ -66,20 +98,16 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         GlideUtil.loadAvatarFromUrl(mContext, mIvAvatar, userInfo.getAvatar());
 
         switch (data.getType()) {
-            case ACCEPT_PASSIVE:
-            case ACCEPT_ACTIVE:
+            case ACCEPT:
                 setupAcceptState(data);
                 break;
-            case REJECT_PASSIVE:
-            case REJECT_ACTIVE:
+            case REJECT:
                 setupRejectState(data);
                 break;
-            case REQUEST_PASSIVE:
-            case REQUEST_ACTIVE:
+            case REQUEST:
                 setupRequestState(data);
                 break;
-            case DELETE_ACTIVE:
-            case DELETE_PASSIVE:
+            case DELETE:
                 setupDeleteState(data);
                 break;
         }
@@ -115,17 +143,14 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvReason.append("添加理由：");
         mTvReason.append(reason);
         mTvPositive.setVisibility(View.VISIBLE);
-        switch (data.getType()) {
-            case REQUEST_ACTIVE:
-                mTvPositive.setEnabled(false);
-                mTvPositive.setText("等待对方同意");
-                break;
-            case REQUEST_PASSIVE:
-                mTvPositive.setEnabled(true);
-                mTvPositive.setText("添加");
-                break;
-            default:
-                break;
+
+        UserProfile profile = data.getTriggerProfile();
+        if (mDataAdapter.isMySelf(profile)) {
+            mTvPositive.setEnabled(false);
+            mTvPositive.setText("等待对方同意");
+        } else {
+            mTvPositive.setEnabled(true);
+            mTvPositive.setText("添加");
         }
     }
 
@@ -137,16 +162,14 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvReason.append("拒绝理由：");
         mTvReason.append(reason);
         mTvNegative.setVisibility(View.VISIBLE);
-        mTvNegative.setEnabled(false);
-        switch (data.getType()) {
-            case REJECT_ACTIVE:
-                mTvNegative.setText("已拒绝添加");
-                break;
-            case REJECT_PASSIVE:
-                mTvNegative.setText("对方拒绝添加");
-                break;
-            default:
-                break;
+
+        UserProfile profile = data.getTriggerProfile();
+        if (mDataAdapter.isMySelf(profile)) {
+            mTvNegative.setEnabled(false);
+            mTvNegative.setText("已拒绝添加");
+        } else {
+            mTvNegative.setEnabled(true);
+            mTvNegative.setText("对方拒绝添加");
         }
     }
 
@@ -160,15 +183,14 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvNegative.setVisibility(View.VISIBLE);
         mTvNegative.setEnabled(false);
         mClRootView.setAlpha(0.4f);
-        switch (data.getType()) {
-            case DELETE_ACTIVE:
-                mTvNegative.setText("已删除好友");
-                break;
-            case DELETE_PASSIVE:
-                mTvNegative.setText("对方已删除");
-                break;
-            default:
-                break;
+
+        UserProfile profile = data.getTriggerProfile();
+        if (mDataAdapter.isMySelf(profile)) {
+            mTvNegative.setEnabled(false);
+            mTvNegative.setText("已删除好友");
+        } else {
+            mTvNegative.setEnabled(true);
+            mTvNegative.setText("对方已删除");
         }
     }
 
@@ -176,32 +198,17 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mOnClickListener = listener;
     }
 
-    private final View.OnClickListener mOnViewClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mOnClickListener == null) {
-                return;
-            }
-            int position = getBindingAdapterPosition();
-            switch (v.getId()) {
-                case R.id.mTvPositive:
-                    mOnClickListener.onClickAccept(position);
-                    break;
-                case R.id.mTvNegative:
-                    mOnClickListener.onClickRefused(position);
-                    break;
-                case R.id.mClRootView:
-                    mOnClickListener.onClickItem(position);
-                    break;
-            }
-        }
-    };
-
     public interface OnClickListener {
         void onClickAccept(int position);
 
         void onClickRefused(int position);
 
         void onClickItem(int position);
+
+        void onLongClickItem(int position, View itemView, int touchX, int touchY);
+    }
+
+    public interface DataAdapter {
+        boolean isMySelf(UserProfile profile);
     }
 }

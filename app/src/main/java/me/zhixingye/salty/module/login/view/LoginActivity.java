@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.salty.protos.SMSOperationType;
@@ -73,6 +74,8 @@ public class LoginActivity
         mPBtnLogin = findViewById(R.id.mPBtnLogin);
         mBtnRegister = findViewById(R.id.mBtnRegister);
         mBtnResetPassword = findViewById(R.id.mBtnResetPassword);
+
+        new ViewModelProvider(this).get(MyViewModel.class);
     }
 
     @Override

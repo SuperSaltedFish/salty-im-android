@@ -9,9 +9,9 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:paddingStart="16dp"
-    android:paddingTop="12dp"
+    android:paddingTop="8dp"
     android:paddingEnd="16dp"
-    android:paddingBottom="12dp">
+    android:paddingBottom="8dp">
 
     <me.zhixingye.base.view.HexagonAvatarView
         android:id="@+id/mIvAvatar"
@@ -66,10 +66,13 @@
 
     <Button
         android:id="@+id/mTvPositive"
-        android:layout_width="104dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginTop="4dp"
         android:gravity="center"
+        android:minWidth="104dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:visibility="gone"
@@ -79,11 +82,14 @@
 
     <Button
         android:id="@+id/mTvNegative"
-        android:layout_width="104dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:backgroundTint="@color/btn_background_tint_error"
         android:gravity="center"
+        android:minWidth="104dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/mTvPositive"

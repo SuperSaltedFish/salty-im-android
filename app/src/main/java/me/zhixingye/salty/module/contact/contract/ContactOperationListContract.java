@@ -1,8 +1,11 @@
 package me.zhixingye.salty.module.contact.contract;
 
 
+import androidx.annotation.Nullable;
+
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.ContactProfile;
+import com.salty.protos.UserProfile;
 
 import java.util.List;
 
@@ -18,13 +21,16 @@ import me.zhixingye.salty.module.contact.presenter.ContactOperationListPresenter
 public class ContactOperationListContract {
 
     public interface View extends IView<ContactOperationListPresenter> {
+
+        void setRefreshing(boolean refreshing);
+
         void showContactOperation(List<ContactOperationMessage> messageList);
     }
 
 
     public interface Presenter extends IPresenter<View> {
 
-        List<ContactOperationMessage> getAllContactOperationMessage();
+        void loadAllContactOperationMessage();
 
         void loadAllAndMakeAllAsRead();
 
@@ -34,7 +40,10 @@ public class ContactOperationListContract {
 
         void removeContactOperation(ContactOperationMessage message);
 
+        @Nullable
         ContactProfile getContactBy(String userID);
+
+        boolean isMySelf(UserProfile profile);
 
     }
 

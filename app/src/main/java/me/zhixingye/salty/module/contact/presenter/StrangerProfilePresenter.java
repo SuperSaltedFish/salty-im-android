@@ -9,7 +9,7 @@ import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.contact.contract.StrangerProfileContract;
-import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
+import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
 
 /**
  * Created by YZX on 2018年01月29日.
@@ -41,7 +41,7 @@ public class StrangerProfilePresenter implements StrangerProfileContract.Present
 
     @Override
     public void requestAddContact(String userId, String addReason) {
-        IMClient.get().getContactService().requestContact(userId, addReason, new LifecycleMVPRequestCallback<RequestContactResp>(mView) {
+        IMClient.get().getContactService().requestContact(userId, addReason, new LifecycleRequestCallback<RequestContactResp>(mView) {
             @Override
             protected void onSuccess(RequestContactResp result) {
 
@@ -51,7 +51,7 @@ public class StrangerProfilePresenter implements StrangerProfileContract.Present
 
     @Override
     public void acceptAddContact(String userId) {
-        IMClient.get().getContactService().acceptContact(userId, new LifecycleMVPRequestCallback<AcceptContactResp>(mView) {
+        IMClient.get().getContactService().acceptContact(userId, new LifecycleRequestCallback<AcceptContactResp>(mView) {
             @Override
             protected void onSuccess(AcceptContactResp result) {
 
@@ -61,7 +61,7 @@ public class StrangerProfilePresenter implements StrangerProfileContract.Present
 
     @Override
     public void refusedAddContact(String userId, String rejectReason) {
-        IMClient.get().getContactService().refusedContact(userId, rejectReason, new LifecycleMVPRequestCallback<RefusedContactResp>(mView) {
+        IMClient.get().getContactService().refusedContact(userId, rejectReason, new LifecycleRequestCallback<RefusedContactResp>(mView) {
             @Override
             protected void onSuccess(RefusedContactResp result) {
 

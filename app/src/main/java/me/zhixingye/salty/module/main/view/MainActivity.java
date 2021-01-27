@@ -153,10 +153,4 @@ public class MainActivity extends MVPBasicActivity {
             AnimationUtil.circularRevealHideByFullActivityAnim(this, image);
         }
     }
-
-
-    public void onClick(View v) {
-        IMClient.get().getAccountService().logout();
-        finish();
-    }
 }

@@ -8,6 +8,7 @@ import me.jessyan.autosize.AutoSizeConfig;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.im.sdk.util.SystemUtils;
 import me.zhixingye.salty.configure.AppConfig;
+import me.zhixingye.salty.manager.LoginManager;
 import me.zhixingye.salty.tool.ActivityHelper;
 import me.zhixingye.salty.util.AndroidHelper;
 
@@ -31,12 +32,18 @@ public class SaltyApp extends Application {
             AndroidHelper.init(this);
             ActivityHelper.init(this);
             setupThirdPart();
+            setupIMSDK();
         }
     }
 
     private void setupThirdPart() {
 //        EmojiCompat.init(new BundledEmojiCompatConfig(this));
         AutoSizeConfig.getInstance().setDesignWidthInDp(420).setBaseOnWidth(true).setExcludeFontScale(true);
+    }
+
+    private void setupIMSDK() {
+        IMClient.init(this);
+        LoginManager.observeLoginState();
     }
 
     public static Context getAppContext() {

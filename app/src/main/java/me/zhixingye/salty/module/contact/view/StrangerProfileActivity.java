@@ -123,24 +123,24 @@ public class StrangerProfileActivity
         if (mContactOperationMessage != null) {
             boolean isOperable = true;
             switch (mContactOperationMessage.getType()) {
-                case REQUEST_ACTIVE:
-                    mBtnConfirm.setText("等待对方同意");
-                    isOperable = false;
-                    break;
-                case REJECT_ACTIVE:
-                    mBtnConfirm.setText("已拒绝");
-                    isOperable = false;
-                    break;
-                case REQUEST_PASSIVE:
-                    mBtnConfirm.setText("同意");
-                    break;
-                case REJECT_PASSIVE:
-                    mBtnConfirm.setText("对方拒绝添加");
-                    isOperable = false;
-                    break;
-                default:
-                    finish();
-                    return;
+//                case REQUEST_ACTIVE:
+//                    mBtnConfirm.setText("等待对方同意");
+//                    isOperable = false;
+//                    break;
+//                case REJECT_ACTIVE:
+//                    mBtnConfirm.setText("已拒绝");
+//                    isOperable = false;
+//                    break;
+//                case REQUEST_PASSIVE:
+//                    mBtnConfirm.setText("同意");
+//                    break;
+//                case REJECT_PASSIVE:
+//                    mBtnConfirm.setText("对方拒绝添加");
+//                    isOperable = false;
+//                    break;
+//                default:
+//                    finish();
+//                    return;
             }
 
             mEtReason.setEnabled(false);
@@ -173,20 +173,20 @@ public class StrangerProfileActivity
         String reason = "";
         if (message != null) {
             switch (message.getType()) {
-                case REQUEST_ACTIVE:
-                case REQUEST_PASSIVE:
-                    reason = mContactOperationMessage.getAddReason();
-                    if (TextUtils.isEmpty(reason)) {
-                        reason = "添加理由：无";
-                    }
-                    break;
-                case REJECT_ACTIVE:
-                case REJECT_PASSIVE:
-                    reason = mContactOperationMessage.getRejectReason();
-                    if (TextUtils.isEmpty(reason)) {
-                        reason = "对方拒绝添加您为好友";
-                    }
-                    break;
+//                case REQUEST_ACTIVE:
+//                case REQUEST_PASSIVE:
+//                    reason = mContactOperationMessage.getAddReason();
+//                    if (TextUtils.isEmpty(reason)) {
+//                        reason = "添加理由：无";
+//                    }
+//                    break;
+//                case REJECT_ACTIVE:
+//                case REJECT_PASSIVE:
+//                    reason = mContactOperationMessage.getRejectReason();
+//                    if (TextUtils.isEmpty(reason)) {
+//                        reason = "对方拒绝添加您为好友";
+//                    }
+//                    break;
             }
         }
         return reason;
@@ -200,12 +200,12 @@ public class StrangerProfileActivity
                 getPresenter().requestAddContact(mUserProfile.getUserId(), reason);
             } else {
                 switch (mContactOperationMessage.getType()) {
-                    case REQUEST_PASSIVE:
-                        getPresenter().acceptAddContact(mUserProfile.getUserId());
-                        break;
-                    case REJECT_PASSIVE:
-                        getPresenter().refusedAddContact(mUserProfile.getUserId(), reason);
-                        break;
+//                    case REQUEST_PASSIVE:
+//                        getPresenter().acceptAddContact(mUserProfile.getUserId());
+//                        break;
+//                    case REJECT_PASSIVE:
+//                        getPresenter().refusedAddContact(mUserProfile.getUserId(), reason);
+//                        break;
                 }
             }
         }

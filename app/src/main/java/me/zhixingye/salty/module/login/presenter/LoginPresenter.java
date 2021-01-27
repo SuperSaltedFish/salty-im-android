@@ -1,7 +1,6 @@
 package me.zhixingye.salty.module.login.presenter;
 
 
-import com.salty.protos.LoginResp;
 import com.salty.protos.ObtainTelephoneSMSCodeResp;
 import com.salty.protos.SMSOperationType;
 import com.salty.protos.UserProfile;
@@ -9,7 +8,7 @@ import com.salty.protos.UserProfile;
 import me.zhixingye.im.constant.ResponseCode;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.login.contract.LoginContract;
-import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
+import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -32,10 +31,10 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void tryLoginByTelephone(final String telephone, String password) {
-        IMClient.get().getAccountService().loginByTelephone(
+        IMClient.get().getLoginService().loginByTelephone(
                 telephone,
                 password,
-                new LifecycleMVPRequestCallback<UserProfile>(mView, false) {
+                new LifecycleRequestCallback<UserProfile>(mView, false) {
                     @Override
                     protected void onSuccess(UserProfile result) {
                         mView.startHomeActivity();
@@ -61,7 +60,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
                 telephone,
                 SMSOperationType.LOGIN,
-                new LifecycleMVPRequestCallback<ObtainTelephoneSMSCodeResp>(mView, false) {
+                new LifecycleRequestCallback<ObtainTelephoneSMSCodeResp>(mView, false) {
                     @Override
                     protected void onSuccess(ObtainTelephoneSMSCodeResp result) {
                         mView.startPhoneVerifyActivity();

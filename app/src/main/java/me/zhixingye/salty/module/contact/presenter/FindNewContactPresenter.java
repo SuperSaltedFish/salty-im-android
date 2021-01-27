@@ -5,7 +5,7 @@ import com.salty.protos.QueryUserInfoResp;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.contact.contract.FindNewContactContract;
-import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
+import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
 
 /**
  * Created by YZX on 2017年11月27日.
@@ -29,7 +29,7 @@ public class FindNewContactPresenter implements FindNewContactContract.Presenter
 
     @Override
     public void searchUser(String nicknameOrTelephone) {
-        IMClient.get().getUserService().queryUserInfoByTelephone(nicknameOrTelephone, new LifecycleMVPRequestCallback<QueryUserInfoResp>(mView) {
+        IMClient.get().getUserService().queryUserInfoByTelephone(nicknameOrTelephone, new LifecycleRequestCallback<QueryUserInfoResp>(mView) {
             @Override
             protected void onSuccess(QueryUserInfoResp result) {
                 if(result.hasProfile()){

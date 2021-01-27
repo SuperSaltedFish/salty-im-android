@@ -1,15 +1,20 @@
 package me.zhixingye.salty.module.contact.presenter;
 
 
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+
+import com.salty.protos.AcceptContactResp;
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.ContactProfile;
-import com.salty.protos.MessageCommon;
+import com.salty.protos.GetContactOperationMessageListResp;
+import com.salty.protos.RefusedContactResp;
 import com.salty.protos.UserProfile;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.contact.contract.ContactOperationListContract;
+import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
 
 /**
  * Created by YZX on 2018年01月20日.
@@ -30,116 +35,50 @@ public class ContactOperationListPresenter implements ContactOperationListContra
     }
 
     @Override
+    public void loadAllContactOperationMessage() {
+        IMClient.get().getContactService().getContactOperationMessageList(0, new LifecycleRequestCallback<GetContactOperationMessageListResp>(mView) {
+            @Override
+            protected void onPreRequest() {
+                super.onPreRequest();
+                mView.setRefreshing(true);
+            }
+
+            @Override
+            protected void onSuccess(GetContactOperationMessageListResp result) {
+                mView.showContactOperation(result.getMessageListList());
+            }
+
+            @Override
+            protected void onFinish() {
+                super.onFinish();
+                mView.setRefreshing(false);
+            }
+        });
+    }
+
+    @Override
     public void loadAllAndMakeAllAsRead() {
 
     }
 
     @Override
-    public List<ContactOperationMessage> getAllContactOperationMessage() {
-        List<ContactOperationMessage> messageList = new ArrayList<>();
-        ContactOperationMessage message;
-
-        UserProfile profile = UserProfile.newBuilder()
-                .setBirthday(System.currentTimeMillis())
-                .setEmail("244546875@qq.com")
-                .setLocation("广东 韶关 仁化县")
-                .setNickname("夜之星")
-                .setSex(UserProfile.Sex.FEMALE)
-                .setDescription("每个不曾起舞的日子，都是对生命的辜负")
-                .setUserId("7758258")
-                .build();
-
-        MessageCommon common = MessageCommon.newBuilder()
-                .setCreatedTime(System.currentTimeMillis())
-                .setMessageId("123123")
-                .setSortId("1")
-                .setIsNeedRemind(true)
-                .build();
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.ACCEPT_ACTIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.ACCEPT_PASSIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.DELETE_ACTIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.DELETE_PASSIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.REJECT_ACTIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.REJECT_PASSIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.REQUEST_ACTIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        message = ContactOperationMessage.newBuilder()
-                .setRejectReason("对不起，我并不想加你为好友")
-                .setAddReason("你好啊！我可以添加你为好友吗")
-                .setTriggerProfile(profile)
-                .setType(ContactOperationMessage.OperationType.REQUEST_PASSIVE)
-                .setCommon(common)
-                .build();
-        messageList.add(message);
-
-        return messageList;
-
-    }
-
-    @Override
     public void acceptContactRequest(ContactOperationMessage message) {
+        IMClient.get().getContactService().acceptContact(message.getTriggerProfile().getUserId(), new LifecycleRequestCallback<AcceptContactResp>(mView) {
+            @Override
+            protected void onSuccess(AcceptContactResp result) {
 
+            }
+        });
     }
 
     @Override
     public void refusedContactRequest(ContactOperationMessage message) {
+        IMClient.get().getContactService().refusedContact(message.getTriggerProfile().getUserId(), "", new LifecycleRequestCallback<RefusedContactResp>(mView) {
+            @Override
+            protected void onSuccess(RefusedContactResp result) {
 
+            }
+        });
     }
 
     @Override
@@ -147,8 +86,21 @@ public class ContactOperationListPresenter implements ContactOperationListContra
 
     }
 
+    @Nullable
     @Override
     public ContactProfile getContactBy(String userID) {
         return null;
+    }
+
+    @Override
+    public boolean isMySelf(UserProfile profile) {
+        if (profile == null) {
+            return false;
+        }
+        UserProfile mySelf = IMClient.get().getUserService().getCurrentUserProfile();
+        if (mySelf == null) {
+            return false;
+        }
+        return TextUtils.equals(profile.getUserId(), mySelf.getUserId());
     }
 }

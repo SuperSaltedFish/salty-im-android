@@ -8,7 +8,7 @@ import com.salty.protos.UserProfile;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.splash.contract.SplashContract;
-import me.zhixingye.salty.widget.listener.LifecycleMVPRequestCallback;
+import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
 
 
 /**
@@ -36,10 +36,10 @@ public class SplashPresenter implements SplashContract.Presenter {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (IMClient.get().getAccountService().isLogged()) {
+                if (IMClient.get().getLoginService().isLogged()) {
                     mView.startHomeActivity();
                 } else {
-                    IMClient.get().getAccountService().loginByLastLoginInfo(new LifecycleMVPRequestCallback<UserProfile>(mView, false) {
+                    IMClient.get().getLoginService().loginByLastLoginInfo(new LifecycleRequestCallback<UserProfile>(mView, false) {
                         @Override
                         protected void onSuccess(UserProfile result) {
                             mView.startHomeActivity();

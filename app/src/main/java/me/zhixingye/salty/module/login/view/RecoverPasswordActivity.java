@@ -10,15 +10,12 @@ import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
 
-import me.zhixingye.base.component.mvp.MVPActivity;
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.module.login.contract.RecoverPasswordContract;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
-public class RecoverPasswordActivity
-        extends MVPActivity
-        implements RecoverPasswordContract.View {
+public class RecoverPasswordActivity extends MVVMActivity {
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, RecoverPasswordActivity.class);
@@ -42,7 +39,7 @@ public class RecoverPasswordActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
-        setToolbarId(R.id.mDefaultToolbar,true);
+        setToolbarId(R.id.mDefaultToolbar, true);
 
         mPBtnNext.setOnClickListener(mOnClickListener);
     }
@@ -74,16 +71,9 @@ public class RecoverPasswordActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.mPBtnNext:
-                    next();
-                    break;
+            if (v.getId() == R.id.mPBtnNext) {
+                next();
             }
         }
     };
-
-    @Override
-    public void cancelProgressButtonLoadingIfNeed() {
-        mPBtnNext.startShowAnim();
-    }
 }

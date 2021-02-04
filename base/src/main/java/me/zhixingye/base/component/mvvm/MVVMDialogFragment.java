@@ -12,7 +12,7 @@ import me.zhixingye.base.component.BasicDialogFragment;
  *
  * @author zhixingye , 2020年10月21日.
  */
-public abstract class MVVMDialogFragment extends BasicDialogFragment implements MVVMView {
+public abstract class MVVMDialogFragment extends BasicDialogFragment {
 
     private ViewModelProvider mViewModelProvider;
 
@@ -23,7 +23,7 @@ public abstract class MVVMDialogFragment extends BasicDialogFragment implements 
             mViewModelProvider = new ViewModelProvider(this, factory);
         }
         T viewModel = mViewModelProvider.get(cls);
-        observeBasic(viewModel);
+        viewModel.observeBasic(this);
         return viewModel;
     }
 }

@@ -11,7 +11,7 @@ import me.zhixingye.base.component.BasicFragment;
  *
  * @author zhixingye , 2020年10月21日.
  */
-public abstract class MVVMFragment extends BasicFragment implements MVVMView {
+public abstract class MVVMFragment extends BasicFragment {
 
     private ViewModelProvider mViewModelProvider;
 
@@ -22,7 +22,7 @@ public abstract class MVVMFragment extends BasicFragment implements MVVMView {
             mViewModelProvider = new ViewModelProvider(this, factory);
         }
         T viewModel = mViewModelProvider.get(cls);
-        observeBasic(viewModel);
+        viewModel.observeBasic(this);
         return viewModel;
     }
 }

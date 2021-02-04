@@ -11,7 +11,7 @@ import me.zhixingye.base.component.BasicActivity;
  *
  * @author zhixingye , 2021年01月27日.
  */
-public abstract class MVVMActivity extends BasicActivity implements MVVMView {
+public abstract class MVVMActivity extends BasicActivity {
 
     private ViewModelProvider mViewModelProvider;
 
@@ -22,7 +22,7 @@ public abstract class MVVMActivity extends BasicActivity implements MVVMView {
             mViewModelProvider = new ViewModelProvider(this, factory);
         }
         T viewModel = mViewModelProvider.get(cls);
-        observeBasic(viewModel);
+        viewModel.observeBasic(this);
         return viewModel;
     }
 

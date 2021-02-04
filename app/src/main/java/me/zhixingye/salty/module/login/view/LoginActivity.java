@@ -13,15 +13,15 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.salty.protos.SMSOperationType;
 
-import me.zhixingye.base.component.mvp.MVPActivity;
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.module.login.contract.LoginContract;
+import me.zhixingye.salty.module.login.viewmodel.LoginViewModel;
 import me.zhixingye.salty.module.main.view.MainActivity;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
@@ -31,9 +31,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class LoginActivity
-        extends MVPActivity
-        implements LoginContract.View {
+public class LoginActivity extends MVVMActivity {
 
     private static final String EXTRA_TELEPHONE = "Telephone";
     private static final String EXTRA_PASSWORD = "Password";
@@ -60,6 +58,8 @@ public class LoginActivity
     private Button mBtnRegister;
     private Button mBtnResetPassword;
 
+    private LoginViewModel mLoginViewModel;
+
 
     @Override
     protected int getLayoutID() {
@@ -83,6 +83,37 @@ public class LoginActivity
         mBtnResetPassword.setOnClickListener(mOnClickListener);
         mPBtnLogin.setOnClickListener(mOnClickListener);
 
+        setupViewModule();
+    }
+
+    private void setupViewModule() {
+        mLoginViewModel = createViewModel(LoginViewModel.class);
+        mLoginViewModel.getLoginSuccessData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    startHomeActivity();
+                }
+            }
+        });
+        mLoginViewModel.getObtainSMSSuccessData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    startPhoneVerifyActivity();
+                }
+            }
+        });
+        mLoginViewModel.getLoginLoadingData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    mPBtnLogin.startHideAnim();
+                } else {
+                    mPBtnLogin.startShowAnim();
+                }
+            }
+        });
     }
 
     private void tryLogin() {
@@ -113,7 +144,7 @@ public class LoginActivity
         mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                getPresenter().tryLoginByTelephone(telephone, password);
+                mLoginViewModel.loginByTelephone(telephone, password);
             }
         });
     }
@@ -121,16 +152,17 @@ public class LoginActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.mPBtnLogin:
-                    tryLogin();
-                    break;
-                case R.id.mBtnRegister:
-                    startRegisterActivity();
-                    break;
-                case R.id.mBtnResetPassword:
-                    startRecoverPasswordActivity();
-                    break;
+            if (v.getId() == R.id.mPBtnLogin) {
+                tryLogin();
+                return;
+            }
+            if (v.getId() == R.id.mBtnRegister) {
+                startRegisterActivity();
+                return;
+            }
+            if (v.getId() == R.id.mBtnResetPassword) {
+                startRecoverPasswordActivity();
+                return;
             }
         }
     };
@@ -156,8 +188,7 @@ public class LoginActivity
     }
 
 
-    @Override
-    public void startPhoneVerifyActivity() {
+    private void startPhoneVerifyActivity() {
         TelephoneSMSVerifyActivity.startActivityForResult(
                 this,
                 1,
@@ -173,8 +204,7 @@ public class LoginActivity
         RecoverPasswordActivity.startActivity(this);
     }
 
-    @Override
-    public void startHomeActivity() {
+    private void startHomeActivity() {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS);
         AnimationUtil.circularRevealShowByFullActivityAnim(
                 this,
@@ -191,8 +221,4 @@ public class LoginActivity
                 });
     }
 
-    @Override
-    public void cancelProgressButtonLoadingIfNeed() {
-        mPBtnLogin.startShowAnim();
-    }
 }

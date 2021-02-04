@@ -12,7 +12,7 @@
         android:indeterminateTint="@color/colorAccent" />
 
     <TextView
-        android:id="@+id/ProgressDialog_mTvHint"
+        android:id="@+id/mTvHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

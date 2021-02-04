@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.FloatRange;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import me.zhixingye.base.R;
-import me.zhixingye.base.listener.CancelableListener;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -33,7 +33,7 @@ import me.zhixingye.base.listener.CancelableListener;
  */
 public abstract class BasicDialogFragment
         extends DialogFragment
-        implements UIComponent {
+        implements LifecycleUIComponent {
 
     @LayoutRes
     protected abstract int getLayoutID();
@@ -46,7 +46,7 @@ public abstract class BasicDialogFragment
 
     public Context mContext;
 
-    private CancelableListener mCancelableListener;
+    private DialogInterface.OnDismissListener mOnDismissListener;
 
     private boolean isSingleInstance;//只能弹出一个本实例的对话框，会判断对话框是否已经存在
 
@@ -54,20 +54,6 @@ public abstract class BasicDialogFragment
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.DialogFragmentStyle);
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        setupDialog(dialog);
-        return dialog;
     }
 
     @Nullable
@@ -86,9 +72,10 @@ public abstract class BasicDialogFragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //默认从下方显示
-        setWindowsGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        setWindowLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            setupDialog(dialog);
+        }
     }
 
     @Override
@@ -100,14 +87,6 @@ public abstract class BasicDialogFragment
     public void onDetach() {
         super.onDetach();
         mContext = null;
-    }
-
-    @Override
-    public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
-        if (mCancelableListener != null) {
-            mCancelableListener.onCancel();
-        }
     }
 
     @Override
@@ -153,8 +132,16 @@ public abstract class BasicDialogFragment
         }
     }
 
-    public void setCancelableListener(CancelableListener listener) {
-        mCancelableListener = listener;
+    public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
+        mOnDismissListener = listener;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss(dialog);
+        }
     }
 
     //是否对同样的dialogFragment进行单例的判断
@@ -207,7 +194,7 @@ public abstract class BasicDialogFragment
         }
     }
 
-    protected void setEnableWindowDimBehind(boolean isEnableDimBehind) {
+    protected void setWindowEnableDimBehind(boolean isEnableDimBehind) {
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -221,12 +208,32 @@ public abstract class BasicDialogFragment
         }
     }
 
+    protected void setWindowsDimAmount(@FloatRange(from = 0f, to = 1f) float amount) {
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setDimAmount(amount);
+            }
+        }
+    }
+
     protected void setWindowsBackgroundDrawable(Drawable drawable) {
         Dialog dialog = getDialog();
         if (dialog != null) {
             Window window = dialog.getWindow();
             if (window != null) {
                 window.setBackgroundDrawable(drawable);
+            }
+        }
+    }
+
+    protected void setBackgroundDrawableResource(@DrawableRes int resId) {
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawableResource(resId);
             }
         }
     }

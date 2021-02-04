@@ -2,15 +2,13 @@ package me.zhixingye.base.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+
 import me.zhixingye.base.component.BasicDialogFragment;
 import me.zhixingye.base.R;
 
@@ -43,33 +41,30 @@ public class ProgressDialogFragment extends BasicDialogFragment {
 
     @Override
     protected void init(View rootView) {
-        mTvHint = rootView.findViewById(R.id.ProgressDialog_mTvHint);
+        mTvHint = rootView.findViewById(R.id.mTvHint);
     }
 
     @Override
     protected void setup(Bundle savedInstanceState) {
         String hintText = getHintText();
-        if (hintText != null) {
+        if (!TextUtils.isEmpty(hintText)) {
             mTvHint.setText(hintText);
+            mTvHint.setVisibility(View.VISIBLE);
+        } else {
+            mTvHint.setVisibility(View.GONE);
         }
     }
 
     @Override
     protected void setupDialog(@NonNull Dialog dialog) {
-        dialog.setCancelable(getCancelable());
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.bg_progress_dialog));
-            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.setCanceledOnTouchOutside(getCancelable());
+        setCancelable(getCancelable());
 
-            int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96f, getResources().getDisplayMetrics());
-            WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = size;
-            lp.height = size;
-            lp.gravity = Gravity.CENTER; // 紧贴底部
-            lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING;
-            window.setAttributes(lp);
-        }
+
+        int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, getResources().getDisplayMetrics());
+        setWindowLayout(size, size);
+        setBackgroundDrawableResource(R.drawable.bg_progress_dialog);
+        setWindowsDimAmount(0.3f);
     }
 
     private String getHintText() {

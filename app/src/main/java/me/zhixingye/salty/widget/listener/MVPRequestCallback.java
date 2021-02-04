@@ -13,21 +13,21 @@ import me.zhixingye.im.listener.RequestCallback;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public abstract class LifecycleRequestCallback<T> implements RequestCallback<T> {
+public abstract class MVPRequestCallback<T> implements RequestCallback<T> {
 
     private final WeakReference<IView<?>> mLifecycleView;
     private final boolean isEnableLoading;//自动启动和关闭加载对话框
     private final boolean isEnableCancelableDialog;//自动启动和关闭加载对话框
 
-    public LifecycleRequestCallback(IView<?> lifecycleView) {
+    public MVPRequestCallback(IView<?> lifecycleView) {
         this(lifecycleView, true);
     }
 
-    public LifecycleRequestCallback(IView<?> lifecycleView, boolean isEnableLoading) {
+    public MVPRequestCallback(IView<?> lifecycleView, boolean isEnableLoading) {
         this(lifecycleView, isEnableLoading, false);
     }
 
-    public LifecycleRequestCallback(IView<?> lifecycleView, boolean isEnableLoading, boolean isEnableCancelableDialog) {
+    public MVPRequestCallback(IView<?> lifecycleView, boolean isEnableLoading, boolean isEnableCancelableDialog) {
         mLifecycleView = new WeakReference<>(lifecycleView);
         this.isEnableLoading = isEnableLoading;
         this.isEnableCancelableDialog = isEnableCancelableDialog;
@@ -44,7 +44,7 @@ public abstract class LifecycleRequestCallback<T> implements RequestCallback<T> 
     protected void onPreRequest() {
         IView<?> view = mLifecycleView.get();
         if (isEnableLoading && view != null) {
-            view.showLoadingDialog(null, null, isEnableCancelableDialog, null);
+            view.showLoadingDialog(null, isEnableCancelableDialog, null);
         }
     }
 

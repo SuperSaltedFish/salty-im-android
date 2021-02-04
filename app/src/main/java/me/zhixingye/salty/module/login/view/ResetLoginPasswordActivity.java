@@ -11,18 +11,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import me.zhixingye.base.component.mvp.MVPActivity;
+import androidx.lifecycle.Observer;
+
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.listener.SimpleTextWatcher;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
-import me.zhixingye.salty.module.login.contract.ResetLoginPasswordContract;
+import me.zhixingye.salty.module.login.viewmodel.ResetLoginPasswordViewModel;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.util.RegexUtil;
 
-public class ResetLoginPasswordActivity
-        extends MVPActivity
-        implements ResetLoginPasswordContract.View {
+public class ResetLoginPasswordActivity extends MVVMActivity {
 
     private static final String EXTRA_OPERATION_TYPE = "OperationType";
     private static final String EXTRA_TELEPHONE = "Telephone";
@@ -58,6 +58,7 @@ public class ResetLoginPasswordActivity
     private int mOperationType;
     private String mTelephone;
 
+    private ResetLoginPasswordViewModel mResetLoginPasswordViewModel;
 
     @Override
     protected int getLayoutID() {
@@ -85,10 +86,42 @@ public class ResetLoginPasswordActivity
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
         setToolbarId(R.id.mDefaultToolbar, true);
 
+        setupViewModule();
         setupPasswordRuleVerificationAnimation();
         setupMode();
 
         mPBtnConfirm.setOnClickListener(mOnClickListener);
+    }
+
+    private void setupViewModule() {
+        mResetLoginPasswordViewModel = new ResetLoginPasswordViewModel();
+
+        mResetLoginPasswordViewModel.getRegisterSuccessData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    showRegisterSuccessful();
+                }
+            }
+        });
+        mResetLoginPasswordViewModel.getResetTelephoneSuccessData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    showResetLoginPasswordSuccessful();
+                }
+            }
+        });
+        mResetLoginPasswordViewModel.getLoadingData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    mPBtnConfirm.startHideAnim();
+                } else {
+                    mPBtnConfirm.startShowAnim();
+                }
+            }
+        });
     }
 
     private void setupMode() {
@@ -109,15 +142,11 @@ public class ResetLoginPasswordActivity
             @Override
             public void afterTextChanged(Editable s) {
                 mTvRuleLength.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && (s.length() >= AppConfig.MIN_TELEPHONE_LENGTH));
+                        !TextUtils.isEmpty(s) && (s.length() >= AppConfig.MIN_TELEPHONE_LENGTH));
                 mTvRuleRepeatedNumbers.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && s.length() > 3
-                                && !RegexUtil.isRepeatedNumber(s, 3));
+                        !TextUtils.isEmpty(s) && s.length() > 3 && !RegexUtil.isRepeatedNumber(s, 3));
                 mTvRuleCombination.setEnabled(
-                        !TextUtils.isEmpty(s)
-                                && RegexUtil.isContainsNumbersOrLettersOrSymbol(s));
+                        !TextUtils.isEmpty(s) && RegexUtil.isContainsNumbersOrLettersOrSymbol(s));
                 mTvRuleConsistency.setEnabled(
                         !TextUtils.isEmpty(s) && TextUtils.equals(s, mEtConfirmPassword.getText()));
             }
@@ -126,8 +155,7 @@ public class ResetLoginPasswordActivity
         mEtConfirmPassword.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                mTvRuleConsistency.setEnabled(
-                        !TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
+                mTvRuleConsistency.setEnabled(!TextUtils.isEmpty(s) && TextUtils.equals(s, mEtPassword.getText()));
             }
         });
     }
@@ -157,10 +185,10 @@ public class ResetLoginPasswordActivity
             public void onAnimationEnd(Animator animation) {
                 switch (mOperationType) {
                     case OPERATION_TYPE_REGISTER_BY_TELEPHONE:
-                        getPresenter().registerByTelephone(mTelephone, newPassword);
+                        mResetLoginPasswordViewModel.registerByTelephone(mTelephone, newPassword);
                         break;
                     case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
-                        getPresenter().resetTelephoneLoginPassword(mTelephone, newPassword);
+                        mResetLoginPasswordViewModel.resetTelephoneLoginPassword(mTelephone, newPassword);
                         break;
                 }
             }
@@ -170,16 +198,13 @@ public class ResetLoginPasswordActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.mPBtnConfirm:
-                    confirm();
-                    break;
+            if (v.getId() == R.id.mPBtnConfirm) {
+                confirm();
             }
         }
     };
 
-    @Override
-    public void showRegisterSuccessful() {
+    private void showRegisterSuccessful() {
         SuccessfulActivity.startActivityForTelephoneRegister(
                 this,
                 mTelephone,
@@ -187,8 +212,7 @@ public class ResetLoginPasswordActivity
         finish();
     }
 
-    @Override
-    public void showResetLoginPasswordSuccessful() {
+    private void showResetLoginPasswordSuccessful() {
         switch (mOperationType) {
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
                 SuccessfulActivity.startActivityForRecoverTelephoneLoginPassword(
@@ -198,11 +222,6 @@ public class ResetLoginPasswordActivity
         }
 
         finish();
-    }
-
-    @Override
-    public void cancelProgressButtonLoadingIfNeed() {
-        mPBtnConfirm.startShowAnim();
     }
 
 }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--全局DialogFragment样式-->
-    <style name="DialogFragmentStyle" parent="Theme.MaterialComponents.Dialog.Alert">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowNoTitle">true</item><!--除去title-->
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowCloseOnTouchOutside">false</item>
-        <item name="android:windowElevation">0dp</item>
-        <item name="android:backgroundDimAmount">0.3</item>
-        <item name="android:windowMinWidthMajor">100%</item>
-        <item name="android:windowMinWidthMinor">100%</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:windowAnimationStyle">@style/BottomDialogFragmentAnimStyle</item>
+
+    <style name="BottomDialogFragmentStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="android:windowBackground">@android:color/white</item>-->
+<!--        <item name="android:windowFrame">@null</item>-->
+<!--        <item name="android:windowIsFloating">true</item>-->
+<!--        <item name="android:windowIsTranslucent">false</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowCloseOnTouchOutside">true</item>-->
+<!--        <item name="android:windowMinWidthMajor">100%</item>-->
+<!--        <item name="android:windowMinWidthMinor">100%</item>-->
+<!--        <item name="android:layout_width">match_parent</item>-->
+<!--        <item name="android:layout_height">wrap_content</item>-->
+<!--        <item name="android:windowAnimationStyle">@style/BottomDialogFragmentAnimStyle</item>-->
+<!--        <item name="android:gravity">center_horizontal|bottom</item>-->
     </style>
+
 
     <style name="BottomDialogFragmentAnimStyle" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/dialog_slide_in_bottom</item>

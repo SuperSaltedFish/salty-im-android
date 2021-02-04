@@ -2,13 +2,15 @@ package me.zhixingye.salty.module.login.view;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 
-import me.zhixingye.base.component.mvp.MVPActivity;
+import me.zhixingye.base.component.mvvm.BasicViewModel;
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.listener.OnDialogOnlySingleClickListener;
 import me.zhixingye.base.view.SMSCodeEditView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
-import me.zhixingye.salty.module.login.contract.TelephoneSMSVerifyContract;
+import me.zhixingye.salty.module.login.viewmodel.TelephoneSMSVerifyViewModel;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -27,12 +29,11 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.salty.protos.SMSOperationType;
+import com.salty.protos.StatusCode;
 
 import java.util.Locale;
 
-public class TelephoneSMSVerifyActivity
-        extends MVPActivity
-        implements TelephoneSMSVerifyContract.View {
+public class TelephoneSMSVerifyActivity extends MVVMActivity {
 
     public static final int RESULT_CODE_VERIFY_SUCCESSFUL = TelephoneSMSVerifyActivity.class.hashCode();
 
@@ -63,6 +64,8 @@ public class TelephoneSMSVerifyActivity
     private SMSOperationType mSMSOperationType;
     private String mTelephone;
 
+    private TelephoneSMSVerifyViewModel mTelephoneSMSVerifyViewModel;
+
     @Override
     protected void init(Bundle savedInstanceState) {
         mTvSMSCodeSendHint = findViewById(R.id.mTvSMSCodeSendHint);
@@ -87,10 +90,69 @@ public class TelephoneSMSVerifyActivity
 
         mBtnResend.setOnClickListener(mOnClickListener);
 
+        setupViewModule();
         setupTitleHint();
         setupVoiceSMSHint();
         setupAutoConfirm();
-        resendSMS(true);
+        resendSMS();
+    }
+
+    private void setupViewModule() {
+        mTelephoneSMSVerifyViewModel = createViewModel(TelephoneSMSVerifyViewModel.class);
+
+        mTelephoneSMSVerifyViewModel.getSMSLengthData().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer data) {
+                if (data == null) {
+                    return;
+                }
+                showSMSInputLayout(data);
+            }
+        });
+        mTelephoneSMSVerifyViewModel.getObtainSMSErrorData().observe(this, new Observer<BasicViewModel.ErrorData>() {
+            @Override
+            public void onChanged(BasicViewModel.ErrorData data) {
+                if (data == null) {
+                    return;
+                }
+                mSMSEditView.cleanInputContent();
+                StatusCode statusCode = StatusCode.forNumber(data.mErrorCode);
+                if (statusCode == null) {
+                    showErrorDialog(data.mErrorContent);
+                    return;
+                }
+                switch (statusCode) {
+                    case STATUS_ACCOUNT_EXISTS:
+                        showRegisteredHintDialog();
+                        break;
+                    case STATUS_ACCOUNT_NOT_EXISTS:
+                        showUnregisteredHintDialog();
+                        break;
+                    default:
+                        showErrorDialog(data.mErrorContent);
+                        break;
+                }
+            }
+        });
+        mTelephoneSMSVerifyViewModel.getVerifySMSSuccessData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                if (Boolean.TRUE.equals(data)) {
+                    showVerifySuccessful();
+                } else {
+                    mSMSEditView.cleanInputContent();
+                }
+            }
+        });
+        mTelephoneSMSVerifyViewModel.getVerifySMSSErrorData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String data) {
+                if (!TextUtils.isEmpty(data)) {
+                    showError(data);
+                }
+                mSMSEditView.cleanInputContent();
+            }
+        });
     }
 
     private void setupTitleHint() {
@@ -148,11 +210,11 @@ public class TelephoneSMSVerifyActivity
             showError("请输入完整的验证码");
             return;
         }
-        getPresenter().verifyTelephoneSMS(mTelephone, smsCode, mSMSOperationType);
+        mTelephoneSMSVerifyViewModel.verifyTelephoneSMS(mTelephone, smsCode, mSMSOperationType);
     }
 
-    private void resendSMS(boolean isFirstSend) {
-        getPresenter().obtainTelephoneSMS(mTelephone, mSMSOperationType, isFirstSend);
+    private void resendSMS() {
+        mTelephoneSMSVerifyViewModel.obtainTelephoneSMS(mTelephone, mSMSOperationType);
     }
 
     private void setAllowResendSMSCode(boolean isAllow) {
@@ -163,10 +225,8 @@ public class TelephoneSMSVerifyActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.mBtnResend:
-                    resendSMS(false);
-                    break;
+            if (v.getId() == R.id.mBtnResend) {
+                resendSMS();
             }
         }
     };
@@ -191,18 +251,17 @@ public class TelephoneSMSVerifyActivity
         mResendCountDown.cancel();
     }
 
-    @Override
-    public void showSMSInputLayout(int smsCodeLength) {
+    private void showSMSInputLayout(int smsCodeLength) {
         setAllowResendSMSCode(false);
         mResendCountDown.cancel();
         mResendCountDown.start();
         mSMSEditView.setVisibility(View.VISIBLE);
         mSMSEditView.setItemCount(smsCodeLength);
+        mSMSEditView.cleanInputContent();
         showSoftKeyboard(mSMSEditView.getChildAt(0));
     }
 
-    @Override
-    public void showFirstSendFailure(String error) {
+    private void showErrorDialog(String error) {
         showHintDialog(error, new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -211,14 +270,12 @@ public class TelephoneSMSVerifyActivity
         });
     }
 
-    @Override
-    public void showVerifySuccessful() {
+    private void showVerifySuccessful() {
         setResult(RESULT_CODE_VERIFY_SUCCESSFUL);
         finish();
     }
 
-    @Override
-    public void showRegisteredHintDialog() {
+    private void showRegisteredHintDialog() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("无法注册")
                 .setMessage("该手机账号已经被注册，是否马上去登录?")
@@ -241,8 +298,7 @@ public class TelephoneSMSVerifyActivity
                 .show();
     }
 
-    @Override
-    public void showUnregisteredHintDialog() {
+    private void showUnregisteredHintDialog() {
         new MaterialAlertDialogBuilder(this)
                 .setTitle("无法重置密码")
                 .setMessage("该手机账号未注册，是否马上去注册?")
@@ -261,11 +317,5 @@ public class TelephoneSMSVerifyActivity
                     }
                 })
                 .show();
-    }
-
-    @Override
-    public void showError(String error) {
-        super.showError(error);
-        mSMSEditView.cleanInputContent();
     }
 }

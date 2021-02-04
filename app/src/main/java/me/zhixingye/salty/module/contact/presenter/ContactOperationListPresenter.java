@@ -14,7 +14,7 @@ import com.salty.protos.UserProfile;
 
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.module.contact.contract.ContactOperationListContract;
-import me.zhixingye.salty.widget.listener.LifecycleRequestCallback;
+import me.zhixingye.salty.widget.listener.MVPRequestCallback;
 
 /**
  * Created by YZX on 2018年01月20日.
@@ -36,7 +36,7 @@ public class ContactOperationListPresenter implements ContactOperationListContra
 
     @Override
     public void loadAllContactOperationMessage() {
-        IMClient.get().getContactService().getContactOperationMessageList(0, new LifecycleRequestCallback<GetContactOperationMessageListResp>(mView) {
+        IMClient.get().getContactService().getContactOperationMessageList(0, new MVPRequestCallback<GetContactOperationMessageListResp>(mView) {
             @Override
             protected void onPreRequest() {
                 super.onPreRequest();
@@ -63,7 +63,7 @@ public class ContactOperationListPresenter implements ContactOperationListContra
 
     @Override
     public void acceptContactRequest(ContactOperationMessage message) {
-        IMClient.get().getContactService().acceptContact(message.getTriggerProfile().getUserId(), new LifecycleRequestCallback<AcceptContactResp>(mView) {
+        IMClient.get().getContactService().acceptContact(message.getTriggerProfile().getUserId(), new MVPRequestCallback<AcceptContactResp>(mView) {
             @Override
             protected void onSuccess(AcceptContactResp result) {
 
@@ -73,7 +73,7 @@ public class ContactOperationListPresenter implements ContactOperationListContra
 
     @Override
     public void refusedContactRequest(ContactOperationMessage message) {
-        IMClient.get().getContactService().refusedContact(message.getTriggerProfile().getUserId(), "", new LifecycleRequestCallback<RefusedContactResp>(mView) {
+        IMClient.get().getContactService().refusedContact(message.getTriggerProfile().getUserId(), "", new MVPRequestCallback<RefusedContactResp>(mView) {
             @Override
             protected void onSuccess(RefusedContactResp result) {
 

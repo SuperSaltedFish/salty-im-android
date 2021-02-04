@@ -19,11 +19,10 @@ import com.salty.protos.SMSOperationType;
 
 import androidx.annotation.Nullable;
 
-import me.zhixingye.base.component.mvp.MVPActivity;
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.view.ProgressButton;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
-import me.zhixingye.salty.module.login.contract.RegisterContract;
 import me.zhixingye.salty.module.web.WebActivity;
 import me.zhixingye.salty.widget.view.TelephoneEditText;
 
@@ -32,9 +31,7 @@ import me.zhixingye.salty.widget.view.TelephoneEditText;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class RegisterActivity
-        extends MVPActivity
-        implements RegisterContract.View {
+public class RegisterActivity extends MVVMActivity {
 
     private static final String TAG = "RegisterActivity";
 
@@ -65,7 +62,7 @@ public class RegisterActivity
     @Override
     protected void setup(Bundle savedInstanceState) {
         setSystemUiMode(SYSTEM_UI_MODE_TRANSPARENT_LIGHT_BAR_STATUS_AND_NAVIGATION);
-        setToolbarId(R.id.mDefaultToolbar,true);
+        setToolbarId(R.id.mDefaultToolbar, true);
 
         setupUserAgreement();
 
@@ -83,20 +80,18 @@ public class RegisterActivity
         String focus = "《咸鱼协议》";
         int startIndex = userAgreement.length();
         SpannableString sStr = new SpannableString(userAgreement + focus);
-        sStr.setSpan(
-                new ClickableSpan() {
-                    @Override
-                    public void onClick(@NonNull View widget) {
-                        WebActivity
-                                .startActivity(RegisterActivity.this, AppConfig.USER_AGREEMENT_URL);
-                    }
+        sStr.setSpan(new ClickableSpan() {
+                         @Override
+                         public void onClick(@NonNull View widget) {
+                             WebActivity.startActivity(RegisterActivity.this, AppConfig.USER_AGREEMENT_URL);
+                         }
 
-                    @Override
-                    public void updateDrawState(@NonNull TextPaint ds) {
-                        super.updateDrawState(ds);
-                        ds.setUnderlineText(false);
-                    }
-                },
+                         @Override
+                         public void updateDrawState(@NonNull TextPaint ds) {
+                             super.updateDrawState(ds);
+                             ds.setUnderlineText(false);
+                         }
+                     },
                 startIndex,
                 startIndex + focus.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -119,10 +114,8 @@ public class RegisterActivity
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.mPBtnRegister:
-                    tryNext();
-                    break;
+            if (v.getId() == R.id.mPBtnRegister) {
+                tryNext();
             }
         }
     };
@@ -131,9 +124,7 @@ public class RegisterActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == TelephoneSMSVerifyActivity.RESULT_CODE_VERIFY_SUCCESSFUL) {
-            ResetLoginPasswordActivity.startActivityToRegisterByTelephone(
-                    this,
-                    mTEtPhone.getPhoneSuffixText());
+            ResetLoginPasswordActivity.startActivityToRegisterByTelephone(this, mTEtPhone.getPhoneSuffixText());
         }
     }
 }

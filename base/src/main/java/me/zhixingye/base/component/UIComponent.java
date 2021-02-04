@@ -22,7 +22,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import me.zhixingye.base.dialog.ProgressDialogFragment;
-import me.zhixingye.base.listener.CancelableListener;
 import me.zhixingye.base.view.SaltyToast;
 
 /**
@@ -51,67 +50,42 @@ public interface UIComponent {
 
     //显示Loading对话框，没有tag
     default void showLoadingDialog() {
-        showLoadingDialog(null, null);
+        showLoadingDialog(null);
     }
 
     //显示Loading对话框，支持tag
-    default void showLoadingDialog(@Nullable String tag) {
-        showLoadingDialog(tag, null);
-    }
-
-    //显示Loading对话框,带自定义loading文字
-    default void showLoadingDialog(@Nullable String tag, String text) {
-        showLoadingDialog(tag, text, false, null);
+    default void showLoadingDialog(String text) {
+        showLoadingDialog(text, false, null);
     }
 
     //显示Loading对话框,带自定义loading文字,是否可以关闭，关闭的回调事件
-    default void showLoadingDialog(@Nullable String tag, String text, boolean isCancelable, @Nullable CancelableListener listener) {
+    default void showLoadingDialog(String text, boolean isCancelable, @Nullable DialogInterface.OnDismissListener listener) {
         Context context = getContext();
         if (!(context instanceof FragmentActivity)) {
             return;
-        }
-        if (tag == null) {
-            tag = getDefaultLoadingDialogTag();
-        }
-        if (tag == null) {
-            throw new RuntimeException("tag cannot be null");
         }
         hideSoftKeyboard();
-        FragmentActivity activity = (FragmentActivity) context;
+        FragmentActivity fActivity = (FragmentActivity) context;
         ProgressDialogFragment progressDialog = ProgressDialogFragment.create(text, isCancelable);
         progressDialog.setSingleInstance(true);
-        progressDialog.setCancelableListener(listener);
-        progressDialog.showNow(activity.getSupportFragmentManager(), tag);
+        progressDialog.setOnDismissListener(listener);
+        progressDialog.showNow(fActivity.getSupportFragmentManager(), toString());
     }
 
-    //隐藏Loading对话框，使用默认tag
+    //隐藏Loading对话框
     default void hideLoadingDialog() {
-        hideLoadingDialog(null);
-    }
-
-    //隐藏Loading对话框，关闭特地tag的
-    default void hideLoadingDialog(@Nullable String tag) {
         Context context = getContext();
         if (!(context instanceof FragmentActivity)) {
             return;
         }
-        if (tag == null) {
-            tag = getDefaultLoadingDialogTag();
-        }
-        if (tag == null) {
-            throw new RuntimeException("tag cannot be null");
-        }
-        FragmentActivity activity = (FragmentActivity) context;
-        FragmentManager manager = activity.getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag(tag);
+
+        FragmentActivity fActivity = (FragmentActivity) context;
+        FragmentManager manager = fActivity.getSupportFragmentManager();
+        Fragment fragment = manager.findFragmentByTag(toString());
         if (fragment instanceof ProgressDialogFragment) {
             ((ProgressDialogFragment) fragment).dismissAllowingStateLoss();
         }
 
-    }
-
-    default String getDefaultLoadingDialogTag() {
-        return this.toString();
     }
 
     //展示对话框
@@ -120,12 +94,12 @@ public interface UIComponent {
     }
 
     //展示对话框
-    default void showHintDialog(String content, DialogInterface.OnDismissListener listener) {
+    default void showHintDialog(String content, @Nullable DialogInterface.OnDismissListener listener) {
         showHintDialog(null, content, listener);
     }
 
     //展示对话框，含标题
-    default void showHintDialog(String title, String content, DialogInterface.OnDismissListener listener) {
+    default void showHintDialog(String title, String content, @Nullable DialogInterface.OnDismissListener listener) {
         Context context = getContext();
         if (context == null) {
             return;
@@ -226,11 +200,11 @@ public interface UIComponent {
         if (!(context instanceof Activity)) {
             return;
         }
-        InputMethodManager manager = context.getSystemService(InputMethodManager.class);
+        Activity activity = (Activity) context;
+        InputMethodManager manager = activity.getSystemService(InputMethodManager.class);
         if (manager == null) {
             return;
         }
-        Activity activity = (Activity) context;
         if (activity.getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
             View focusView = activity.getCurrentFocus();
             if (focusView != null) {

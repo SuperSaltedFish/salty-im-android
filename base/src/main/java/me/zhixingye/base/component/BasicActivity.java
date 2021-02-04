@@ -40,7 +40,7 @@ import me.zhixingye.base.view.TextInputLayoutExtra;
 
 public abstract class BasicActivity
         extends AppCompatActivity
-        implements UIComponent {
+        implements LifecycleUIComponent {
 
     public static final int SYSTEM_UI_MODE_NONE = 0;//默认显示，无沉侵
     public static final int SYSTEM_UI_MODE_TRANSPARENT_BAR_STATUS = 1;//沉侵状态栏，内容延申到状态栏

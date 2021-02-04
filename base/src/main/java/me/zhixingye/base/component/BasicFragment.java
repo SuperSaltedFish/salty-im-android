@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 
 public abstract class BasicFragment
         extends Fragment
-        implements UIComponent {
+        implements LifecycleUIComponent {
 
     @LayoutRes
     protected abstract int getLayoutID();

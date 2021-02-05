@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import me.zhixingye.base.component.BasicFragment;
 import me.zhixingye.base.component.mvp.MVPBasicFragment;
+import me.zhixingye.base.component.mvvm.MVVMFragment;
 import me.zhixingye.base.view.IndexBarView;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.util.AndroidHelper;
@@ -34,7 +35,7 @@ import me.zhixingye.salty.widget.view.LetterSegmentationItemDecoration;
  *
  * @author zhixingye , 2020年05月17日.
  */
-public class ContactListFragment extends MVPBasicFragment {
+public class ContactListFragment extends MVVMFragment {
 
     private Toolbar mDefaultToolbar;
     private RecyclerView mRvContact;

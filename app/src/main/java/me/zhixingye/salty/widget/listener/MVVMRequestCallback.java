@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 
-import me.zhixingye.base.component.mvp.IView;
 import me.zhixingye.base.component.mvvm.BasicViewModel;
 import me.zhixingye.im.listener.RequestCallback;
 
@@ -27,12 +26,12 @@ public abstract class MVVMRequestCallback<T> implements RequestCallback<T> {
 
     @CallSuper
     protected void onPreRequest() {
-        setEnableLoading(true);
+        setDisplayLoading(true);
     }
 
     @CallSuper
     protected void onRequestFinish() {
-        setEnableLoading(false);
+        setDisplayLoading(false);
         mBasicViewModel.clear();
     }
 
@@ -49,7 +48,7 @@ public abstract class MVVMRequestCallback<T> implements RequestCallback<T> {
         onRequestFinish();
     }
 
-    protected void setEnableLoading(boolean isEnable) {
+    protected void setDisplayLoading(boolean isEnable) {
         BasicViewModel viewModel = mBasicViewModel.get();
         if (viewModel == null) {
             return;

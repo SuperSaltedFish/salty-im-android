@@ -96,10 +96,11 @@ public class LoginActivity extends MVVMActivity {
                 }
             }
         });
-        mLoginViewModel.getObtainSMSSuccessData().observe(this, new Observer<Boolean>() {
+        mLoginViewModel.getNeedVerifyData().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean data) {
                 if (Boolean.TRUE.equals(data)) {
+                    mLoginViewModel.setNeedVerifyData(false);
                     startPhoneVerifyActivity();
                 }
             }
@@ -127,7 +128,12 @@ public class LoginActivity extends MVVMActivity {
             mTilPassword.setError("密码不能为空，请输入密码");
             return;
         }
-        tryLogin(telephone, password);
+        mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                tryLogin(telephone, password);
+            }
+        });
     }
 
     private void tryLogin(final String telephone, final String password) {

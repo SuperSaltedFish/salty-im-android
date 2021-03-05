@@ -25,6 +25,9 @@ public class UserDataFormatter {
         if (TextUtils.isEmpty(name)) {
             name = user.getNickname();
         }
+        if (TextUtils.isEmpty(name)) {
+            name = user.getUserId().substring(0, 8);
+        }
         return name;
     }
 

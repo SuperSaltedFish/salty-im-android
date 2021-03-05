@@ -32,6 +32,10 @@ public class SplashViewModel extends BasicViewModel {
                 } else {
                     IMClient.get().getLoginService().loginByLastLoginInfo(new MVVMRequestCallback<UserProfile>(SplashViewModel.this) {
                         @Override
+                        protected void setDisplayLoading(boolean isEnable) {
+                        }
+
+                        @Override
                         protected void onSucceed(UserProfile result) {
                             postValue(mLoginStateData, STATE_LOGGED);
                         }

@@ -7,23 +7,22 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.salty.protos.ContactProfile;
-import com.salty.protos.ContactRemark;
-import com.salty.protos.UserProfile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import me.zhixingye.base.component.BasicFragment;
-import me.zhixingye.base.component.mvp.MVPBasicFragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import me.zhixingye.base.component.mvvm.MVVMFragment;
 import me.zhixingye.base.view.IndexBarView;
 import me.zhixingye.salty.R;
+import me.zhixingye.salty.module.contact.viewmodel.ContactListViewModel;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.adapter.ContactListAdapter;
@@ -42,12 +41,15 @@ public class ContactListFragment extends MVVMFragment {
     private IndexBarView mIndexBarView;
     private TextView mTvIndexBarHint;
     private FloatingActionButton mFBtnAdd;
+    private SwipeRefreshLayout mSrlContact;
 
     private ContactListHeaderAdapter mContactListHeaderAdapter;
     private ContactListAdapter mContactListAdapter;
 
     private LetterSegmentationItemDecoration mLetterSegmentation;
     private LinearLayoutManager mLinearLayoutManager;
+
+    private ContactListViewModel mContactListViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class ContactListFragment extends MVVMFragment {
         mIndexBarView = rootView.findViewById(R.id.mIndexBarView);
         mTvIndexBarHint = rootView.findViewById(R.id.mTvIndexBarHint);
         mFBtnAdd = rootView.findViewById(R.id.mFBtnAdd);
+        mSrlContact = rootView.findViewById(R.id.mSrlContact);
 
         mContactListAdapter = new ContactListAdapter();
         mContactListHeaderAdapter = new ContactListHeaderAdapter();
@@ -77,105 +80,10 @@ public class ContactListFragment extends MVVMFragment {
 
         setupRecyclerViewAndAdapter();
         setupIndexBar();
+        setupFloatButton();
+        setupViewModule();
 
-        setMockData();
-
-        mFBtnAdd.setOnClickListener(mOnClickListener);
-    }
-
-    private void setMockData() {
-        List<ContactProfile> profiles = new ArrayList<>();
-        UserProfile user = UserProfile.newBuilder()
-                .setUserId("123")
-                .setNickname("叶智星")
-                .setBirthday(System.currentTimeMillis() / 3 * 2)
-                .setDescription("每个不曾起舞的日子都是对生命的辜负。")
-                .setSex(UserProfile.Sex.MALE)
-                .build();
-        ContactRemark remark = ContactRemark.newBuilder()
-                .addTags("同学")
-                .build();
-        ContactProfile profile1 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("A")
-                .build();
-
-        ContactProfile profile2 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("B")
-                .build();
-
-        ContactProfile profile3 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("C")
-                .build();
-
-        ContactProfile profile4 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("D")
-                .build();
-
-        ContactProfile profile5 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("E")
-                .build();
-
-        ContactProfile profile6 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("F")
-                .build();
-
-        ContactProfile profile7 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("G")
-                .build();
-
-        ContactProfile profile8 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("H")
-                .build();
-
-        ContactProfile profile9 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("I")
-                .build();
-
-        ContactProfile profile10 = ContactProfile.newBuilder()
-                .setRemarkInfo(remark)
-                .setUserProfile(user)
-                .setSortId("J")
-                .build();
-
-
-        profiles.add(profile1);
-        profiles.add(profile1);
-        profiles.add(profile2);
-        profiles.add(profile3);
-        profiles.add(profile3);
-        profiles.add(profile3);
-        profiles.add(profile3);
-        profiles.add(profile4);
-        profiles.add(profile5);
-        profiles.add(profile5);
-        profiles.add(profile5);
-        profiles.add(profile6);
-        profiles.add(profile7);
-        profiles.add(profile7);
-        profiles.add(profile8);
-        profiles.add(profile9);
-        profiles.add(profile10);
-
-        mContactListAdapter.submitList(profiles);
-
+        loadData();
     }
 
     private void setupRecyclerViewAndAdapter() {
@@ -230,6 +138,33 @@ public class ContactListFragment extends MVVMFragment {
                 }
             }
         });
+    }
+
+    private void setupFloatButton() {
+        mFBtnAdd.setOnClickListener(mOnClickListener);
+    }
+
+    private void setupViewModule() {
+        mContactListViewModel = createViewModel(ContactListViewModel.class);
+        mContactListViewModel.getContactListData().observe(this, new Observer<List<ContactProfile>>() {
+            @Override
+            public void onChanged(List<ContactProfile> contactProfiles) {
+                mContactListAdapter.submitList(contactProfiles);
+            }
+        });
+
+        mContactListViewModel.getContactListLoadingStateData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                boolean isDisplay = Boolean.TRUE.equals(data);
+                mSrlContact.setEnabled(isDisplay);
+                mSrlContact.setRefreshing(isDisplay);
+            }
+        });
+    }
+
+    private void loadData() {
+        mContactListViewModel.loadAllContact();
     }
 
     private void startFindNewContactActivity() {

@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import me.zhixingye.base.R;
 
 /**
@@ -39,8 +40,6 @@ public class ProgressButton extends ConstraintLayout {
 
     private Animator mShowAnimator;
     private Animator mHideAnimator;
-
-    private boolean isLayoutCompleted;
 
     public ProgressButton(@NonNull Context context) {
         this(context, null);
@@ -88,12 +87,6 @@ public class ProgressButton extends ConstraintLayout {
                 }
             }
         });
-        mButton.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                isLayoutCompleted = true;
-            }
-        });
     }
 
     @Override
@@ -109,18 +102,19 @@ public class ProgressButton extends ConstraintLayout {
     }
 
     public void startShowAnim(@Nullable Animator.AnimatorListener listener) {
-        if (mButton.getVisibility() == View.VISIBLE || (mShowAnimator != null && mShowAnimator.isRunning())) {
+        if (mButton.getVisibility() == View.VISIBLE) {
+            if (listener != null) {
+                listener.onAnimationEnd(null);
+            }
             return;
         }
-        if (mShowAnimator != null) {
-            mShowAnimator.cancel();
-            mShowAnimator.removeAllListeners();
+        createShowAnimIfNeed();
+        if (listener != null) {
+            mShowAnimator.addListener(listener);
         }
-        if (isLayoutCompleted) {
-            new CreateShowAnimRunnable(listener).run();
-        } else {
-            post(new CreateShowAnimRunnable(listener));
-        }
+        cancelHideAnim();
+        removeCallbacks(mShowAnimRunnable);
+        post(mShowAnimRunnable);
     }
 
     public void startHideAnim() {
@@ -128,17 +122,76 @@ public class ProgressButton extends ConstraintLayout {
     }
 
     public void startHideAnim(@Nullable Animator.AnimatorListener listener) {
-        if (mButton.getVisibility() == View.INVISIBLE || (mHideAnimator != null && mHideAnimator.isRunning())) {
+        if (mButton.getVisibility() == View.INVISIBLE) {
+            if (listener != null) {
+                listener.onAnimationEnd(null);
+            }
             return;
         }
+        createHideAnimIfNeed();
+        if (mHideAnimator != null) {
+            mHideAnimator.addListener(listener);
+        }
+        cancelShowAnim();
+        removeCallbacks(mHintAnimRunnable);
+        post(mHintAnimRunnable);
+    }
+
+    private void createShowAnimIfNeed() {
+        if (mShowAnimator != null) {
+            return;
+        }
+        mShowAnimator = createShowCircularReveal(mButton);
+        mShowAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mButton.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mButton.setClickable(true);
+                mProgressBar.setVisibility(View.INVISIBLE);
+                mTransparentDialog.dismiss();
+                cancelShowAnim();
+            }
+        });
+    }
+
+    private void createHideAnimIfNeed() {
+        if (mHideAnimator != null) {
+            return;
+        }
+        mHideAnimator = createHideCircularReveal(mButton);
+        mHideAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mButton.setClickable(false);
+                mProgressBar.setVisibility(View.VISIBLE);
+                if (!mTransparentDialog.isShowing()) {
+                    mTransparentDialog.show();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mButton.setVisibility(View.INVISIBLE);
+                cancelHideAnim();
+            }
+        });
+    }
+
+    private void cancelShowAnim() {
+        if (mShowAnimator != null) {
+            mShowAnimator.cancel();
+            mShowAnimator = null;
+        }
+    }
+
+    private void cancelHideAnim() {
         if (mHideAnimator != null) {
             mHideAnimator.cancel();
-            mHideAnimator.removeAllListeners();
-        }
-        if (isLayoutCompleted) {
-            new CreateHintAnimRunnable(listener).run();
-        } else {
-            post(new CreateHintAnimRunnable(listener));
+            mHideAnimator = null;
         }
     }
 
@@ -161,74 +214,20 @@ public class ProgressButton extends ConstraintLayout {
         }
     }
 
-    private final class CreateShowAnimRunnable implements Runnable {
-        private Animator.AnimatorListener mListener;
-
-        private CreateShowAnimRunnable(Animator.AnimatorListener listener) {
-            mListener = listener;
-        }
-
+    private final Runnable mShowAnimRunnable = new Runnable() {
         @Override
         public void run() {
-            mShowAnimator = circularRevealShowAnim(mButton);
-            mShowAnimator.addListener(mShowListener);
-            if (mListener != null) {
-                mShowAnimator.addListener(mListener);
-            }
             mShowAnimator.start();
         }
-    }
+    };
 
-    private final class CreateHintAnimRunnable implements Runnable {
-        private Animator.AnimatorListener mListener;
-
-        private CreateHintAnimRunnable(Animator.AnimatorListener listener) {
-            mListener = listener;
-        }
-
+    private final Runnable mHintAnimRunnable = new Runnable() {
         @Override
         public void run() {
-            mHideAnimator = circularRevealHideAnim(mButton);
-            mHideAnimator.addListener(mHideListener);
-            if (mListener != null) {
-                mHideAnimator.addListener(mListener);
-            }
             mHideAnimator.start();
             clearCurrentFocus();
         }
-    }
-
-
-    private final Animator.AnimatorListener mShowListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-            mButton.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mButton.setClickable(true);
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mTransparentDialog.dismiss();
-        }
     };
-
-    private final Animator.AnimatorListener mHideListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-            mButton.setClickable(false);
-            mProgressBar.setVisibility(View.VISIBLE);
-            if (!mTransparentDialog.isShowing()) {
-                mTransparentDialog.show();
-            }
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            mButton.setVisibility(View.INVISIBLE);
-        }
-    };
-
 
     public void setText(CharSequence text) {
         mButton.setText(text);
@@ -279,7 +278,7 @@ public class ProgressButton extends ConstraintLayout {
         }
     }
 
-    private static Animator circularRevealHideAnim(View view) {
+    private static Animator createHideCircularReveal(View view) {
         int width = view.getWidth();
         int height = view.getHeight();
         int diameter = Math.max(width, height);
@@ -287,14 +286,17 @@ public class ProgressButton extends ConstraintLayout {
 
     }
 
-    private static Animator circularRevealShowAnim(View view) {
+    private static Animator createShowCircularReveal(View view) {
         int width = view.getWidth();
         int height = view.getHeight();
         int diameter = Math.max(width, height);
         return ViewAnimationUtils.createCircularReveal(view, width / 2, height / 2, 0, diameter / 2f);
     }
 
-    private static final class TransparentDialog extends Dialog {//这个对话框的的作用：当执行动画或ProgressBar可见时弹出全透明的dialog，让返回按钮和UI上的其他东西不可用
+    /**
+     * 这个对话框的的作用：当执行动画或ProgressBar可见时弹出全透明的dialog，让返回按钮和UI上的其他东西不可用
+     */
+    private static final class TransparentDialog extends Dialog {
 
         TransparentDialog(@NonNull Context context) {
             super(context);

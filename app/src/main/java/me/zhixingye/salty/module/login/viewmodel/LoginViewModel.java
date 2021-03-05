@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.salty.protos.ObtainTelephoneSMSCodeResp;
 import com.salty.protos.SMSOperationType;
+import com.salty.protos.StatusCode;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.base.component.mvvm.BasicViewModel;
@@ -21,7 +22,7 @@ public class LoginViewModel extends BasicViewModel {
     private final MutableLiveData<Boolean> mLoginSuccessData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mLoginLoadingData = new MutableLiveData<>();
 
-    private final MutableLiveData<Boolean> mObtainSMSSuccessData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isNeedVerifyData = new MutableLiveData<>();
 
     public void loginByTelephone(String telephone, String password) {
         IMClient.get().getLoginService().loginByTelephone(
@@ -29,7 +30,7 @@ public class LoginViewModel extends BasicViewModel {
                 password,
                 new MVVMRequestCallback<UserProfile>(this) {
                     @Override
-                    protected void setEnableLoading(boolean isEnable) {
+                    protected void setDisplayLoading(boolean isEnable) {
                         postValue(mLoginLoadingData, isEnable);
                     }
 
@@ -37,26 +38,18 @@ public class LoginViewModel extends BasicViewModel {
                     protected void onSucceed(UserProfile result) {
                         postValue(mLoginSuccessData, true);
                     }
+
+                    @Override
+                    protected void showError(int code, String error) {
+                        if (StatusCode.STATUS_ACCOUNT_AUTHORIZED_REQUIRED.getNumber() == code) {
+                            setNeedVerifyData(true);
+                            return;
+                        }
+                        super.showError(code, error);
+                    }
                 });
     }
 
-    private void obtainTelephoneSMS(String telephone) {
-        IMClient.get().getSMSService().obtainVerificationCodeForTelephoneType(
-                telephone,
-                SMSOperationType.LOGIN,
-                new MVVMRequestCallback<ObtainTelephoneSMSCodeResp>(this) {
-                    @Override
-                    protected void setEnableLoading(boolean isEnable) {
-                        postValue(mObtainSMSSuccessData, isEnable);
-                    }
-
-                    @Override
-                    protected void onSucceed(ObtainTelephoneSMSCodeResp result) {
-
-                    }
-                });
-
-    }
 
     public LiveData<Boolean> getLoginSuccessData() {
         return mLoginSuccessData;
@@ -66,7 +59,11 @@ public class LoginViewModel extends BasicViewModel {
         return mLoginLoadingData;
     }
 
-    public LiveData<Boolean> getObtainSMSSuccessData() {
-        return mObtainSMSSuccessData;
+    public LiveData<Boolean> getNeedVerifyData() {
+        return isNeedVerifyData;
+    }
+
+    public void setNeedVerifyData(boolean isNeedVerify) {
+        postValue(isNeedVerifyData, isNeedVerify);
     }
 }

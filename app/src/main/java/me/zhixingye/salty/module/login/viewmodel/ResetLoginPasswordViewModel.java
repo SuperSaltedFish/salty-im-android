@@ -33,7 +33,7 @@ public class ResetLoginPasswordViewModel extends BasicViewModel {
                     }
 
                     @Override
-                    protected void setEnableLoading(boolean isEnable) {
+                    protected void setDisplayLoading(boolean isEnable) {
                         postValue(mLoadingData, isEnable);
                     }
                 });
@@ -50,7 +50,7 @@ public class ResetLoginPasswordViewModel extends BasicViewModel {
                     }
 
                     @Override
-                    protected void setEnableLoading(boolean isEnable) {
+                    protected void setDisplayLoading(boolean isEnable) {
                         postValue(mLoadingData, isEnable);
                     }
                 });

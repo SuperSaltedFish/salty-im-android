@@ -42,11 +42,10 @@ public class SplashViewModel extends BasicViewModel {
 
                         @Override
                         protected void showError(int code, String error) {
-                            IMClient.get().getLoginService().logout();
                             if (AppConfig.isEverStartedGuide()) {
-                                postValue(mLoginStateData, STATE_LOGOUT_FIRST);
-                            } else {
                                 postValue(mLoginStateData, STATE_LOGOUT);
+                            } else {
+                                postValue(mLoginStateData, STATE_LOGOUT_FIRST);
                             }
                         }
 

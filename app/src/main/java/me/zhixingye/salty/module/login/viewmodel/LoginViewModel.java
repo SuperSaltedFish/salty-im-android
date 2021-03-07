@@ -9,6 +9,7 @@ import com.salty.protos.StatusCode;
 import com.salty.protos.UserProfile;
 
 import me.zhixingye.base.component.mvvm.BasicViewModel;
+import me.zhixingye.base.view.SaltyToast;
 import me.zhixingye.im.sdk.IMClient;
 import me.zhixingye.salty.widget.listener.MVVMRequestCallback;
 
@@ -19,10 +20,8 @@ import me.zhixingye.salty.widget.listener.MVVMRequestCallback;
  */
 public class LoginViewModel extends BasicViewModel {
 
-    private final MutableLiveData<Boolean> mLoginSuccessData = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> mLoginSuccessData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mLoginLoadingData = new MutableLiveData<>();
-
-    private final MutableLiveData<Boolean> isNeedVerifyData = new MutableLiveData<>();
 
     public void loginByTelephone(String telephone, String password) {
         IMClient.get().getLoginService().loginByTelephone(
@@ -36,22 +35,22 @@ public class LoginViewModel extends BasicViewModel {
 
                     @Override
                     protected void onSucceed(UserProfile result) {
-                        postValue(mLoginSuccessData, true);
+                        postValue(mLoginSuccessData, new LoginResult(null, true));
                     }
 
                     @Override
                     protected void showError(int code, String error) {
-                        if (StatusCode.STATUS_ACCOUNT_AUTHORIZED_REQUIRED.getNumber() == code) {
-                            setNeedVerifyData(true);
-                            return;
+                        if (code == StatusCode.STATUS_ACCOUNT_AUTHORIZED_REQUIRED.getNumber()) {
+                            setToastData(new ToastData(error, SaltyToast.TYPE_HINT));
+                        } else {
+                            super.showError(code, error);
                         }
-                        super.showError(code, error);
+                        postValue(mLoginSuccessData, new LoginResult(StatusCode.forNumber(code), false));
                     }
                 });
     }
 
-
-    public LiveData<Boolean> getLoginSuccessData() {
+    public LiveData<LoginResult> getLoginSuccessData() {
         return mLoginSuccessData;
     }
 
@@ -59,11 +58,13 @@ public class LoginViewModel extends BasicViewModel {
         return mLoginLoadingData;
     }
 
-    public LiveData<Boolean> getNeedVerifyData() {
-        return isNeedVerifyData;
-    }
+    public static class LoginResult {
+        public final StatusCode code;
+        public final boolean isLoginSucceed;
 
-    public void setNeedVerifyData(boolean isNeedVerify) {
-        postValue(isNeedVerifyData, isNeedVerify);
+        public LoginResult(StatusCode code, boolean isLoginSucceed) {
+            this.code = code;
+            this.isLoginSucceed = isLoginSucceed;
+        }
     }
 }

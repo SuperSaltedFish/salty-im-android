@@ -13,6 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import me.zhixingye.base.R;
 
 /**
@@ -25,6 +29,7 @@ public class SaltyToast {
     public static final int TYPE_ERROR = 2;
     public static final int TYPE_SUCCESS = 3;
 
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef({TYPE_HINT, TYPE_ERROR, TYPE_SUCCESS})
     public @interface ToastType {
     }

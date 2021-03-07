@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import androidx.lifecycle.Observer;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.salty.protos.SMSOperationType;
+import com.salty.protos.StatusCode;
 
 import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.view.ProgressButton;
@@ -88,20 +90,19 @@ public class LoginActivity extends MVVMActivity {
 
     private void setupViewModule() {
         mLoginViewModel = createViewModel(LoginViewModel.class);
-        mLoginViewModel.getLoginSuccessData().observe(this, new Observer<Boolean>() {
+        mLoginViewModel.getLoginSuccessData().observe(this, new Observer<LoginViewModel.LoginResult>() {
             @Override
-            public void onChanged(Boolean data) {
-                if (Boolean.TRUE.equals(data)) {
-                    startHomeActivity();
+            public void onChanged(LoginViewModel.LoginResult loginResult) {
+                if (loginResult == null) {
+                    return;
                 }
-            }
-        });
-        mLoginViewModel.getNeedVerifyData().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean data) {
-                if (Boolean.TRUE.equals(data)) {
-                    mLoginViewModel.setNeedVerifyData(false);
+                if (loginResult.isLoginSucceed) {
+                    startHomeActivity();
+                    return;
+                }
+                if (loginResult.code == StatusCode.STATUS_ACCOUNT_AUTHORIZED_REQUIRED) {
                     startPhoneVerifyActivity();
+                    return;
                 }
             }
         });
@@ -117,6 +118,17 @@ public class LoginActivity extends MVVMActivity {
         });
     }
 
+    private void tryLogin(Intent intent) {
+        String telephone = intent.getStringExtra(EXTRA_TELEPHONE);
+        String password = intent.getStringExtra(EXTRA_PASSWORD);
+        if (TextUtils.isEmpty(telephone) || TextUtils.isEmpty(password)) {
+            return;
+        }
+        mTEtPhone.setPhoneSuffixText(telephone);
+        mEtPassword.setText(password);
+        tryLogin();
+    }
+
     private void tryLogin() {
         final String telephone = mTEtPhone.getPhoneSuffixText();
         final String password = mEtPassword.getText().toString();
@@ -128,15 +140,10 @@ public class LoginActivity extends MVVMActivity {
             mTilPassword.setError("密码不能为空，请输入密码");
             return;
         }
-        mPBtnLogin.startHideAnim(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                tryLogin(telephone, password);
-            }
-        });
+        login(telephone, password);
     }
 
-    private void tryLogin(final String telephone, final String password) {
+    private void login(final String telephone, final String password) {
         if (TextUtils.isEmpty(telephone)) {
             return;
         }
@@ -174,22 +181,21 @@ public class LoginActivity extends MVVMActivity {
     };
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mEtPassword.setText("");
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        tryLogin(intent.getStringExtra(EXTRA_TELEPHONE), intent.getStringExtra(EXTRA_PASSWORD));
+        tryLogin(intent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == TelephoneSMSVerifyActivity.RESULT_CODE_VERIFY_SUCCESSFUL) {
-            tryLogin();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tryLogin();
+                }
+            }, 3000);
         }
     }
 

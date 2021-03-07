@@ -136,7 +136,7 @@ public interface UIComponent {
         if (TextUtils.isEmpty(error)) {
             return;
         }
-        showShortToast(error, SaltyToast.TYPE_ERROR);
+        showLongToast(error, SaltyToast.TYPE_ERROR);
         vibrate(50);
     }
 

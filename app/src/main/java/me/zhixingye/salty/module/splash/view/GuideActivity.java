@@ -11,11 +11,13 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import me.zhixingye.base.component.mvp.MVPActivity;
+import me.zhixingye.base.component.mvvm.MVVMActivity;
 import me.zhixingye.base.listener.OnOnlySingleClickListener;
 import me.zhixingye.base.view.PageIndicator;
 import me.zhixingye.salty.R;
 import me.zhixingye.salty.configure.AppConfig;
 import me.zhixingye.salty.module.login.view.LoginActivity;
+import me.zhixingye.salty.module.splash.viewmodel.GuideViewModel;
 import me.zhixingye.salty.widget.adapter.GuidePagerAdapter;
 
 /**
@@ -23,7 +25,7 @@ import me.zhixingye.salty.widget.adapter.GuidePagerAdapter;
  *
  * @author zhixingye , 2020年05月01日.
  */
-public class GuideActivity extends MVPActivity {
+public class GuideActivity extends MVVMActivity {
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, GuideActivity.class));
@@ -35,6 +37,8 @@ public class GuideActivity extends MVPActivity {
     private LinearLayout mLlTextIndicator;
 
     private GuidePagerAdapter mGuidePagerAdapter;
+
+    private GuideViewModel mGuideViewModel;
 
     @Override
     protected int getLayoutID() {
@@ -62,10 +66,16 @@ public class GuideActivity extends MVPActivity {
         mPageIndicator.setupWithViewPager(mGuideViewPager);
 
         mLlTextIndicator.setOnClickListener(mOnNextClickListener);
+
+        setupViewModel();
+    }
+
+    private void setupViewModel() {
+        mGuideViewModel = createViewModel(GuideViewModel.class);
     }
 
     private void startLoginActivity() {
-        AppConfig.setEverStartedGuide(true);
+        mGuideViewModel.setEverStartedGuide(true);
         LoginActivity.startActivity(this);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

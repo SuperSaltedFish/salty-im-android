@@ -49,6 +49,7 @@ public class BasicViewModel extends ViewModel {
                     return;
                 }
                 component.showShortToast(data.mToastContent, data.mToastType);
+                postValue(mToastData, null);
             }
         });
 
@@ -65,7 +66,7 @@ public class BasicViewModel extends ViewModel {
                         if (data.mOnDismissListener != null) {
                             data.mOnDismissListener.onDismiss(dialog);
                         }
-                        mLoadingDialogData.setValue(null);
+                        postValue(mLoadingDialogData, null);
                     }
                 });
             }
@@ -83,7 +84,7 @@ public class BasicViewModel extends ViewModel {
                         if (data.mOnDismissListener != null) {
                             data.mOnDismissListener.onDismiss(dialog);
                         }
-                        mHintDialogData.setValue(null);
+                        postValue(mHintDialogData, null);
                     }
                 });
             }
@@ -96,7 +97,7 @@ public class BasicViewModel extends ViewModel {
                     return;
                 }
                 component.showError(data.mErrorContent);
-                mErrorData.setValue(null);
+                postValue(mErrorData, null);
             }
         });
     }

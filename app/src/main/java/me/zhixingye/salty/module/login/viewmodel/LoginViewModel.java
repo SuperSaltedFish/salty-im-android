@@ -3,8 +3,6 @@ package me.zhixingye.salty.module.login.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.salty.protos.ObtainTelephoneSMSCodeResp;
-import com.salty.protos.SMSOperationType;
 import com.salty.protos.StatusCode;
 import com.salty.protos.UserProfile;
 
@@ -20,7 +18,7 @@ import me.zhixingye.salty.widget.listener.MVVMRequestCallback;
  */
 public class LoginViewModel extends BasicViewModel {
 
-    private final MutableLiveData<LoginResult> mLoginSuccessData = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult> mLoginResultData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mLoginLoadingData = new MutableLiveData<>();
 
     public void loginByTelephone(String telephone, String password) {
@@ -35,7 +33,7 @@ public class LoginViewModel extends BasicViewModel {
 
                     @Override
                     protected void onSucceed(UserProfile result) {
-                        postValue(mLoginSuccessData, new LoginResult(null, true));
+                        postValue(mLoginResultData, new LoginResult(null, true));
                     }
 
                     @Override
@@ -45,13 +43,13 @@ public class LoginViewModel extends BasicViewModel {
                         } else {
                             super.showError(code, error);
                         }
-                        postValue(mLoginSuccessData, new LoginResult(StatusCode.forNumber(code), false));
+                        postValue(mLoginResultData, new LoginResult(StatusCode.forNumber(code), false));
                     }
                 });
     }
 
     public LiveData<LoginResult> getLoginSuccessData() {
-        return mLoginSuccessData;
+        return mLoginResultData;
     }
 
     public LiveData<Boolean> getLoginLoadingData() {

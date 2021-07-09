@@ -8,8 +8,7 @@ import com.salty.protos.ResetPasswordResp;
 
 import me.zhixingye.base.component.mvvm.BasicViewModel;
 import me.zhixingye.im.sdk.IMClient;
-import me.zhixingye.salty.widget.listener.MVPRequestCallback;
-import me.zhixingye.salty.widget.listener.MVVMRequestCallback;
+import me.zhixingye.salty.widget.listener.MVVMCallback;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -26,15 +25,15 @@ public class ResetLoginPasswordViewModel extends BasicViewModel {
         IMClient.get().getRegisterService().registerByTelephone(
                 telephone,
                 password,
-                new MVVMRequestCallback<RegisterResp>(this) {
+                new MVVMCallback<RegisterResp>(this) {
                     @Override
                     protected void onSucceed(RegisterResp result) {
                         postValue(mRegisterSuccessData, true);
                     }
 
                     @Override
-                    protected void setDisplayLoading(boolean isEnable) {
-                        postValue(mLoadingData, isEnable);
+                    protected void setShowLoading(boolean isShow) {
+                        postValue(mLoadingData, isShow);
                     }
                 });
     }
@@ -43,15 +42,15 @@ public class ResetLoginPasswordViewModel extends BasicViewModel {
         IMClient.get().getPasswordService().resetLoginPasswordByTelephone(
                 telephone,
                 newPassword,
-                new MVVMRequestCallback<ResetPasswordResp>(this) {
+                new MVVMCallback<ResetPasswordResp>(this) {
                     @Override
                     protected void onSucceed(ResetPasswordResp result) {
                         postValue(mResetTelephoneSuccessData, true);
                     }
 
                     @Override
-                    protected void setDisplayLoading(boolean isEnable) {
-                        postValue(mLoadingData, isEnable);
+                    protected void setShowLoading(boolean isShow) {
+                        postValue(mLoadingData, isShow);
                     }
                 });
     }

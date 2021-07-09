@@ -8,13 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许程序访问WiFi网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许程序控制屏幕常亮了 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 允许程序使用生物未识别功能 -->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!-- 允许程序使用生物未识别功能 -->
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 允许程序安装APK -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 允许程序使用生物未识别功能 -->
     <!-- 以下为需要手动申请的权限 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 允许程序读取外部存储 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 允许程序写入外部存储 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 显示系统窗口权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 允许安装APK权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 使用相机权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 显示系统窗口权限 -->
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
 

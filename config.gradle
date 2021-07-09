@@ -1,7 +1,7 @@
 ext.Ver = [
         compileSdkVersion: 30,
         buildToolsVersion: "30.0.3",
-        minSdkVersion    : 26,
+        minSdkVersion    : 29,
         targetSdkVersion : 30,
         versionCode      : 1,
         versionName      : "1.0",
@@ -26,7 +26,7 @@ def androidx_dependencies = [
 def thirdParty_dependencies = [
         gson      : "com.google.code.gson:gson:2.8.7",
         zxing     : "com.google.zxing:core:3.4.1",
-        autosize  : "me.jessyan:autosize:1.2.1",
+        autosize  : "com.github.JessYanCoding:AndroidAutoSize:v1.2.1",
         map3D     : "com.amap.api:3dmap:latest.integration",
         mapSearch : "com.amap.api:search:latest.integration",
         glide     : "com.github.bumptech.glide:glide:4.12.0",

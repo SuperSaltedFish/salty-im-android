@@ -10,7 +10,7 @@ import java.util.List;
 
 import me.zhixingye.base.component.mvvm.BasicViewModel;
 import me.zhixingye.im.sdk.IMClient;
-import me.zhixingye.salty.widget.listener.MVVMRequestCallback;
+import me.zhixingye.salty.widget.listener.MVVMCallback;
 
 /**
  * 优秀的代码是它自己最好的文档。当你考虑要添加一个注释时，问问自己，“如何能改进这段代码，以让它不需要注释”
@@ -22,10 +22,10 @@ public class ContactListViewModel extends BasicViewModel {
     private final MutableLiveData<Boolean> mContactListLoadingStateData = new MutableLiveData<>();
 
     public void loadAllContact() {
-        IMClient.get().getContactService().getContacts(new MVVMRequestCallback<GetContactsResp>(this) {
+        IMClient.get().getContactService().getContacts(new MVVMCallback<GetContactsResp>(this) {
             @Override
-            protected void setDisplayLoading(boolean isEnable) {
-                postValue(mContactListLoadingStateData, isEnable);
+            protected void setShowLoading(boolean isShow) {
+                postValue(mContactListLoadingStateData, isShow);
             }
 
             @Override

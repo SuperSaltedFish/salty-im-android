@@ -1,8 +1,10 @@
 package me.zhixingye.base.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,21 +24,56 @@ public abstract class BasicListAdapterAdapter<D, VH extends BasicListAdapterAdap
         extends ListAdapter<D, VH> {
 
     protected Context mContext;
+    protected DiffUtil.ItemCallback<D> mDiffItemCallback;
+    protected OnItemClickListener<D> mOnItemClickListener;
 
     protected BasicListAdapterAdapter(@NonNull DiffUtil.ItemCallback<D> diffCallback) {
         super(diffCallback);
+        mDiffItemCallback = diffCallback;
     }
 
     protected BasicListAdapterAdapter(@NonNull AsyncDifferConfig<D> config) {
         super(config);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         if (mContext == null) {
             mContext = holder.itemView.getContext();
         }
-        holder.onBindData(getItem(position));
+
+        D data = getItem(position);
+
+        holder.onBindData(data);
+
+        holder.setOnHolderClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onClick(position, data);
+                }
+            }
+        });
+        holder.setOnHolderLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnItemClickListener != null) {
+                    return mOnItemClickListener.onLongClick(position, data);
+                }
+                return false;
+            }
+        });
+        holder.setOnHolderTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mOnItemClickListener != null) {
+                    return mOnItemClickListener.onTouchEvent(position, data, event);
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -50,24 +87,86 @@ public abstract class BasicListAdapterAdapter<D, VH extends BasicListAdapterAdap
         return super.getItem(position);
     }
 
-    public abstract static class BasicViewHolder<T> extends RecyclerView.ViewHolder {
+    public int getPosition(D data) {
+        for (int i = 0, size = getItemCount(); i < size; i++) {
+            D currentData = getItem(i);
+            if (mDiffItemCallback.areItemsTheSame(currentData, data)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void notifyItemChanged(D data) {
+        int position = getPosition(data);
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
+    }
+
+    public void notifyItemRemoved(D data) {
+        int position = getPosition(data);
+        if (position >= 0) {
+            getCurrentList().remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener<D> listener) {
+        mOnItemClickListener = listener;
+    }
+
+    public abstract static class BasicViewHolder<D> extends RecyclerView.ViewHolder {
 
         protected Context mContext;
 
         public BasicViewHolder(@LayoutRes int layoutRes, ViewGroup parent) {
-            super(LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false));
-            mContext = parent.getContext();
-            onCreateItemView(itemView);
+            this(LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false));
         }
 
         public BasicViewHolder(View itemView) {
             super(itemView);
+            mContext = itemView.getContext();
+            onCreateItemView(itemView);
         }
 
         protected abstract void onCreateItemView(View itemView);
 
-        protected abstract void onBindData(T data);
+        protected abstract void onBindData(D data);
 
         protected abstract void onRecycled();
+
+        protected void setOnHolderClickListener(View.OnClickListener listener) {
+            itemView.setOnClickListener(listener);
+        }
+
+        protected void setOnHolderLongClickListener(View.OnLongClickListener listener) {
+            itemView.setOnLongClickListener(listener);
+        }
+
+        protected void setOnHolderTouchListener(View.OnTouchListener listener) {
+            itemView.setOnTouchListener(listener);
+        }
+    }
+
+    public interface OnItemClickListener<D> {
+        void onClick(int position, D data);
+
+        boolean onLongClick(int position, D data);
+
+        boolean onTouchEvent(int position, D data, MotionEvent event);
+    }
+
+    public static abstract class SimpleOnItemClickListener<D> implements OnItemClickListener<D> {
+
+        @Override
+        public boolean onLongClick(int position, D data) {
+            return false;
+        }
+
+        @Override
+        public boolean onTouchEvent(int position, D data, MotionEvent event) {
+            return false;
+        }
     }
 }

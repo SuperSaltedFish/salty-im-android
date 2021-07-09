@@ -1,8 +1,6 @@
 package me.zhixingye.salty.widget.adapter.holder;
 
 import android.text.TextUtils;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.GestureDetectorCompat;
 
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.UserProfile;
@@ -40,7 +37,8 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
 
     private final DataAdapter mDataAdapter;
 
-    private OnClickListener mOnClickListener;
+    private View.OnClickListener mOnClickAcceptListener;
+    private View.OnClickListener mOnClickRejectListener;
 
     public ContactOperationMessageHolder(ViewGroup parent, @NonNull DataAdapter dataAdapter) {
         super(R.layout.item_contact_operation, parent);
@@ -59,32 +57,17 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvNegative = itemView.findViewById(R.id.mTvNegative);
 
         mTvPositive.setOnClickListener(v -> {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClickAccept(getBindingAdapterPosition());
+            if (mOnClickAcceptListener != null) {
+                mOnClickAcceptListener.onClick(v);
             }
         });
 
         mTvNegative.setOnClickListener(v -> {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClickRefused(getBindingAdapterPosition());
+            if (mOnClickRejectListener != null) {
+                mOnClickRejectListener.onClick(v);
             }
         });
 
-        mClRootView.setOnTouchListener(new OnViewTouchClickListener() {
-            @Override
-            protected void onClick(View v, int touchX, int touchY) {
-                if (mOnClickListener != null) {
-                    mOnClickListener.onClickItem(getBindingAdapterPosition());
-                }
-            }
-
-            @Override
-            protected void onLongClick(View v, int touchX, int touchY) {
-                if (mOnClickListener != null) {
-                    mOnClickListener.onLongClickItem(getBindingAdapterPosition(), v, touchX, touchY);
-                }
-            }
-        });
     }
 
     @Override
@@ -97,6 +80,7 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mIvSex.setSelected(userInfo.getSex() == UserProfile.Sex.FEMALE);
         GlideUtil.loadAvatarFromUrl(mContext, mIvAvatar, userInfo.getAvatar());
 
+        setupReasonContent(data);
         switch (data.getType()) {
             case ACCEPT:
                 setupAcceptState(data);
@@ -125,6 +109,20 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         mTvPositive.setEnabled(true);
         mClRootView.setAlpha(1);
         mClRootView.setEnabled(true);
+    }
+
+    private void setupReasonContent(ContactOperationMessage data) {
+        String reason = data.getAddReason();
+        if (TextUtils.isEmpty(reason)) {
+            reason = "无";
+        }
+
+        if (data.getType() == ContactOperationMessage.OperationType.REJECT) {
+            mTvReason.append("拒绝理由：");
+        } else {
+            mTvReason.append("添加理由：");
+        }
+        mTvReason.append(reason);
     }
 
     private void setupAcceptState(ContactOperationMessage data) {
@@ -194,18 +192,12 @@ public class ContactOperationMessageHolder extends BasicListAdapterAdapter.Basic
         }
     }
 
-    public void setOnClickListener(OnClickListener listener) {
-        mOnClickListener = listener;
+    public void setOnClickAcceptListener(View.OnClickListener listener) {
+        mOnClickAcceptListener = listener;
     }
 
-    public interface OnClickListener {
-        void onClickAccept(int position);
-
-        void onClickRefused(int position);
-
-        void onClickItem(int position);
-
-        void onLongClickItem(int position, View itemView, int touchX, int touchY);
+    public void setOnClickRejectListener(View.OnClickListener listener) {
+        mOnClickRejectListener = listener;
     }
 
     public interface DataAdapter {

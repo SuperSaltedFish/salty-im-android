@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import me.zhixingye.base.BuildConfig;
 import me.zhixingye.base.R;
 
 /**
@@ -95,6 +96,9 @@ public abstract class BasicDialogFragment
             return super.show(transaction, tag);
         } catch (Exception e) {
             //防止各种情况下可能发生的异常抛出
+            if (BuildConfig.DEBUG) {
+                throw e;
+            }
             e.printStackTrace();
         }
         return -1;
@@ -112,6 +116,9 @@ public abstract class BasicDialogFragment
             super.show(manager, tag);
         } catch (Exception e) {
             //防止各种情况下可能发生的异常抛出
+            if (BuildConfig.DEBUG) {
+                throw e;
+            }
             e.printStackTrace();
         }
     }
@@ -128,6 +135,9 @@ public abstract class BasicDialogFragment
             super.showNow(manager, tag);
         } catch (Exception e) {
             //防止各种情况下可能发生的异常抛出
+            if (BuildConfig.DEBUG) {
+                throw e;
+            }
             e.printStackTrace();
         }
     }

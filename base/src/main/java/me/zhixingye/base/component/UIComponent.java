@@ -69,7 +69,7 @@ public interface UIComponent {
         ProgressDialogFragment progressDialog = ProgressDialogFragment.create(text, isCancelable);
         progressDialog.setSingleInstance(true);
         progressDialog.setOnDismissListener(listener);
-        progressDialog.showNow(fActivity.getSupportFragmentManager(), toString());
+        progressDialog.show(fActivity.getSupportFragmentManager(), toString());
     }
 
     //隐藏Loading对话框

@@ -65,36 +65,15 @@ public class ContactListHeaderHolder extends BasicListAdapterAdapter.BasicViewHo
     private void bindSystemNotificationType() {
         GlideUtil.loadAvatarFromUrl(mContext, mIvIcon, R.drawable.ic_contact_notification);
         mTvTitle.setText("通知信息");
-
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PushMessageActivity.startActivity(v.getContext());
-            }
-        });
     }
 
     private void bindGroupType() {
         GlideUtil.loadAvatarFromUrl(mContext, mIvIcon, R.drawable.ic_contact_group);
         mTvTitle.setText("我的群聊");
-
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     private void bindContactLabelType() {
         GlideUtil.loadAvatarFromUrl(mContext, mIvIcon, R.drawable.ic_contact_label);
         mTvTitle.setText("我的标签");
-
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 }

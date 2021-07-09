@@ -43,7 +43,7 @@ public class LoginActivity extends MVVMActivity {
         context.startActivity(intent);
     }
 
-    public static void startActivityByTelephoneAccount(
+    public static void startActivityByAccount(
             Context context,
             String telephone,
             String password) {
@@ -118,7 +118,7 @@ public class LoginActivity extends MVVMActivity {
         });
     }
 
-    private void tryLogin(Intent intent) {
+    private void tryLoginIfNeed(Intent intent) {
         String telephone = intent.getStringExtra(EXTRA_TELEPHONE);
         String password = intent.getStringExtra(EXTRA_PASSWORD);
         if (TextUtils.isEmpty(telephone) || TextUtils.isEmpty(password)) {
@@ -183,7 +183,7 @@ public class LoginActivity extends MVVMActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        tryLogin(intent);
+        tryLoginIfNeed(intent);
     }
 
     @Override

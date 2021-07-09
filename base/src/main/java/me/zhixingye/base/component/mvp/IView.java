@@ -30,7 +30,6 @@ public interface IView<P extends IPresenter> extends UIComponent {
         try {
             P presenter = PresenterManager.createPresenterFromInterfaceGeneric(this);
             presenter.attachView(this);
-            Log.e("yezhixing", presenter.getClass().getSimpleName());
             PresenterManager.savePresenter(this, presenter);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Failed to create presenter", e);

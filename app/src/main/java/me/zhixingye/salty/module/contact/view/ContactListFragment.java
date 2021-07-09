@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.base.component.mvvm.MVVMFragment;
 import me.zhixingye.base.view.IndexBarView;
 import me.zhixingye.salty.R;
@@ -27,6 +29,7 @@ import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.util.AnimationUtil;
 import me.zhixingye.salty.widget.adapter.ContactListAdapter;
 import me.zhixingye.salty.widget.adapter.ContactListHeaderAdapter;
+import me.zhixingye.salty.widget.adapter.holder.ContactListHeaderHolder;
 import me.zhixingye.salty.widget.view.LetterSegmentationItemDecoration;
 
 /**
@@ -99,6 +102,31 @@ public class ContactListFragment extends MVVMFragment {
         mRvContact.addItemDecoration(mLetterSegmentation);
 
         mRvContact.setAdapter(new ConcatAdapter(mContactListHeaderAdapter, mContactListAdapter));
+
+        mContactListHeaderAdapter.setOnItemClickListener(new BasicListAdapterAdapter.SimpleOnItemClickListener<ContactListHeaderHolder.Type>() {
+            @Override
+            public void onClick(int position, ContactListHeaderHolder.Type type) {
+                switch (type) {
+                    case SYSTEM_NOTIFICATION:
+                        PushMessageActivity.startActivity(mContext);
+                        break;
+                    case GROUP:
+                        break;
+                    case CONTACT_LABEL:
+                        break;
+                    default:
+                        return;
+
+                }
+            }
+        });
+
+        mContactListAdapter.setOnItemClickListener(new BasicListAdapterAdapter.SimpleOnItemClickListener<ContactProfile>() {
+            @Override
+            public void onClick(int position, ContactProfile data) {
+                ContactProfileActivity.startActivity(mContext, data.getUserProfile().getUserId());
+            }
+        });
     }
 
     private void setupIndexBar() {

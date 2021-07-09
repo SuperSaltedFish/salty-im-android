@@ -3,6 +3,9 @@ package me.zhixingye.salty.module.contact.view;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -10,21 +13,23 @@ import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.UserProfile;
 
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import me.zhixingye.base.component.mvp.MVPBasicFragment;
-import me.zhixingye.base.listener.OnRecyclerViewItemClickListener;
+import org.jetbrains.annotations.NotNull;
+
+import me.zhixingye.base.adapter.BasicListAdapterAdapter;
+import me.zhixingye.base.component.mvvm.MVVMFragment;
 import me.zhixingye.base.view.DividerItemDecoration;
 import me.zhixingye.base.view.OverflowPopupMenu;
 import me.zhixingye.salty.R;
-import me.zhixingye.salty.module.contact.contract.ContactOperationListContract;
+import me.zhixingye.salty.module.contact.viewmodel.ContactOperationListViewModel;
 import me.zhixingye.salty.tool.OverflowMenuShowHelper;
 import me.zhixingye.salty.util.AndroidHelper;
 import me.zhixingye.salty.widget.adapter.ContactOperationMessageAdapter;
@@ -34,14 +39,14 @@ import me.zhixingye.salty.widget.adapter.holder.ContactOperationMessageHolder;
  * Created by YZX on 2018年01月18日.
  * 优秀的代码是它自己最好的文档,当你考虑要添加一个注释时,问问自己:"如何能改进这段代码，以让它不需要注释？"
  */
-public class ContactOperationListFragment
-        extends MVPBasicFragment
-        implements ContactOperationListContract.View {
+public class ContactOperationListFragment extends MVVMFragment {
 
     private SwipeRefreshLayout mSrlContactOperation;
     private RecyclerView mRvContactOperation;
     private OverflowPopupMenu mContactOperationMenu;
     private ContactOperationMessageAdapter mAdapter;
+
+    private ContactOperationListViewModel mContactOperationListViewModel;
 
     @Override
     protected int getLayoutID() {
@@ -50,8 +55,8 @@ public class ContactOperationListFragment
 
     @Override
     protected void init(View rootView) {
-        mSrlContactOperation = (SwipeRefreshLayout) rootView.findViewById(R.id.mSrlContactOperation);
-        mRvContactOperation = (RecyclerView) rootView.findViewById(R.id.mRvContactOperation);
+        mSrlContactOperation = rootView.findViewById(R.id.mSrlContactOperation);
+        mRvContactOperation = rootView.findViewById(R.id.mRvContactOperation);
         mContactOperationMenu = new OverflowPopupMenu(mContext);
     }
 
@@ -61,11 +66,16 @@ public class ContactOperationListFragment
         setupRecyclerViewAndAdapter();
         setOverflowMenu();
 
-        loadData();
+        setupViewModule();
     }
 
     private void setupSwipeRefreshLayout() {
-        mSrlContactOperation.setOnRefreshListener(this::loadData);
+        mSrlContactOperation.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mContactOperationListViewModel.loadAllContactOperationMessage();
+            }
+        });
         mSrlContactOperation.setColorSchemeResources(R.color.colorAccent);
     }
 
@@ -74,32 +84,54 @@ public class ContactOperationListFragment
         mRvContactOperation.addItemDecoration(new DividerItemDecoration(1, ContextCompat.getColor(mContext, R.color.dividerColor), DividerItemDecoration.HORIZONTAL));
         mRvContactOperation.setHasFixedSize(true);
 
-        mAdapter = new ContactOperationMessageAdapter(profile -> getPresenter().isMySelf(profile));
-        mAdapter.setOnClickListener(new ContactOperationMessageHolder.OnClickListener() {
+        mAdapter = new ContactOperationMessageAdapter(new ContactOperationMessageHolder.DataAdapter() {
             @Override
-            public void onClickAccept(int position) {
-                getPresenter().acceptContactRequest(mAdapter.getItem(position));
+            public boolean isMySelf(UserProfile profile) {
+                return mContactOperationListViewModel.isMySelf(profile);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BasicListAdapterAdapter.SimpleOnItemClickListener<ContactOperationMessage>() {
+
+            private int lastTouchX;
+            private int lastTouchY;
+
+            @Override
+            public void onClick(int position, ContactOperationMessage data) {
+
             }
 
             @Override
-            public void onClickRefused(int position) {
-                getPresenter().refusedContactRequest(mAdapter.getItem(position));
+            public boolean onLongClick(int position, ContactOperationMessage data) {
+                View view = mRvContactOperation.findChildVie  wUnder(lastTouchX, lastTouchY);不准，因为是根据父view坐标
+                if (view != null) {
+                    mContactOperationMenu.setParam(data);
+                    OverflowMenuShowHelper.show(
+                            view,
+                            mContactOperationMenu,
+                            mRvContactOperation.getHeight(),
+                            lastTouchX,
+                            lastTouchY);
+                }
+                return true;
             }
 
             @Override
-            public void onClickItem(int position) {
+            public boolean onTouchEvent(int position, ContactOperationMessage data, MotionEvent event) {
+                lastTouchX = (int) event.getX();
+                lastTouchY = (int) event.getY();
+                return false;
+            }
+        });
 
+        mAdapter.setOnContactOperationClickListener(new ContactOperationMessageAdapter.OnContactOperationClickListener() {
+            @Override
+            public void onClickAccept(int position, ContactOperationMessage message) {
+                mContactOperationListViewModel.acceptContactRequest(mAdapter.getItem(position));
             }
 
             @Override
-            public void onLongClickItem(int position, View itemView, int touchX, int touchY) {
-                mContactOperationMenu.setParam(mAdapter.getItem(position));
-                OverflowMenuShowHelper.show(
-                        itemView,
-                        mContactOperationMenu,
-                        mRvContactOperation.getHeight(),
-                        touchX,
-                        touchY);
+            public void onClickRefused(int position, ContactOperationMessage message) {
+                mContactOperationListViewModel.refusedContactRequest(mAdapter.getItem(position));
             }
         });
         mRvContactOperation.setAdapter(mAdapter);
@@ -122,19 +154,40 @@ public class ContactOperationListFragment
         });
     }
 
-    private void loadData() {
-        getPresenter().loadAllContactOperationMessage();
-    }
+    private void setupViewModule() {
+        mContactOperationListViewModel = createViewModel(ContactOperationListViewModel.class);
 
-    @Override
-    public void setRefreshing(boolean refreshing) {
-        mSrlContactOperation.post(() -> mSrlContactOperation.setRefreshing(refreshing));
-    }
+        mContactOperationListViewModel.getContactOperationMessageListData().observe(this, new Observer<List<ContactOperationMessage>>() {
+            @Override
+            public void onChanged(List<ContactOperationMessage> contactOperationMessageList) {
+                mAdapter.submitList(contactOperationMessageList);
+                mContactOperationMenu.dismiss();
+            }
+        });
 
-    @Override
-    public void showContactOperation(List<ContactOperationMessage> messageList) {
-        mSrlContactOperation.setRefreshing(false);
-        mSrlContactOperation.setEnabled(false);
-        mAdapter.submitList(messageList);
+        mContactOperationListViewModel.getNeedUpdateContactOperationMessage().observe(this, new Observer<ContactOperationMessage>() {
+            @Override
+            public void onChanged(ContactOperationMessage message) {
+                mAdapter.notifyItemChanged(message);
+                mContactOperationMenu.dismiss();
+            }
+        });
+
+        mContactOperationListViewModel.getNeedDeleteContactOperationMessage().observe(this, new Observer<ContactOperationMessage>() {
+            @Override
+            public void onChanged(ContactOperationMessage message) {
+                mAdapter.notifyItemRemoved(message);
+                mContactOperationMenu.dismiss();
+            }
+        });
+
+        mContactOperationListViewModel.getLoadAllContactOperationMessageLoading().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean data) {
+                mSrlContactOperation.setRefreshing(Boolean.TRUE.equals(data));
+            }
+        });
+
+        mContactOperationListViewModel.loadAllContactOperationMessage();
     }
 }

@@ -13,25 +13,25 @@ import me.zhixingye.im.listener.RequestCallback;
  *
  * @author zhixingye , 2021年01月27日.
  */
-public abstract class MVVMRequestCallback<T> implements RequestCallback<T> {
+public abstract class MVVMCallback<T> implements RequestCallback<T> {
 
     protected abstract void onSucceed(T result);
 
     private final WeakReference<BasicViewModel> mBasicViewModel;
 
-    public MVVMRequestCallback(@Nullable BasicViewModel viewModel) {
+    public MVVMCallback(@Nullable BasicViewModel viewModel) {
         this.mBasicViewModel = new WeakReference<>(viewModel);
         onPreRequest();
     }
 
     @CallSuper
     protected void onPreRequest() {
-        setDisplayLoading(true);
+        setShowLoading(true);
     }
 
     @CallSuper
     protected void onRequestFinish() {
-        setDisplayLoading(false);
+        setShowLoading(false);
         mBasicViewModel.clear();
     }
 
@@ -48,12 +48,12 @@ public abstract class MVVMRequestCallback<T> implements RequestCallback<T> {
         onRequestFinish();
     }
 
-    protected void setDisplayLoading(boolean isEnable) {
+    protected void setShowLoading(boolean isShow) {
         BasicViewModel viewModel = mBasicViewModel.get();
         if (viewModel == null) {
             return;
         }
-        if (isEnable) {
+        if (isShow) {
             BasicViewModel.LoadingDialogData data = new BasicViewModel.LoadingDialogData(null, false, null);
             viewModel.setLoadingDialogData(data);
         } else {

@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -76,6 +77,12 @@ public class MainActivity extends MVPActivity {
         initEnterTransition();
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     private void initBottomTab() {
         mBottomTabLayout

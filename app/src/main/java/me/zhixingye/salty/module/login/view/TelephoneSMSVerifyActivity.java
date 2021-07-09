@@ -283,7 +283,7 @@ public class TelephoneSMSVerifyActivity extends MVVMActivity {
                 .setPositiveButton("去登录", new OnDialogOnlySingleClickListener() {
                     @Override
                     public void onSingleClick(DialogInterface dialog, int which) {
-                        LoginActivity.startActivityByTelephoneAccount(
+                        LoginActivity.startActivityByAccount(
                                 TelephoneSMSVerifyActivity.this,
                                 mTelephone,
                                 null);

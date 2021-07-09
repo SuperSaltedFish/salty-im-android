@@ -10,6 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+
 import me.zhixingye.base.adapter.BasicListAdapterAdapter;
 import me.zhixingye.salty.widget.adapter.holder.ContactOperationMessageHolder;
 
@@ -19,9 +23,9 @@ import me.zhixingye.salty.widget.adapter.holder.ContactOperationMessageHolder;
  */
 public class ContactOperationMessageAdapter extends BasicListAdapterAdapter<ContactOperationMessage, ContactOperationMessageHolder> {
 
-    private ContactOperationMessageHolder.OnClickListener mOnClickListener;
 
     private final ContactOperationMessageHolder.DataAdapter mDataAdapter;
+    private OnContactOperationClickListener mOnContactOperationClickListener;
 
     public ContactOperationMessageAdapter(@NonNull ContactOperationMessageHolder.DataAdapter dataAdapter) {
         super(generateComparatorsCallback());
@@ -31,13 +35,33 @@ public class ContactOperationMessageAdapter extends BasicListAdapterAdapter<Cont
     @NonNull
     @Override
     public ContactOperationMessageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ContactOperationMessageHolder holder = new ContactOperationMessageHolder(parent, mDataAdapter);
-        holder.setOnClickListener(mProxyClickListener);
-        return holder;
+        return new ContactOperationMessageHolder(parent, mDataAdapter);
     }
 
-    public void setOnClickListener(ContactOperationMessageHolder.OnClickListener listener) {
-        mOnClickListener = listener;
+    @Override
+    public void onBindViewHolder(@NonNull ContactOperationMessageHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        holder.setOnClickAcceptListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnContactOperationClickListener != null) {
+                    mOnContactOperationClickListener.onClickAccept(position, getItem(position));
+                }
+            }
+        });
+
+        holder.setOnClickRejectListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnContactOperationClickListener != null) {
+                    mOnContactOperationClickListener.onClickRefused(position, getItem(position));
+                }
+            }
+        });
+    }
+
+    public void setOnContactOperationClickListener(OnContactOperationClickListener listener) {
+        mOnContactOperationClickListener = listener;
     }
 
     private static DiffUtil.ItemCallback<ContactOperationMessage> generateComparatorsCallback() {
@@ -54,33 +78,11 @@ public class ContactOperationMessageAdapter extends BasicListAdapterAdapter<Cont
         };
     }
 
-    private final ContactOperationMessageHolder.OnClickListener mProxyClickListener = new ContactOperationMessageHolder.OnClickListener() {
-        @Override
-        public void onClickAccept(int position) {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClickAccept(position);
-            }
-        }
+    public interface OnContactOperationClickListener {
+        void onClickAccept(int position, ContactOperationMessage message);
 
-        @Override
-        public void onClickRefused(int position) {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClickRefused(position);
-            }
-        }
+        void onClickRefused(int position, ContactOperationMessage message);
+    }
 
-        @Override
-        public void onClickItem(int position) {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClickItem(position);
-            }
-        }
 
-        @Override
-        public void onLongClickItem(int position, View itemView, int touchX, int touchY) {
-            if (mOnClickListener != null) {
-                mOnClickListener.onLongClickItem(position, itemView, touchX, touchY);
-            }
-        }
-    };
 }

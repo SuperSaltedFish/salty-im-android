@@ -114,9 +114,7 @@ public class SuccessfulActivity extends MVPActivity {
         switch (mOperationType) {
             case OPERATION_TYPE_TELEPHONE_REGISTER:
             case OPERATION_TYPE_RECOVER_TELEPHONE_LOGIN_PASSWORD:
-                gotoLoginActivity(
-                        mTelephone,
-                        mPassword);
+                gotoLoginActivity(mTelephone, mPassword);
                 break;
             default:
                 finish();
@@ -135,7 +133,7 @@ public class SuccessfulActivity extends MVPActivity {
     }
 
     private void gotoLoginActivity(String telephone, String password) {
-        LoginActivity.startActivityByTelephoneAccount(this, telephone, password);
+        LoginActivity.startActivityByAccount(this, telephone, password);
         finish();
     }
 

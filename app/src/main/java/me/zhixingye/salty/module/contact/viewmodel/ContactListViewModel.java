@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.salty.protos.ContactProfile;
-import com.salty.protos.GetContactsResp;
+import com.salty.protos.GetContactListResp;
 
 import java.util.List;
 
@@ -22,15 +22,15 @@ public class ContactListViewModel extends BasicViewModel {
     private final MutableLiveData<Boolean> mContactListLoadingStateData = new MutableLiveData<>();
 
     public void loadAllContact() {
-        IMClient.get().getContactService().getContacts(new MVVMCallback<GetContactsResp>(this) {
+        IMClient.get().getContactService().getContactList(new MVVMCallback<GetContactListResp>(this) {
             @Override
             protected void setShowLoading(boolean isShow) {
                 postValue(mContactListLoadingStateData, isShow);
             }
 
             @Override
-            protected void onSucceed(GetContactsResp result) {
-                postValue(mContactListData, result.getContactsList());
+            protected void onSucceed(GetContactListResp result) {
+                postValue(mContactListData, result.getContactListList());
             }
         });
     }

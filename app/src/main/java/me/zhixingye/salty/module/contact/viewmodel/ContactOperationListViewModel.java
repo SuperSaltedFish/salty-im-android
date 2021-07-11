@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.salty.protos.AcceptContactResp;
 import com.salty.protos.ContactOperationMessage;
 import com.salty.protos.ContactProfile;
-import com.salty.protos.GetContactOperationMessageListResp;
+import com.salty.protos.GetContactOperationListResp;
 import com.salty.protos.RefusedContactResp;
 import com.salty.protos.UserProfile;
 
@@ -48,14 +48,14 @@ public class ContactOperationListViewModel extends BasicViewModel {
     }
 
     public void loadAllContactOperationMessage() {
-        IMClient.get().getContactService().getContactOperationList(1, new MVVMCallback<GetContactOperationMessageListResp>(this) {
+        IMClient.get().getContactService().getContactOperationList(0, Long.MAX_VALUE, new MVVMCallback<GetContactOperationListResp>(this) {
             @Override
             protected void setShowLoading(boolean isShow) {
                 postValue(mLoadAllContactOperationMessageLoading, isShow);
             }
 
             @Override
-            protected void onSucceed(GetContactOperationMessageListResp result) {
+            protected void onSucceed(GetContactOperationListResp result) {
                 postValue(mContactOperationMessageListData, result.getMessageListList());
             }
         });

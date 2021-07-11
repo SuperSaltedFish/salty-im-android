@@ -102,23 +102,20 @@ public class ContactOperationListFragment extends MVVMFragment {
 
             @Override
             public boolean onLongClick(int position, ContactOperationMessage data) {
-                View view = mRvContactOperation.findChildVie  wUnder(lastTouchX, lastTouchY);不准，因为是根据父view坐标
-                if (view != null) {
-                    mContactOperationMenu.setParam(data);
-                    OverflowMenuShowHelper.show(
-                            view,
-                            mContactOperationMenu,
-                            mRvContactOperation.getHeight(),
-                            lastTouchX,
-                            lastTouchY);
-                }
+                mContactOperationMenu.setParam(data);
+                OverflowMenuShowHelper.show(
+                        mRvContactOperation.getRootView(),
+                        mContactOperationMenu,
+                        mRvContactOperation.getHeight(),
+                        lastTouchX,
+                        lastTouchY);
                 return true;
             }
 
             @Override
             public boolean onTouchEvent(int position, ContactOperationMessage data, MotionEvent event) {
-                lastTouchX = (int) event.getX();
-                lastTouchY = (int) event.getY();
+                lastTouchX = (int) event.getRawX();
+                lastTouchY = (int) event.getRawY();
                 return false;
             }
         });

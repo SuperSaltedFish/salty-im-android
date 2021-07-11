@@ -18,9 +18,15 @@ public abstract class MVVMCallback<T> implements RequestCallback<T> {
     protected abstract void onSucceed(T result);
 
     private final WeakReference<BasicViewModel> mBasicViewModel;
+    private final boolean isNeedLoading;
 
     public MVVMCallback(@Nullable BasicViewModel viewModel) {
+        this(viewModel, true);
+    }
+
+    public MVVMCallback(@Nullable BasicViewModel viewModel, boolean isNeedLoading) {
         this.mBasicViewModel = new WeakReference<>(viewModel);
+        this.isNeedLoading = isNeedLoading;
         onPreRequest();
     }
 
@@ -50,7 +56,7 @@ public abstract class MVVMCallback<T> implements RequestCallback<T> {
 
     protected void setShowLoading(boolean isShow) {
         BasicViewModel viewModel = mBasicViewModel.get();
-        if (viewModel == null) {
+        if (viewModel == null || isNeedLoading) {
             return;
         }
         if (isShow) {
